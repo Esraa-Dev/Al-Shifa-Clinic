@@ -1,6 +1,9 @@
-import mongoose, { Schema, Document } from 'mongoose';
-import { UserRole } from '../constants.js';
-
+import mongoose, { Schema, Document } from "mongoose";
+import { UserRole } from "../constants.js";
+import Joi from "joi";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
 interface IUser extends Document {
   name: string;
   email: string;
@@ -11,6 +14,14 @@ interface IUser extends Document {
   dob: string;
   phone: string;
   role: UserRole;
+  isEmailVerified: boolean;
+  emailVerificationToken: string;
+  emailVerificationTokenExpiry: Date;
+  generateTemporaryToken: () => {
+    token: string;
+    hashedToken: string;
+    tokenExpiry: Date;
+  };
 }
 
 const UserSchema: Schema = new Schema({
@@ -31,8 +42,84 @@ const UserSchema: Schema = new Schema({
     enum: Object.values(UserRole),
     default: UserRole.PATIENT,
   },
+  isEmailVerified: {
+    type: Boolean,
+    default: false,
+  },
+  emailVerificationToken: {
+    type: String,
+  },
+  emailVerificationTokenExpiry: {
+    type: Date,
+  },
 });
 
+UserSchema.pre<IUser>("save", async function () {
+  if (!this.isModified("password")) return;
+
+  await bcrypt.hash(this.password, 20);
+});
+
+UserSchema.methods.isPasswordValid = async function (password: string) {
+  return await bcrypt.compare(password, this.password);
+};
+
+UserSchema.methods.generateTemporaryToken = function () {
+  const token = crypto.randomBytes(32).toString("hex");
+  const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+  const tokenExpiry = new Date(Date.now() + 20 * 60 * 1000);
+  return { token, hashedToken, tokenExpiry };
+};
+
+// UserSchema.method.generateAccessToken = async function () {
+//   jwt.sign({
+//     name: this.name,
+//     _id: this._id,
+//     role: this.role,
+//     email: this.email,
+//   },process.env.JWT_SECRET,{
+//     expiresIn:1
+//   });
+// };
+
+export const registerValidation = Joi.object({
+  name: Joi.string().min(3).max(50).required().messages({
+    "string.empty": "Name is required",
+    "string.min": "Name must be at least 3 characters",
+  }),
+  email: Joi.string().email().required().messages({
+    "string.empty": "Email is required",
+    "string.email": "Invalid email format",
+  }),
+  password: Joi.string().min(6).required().messages({
+    "string.empty": "Password is required",
+    "string.min": "Password must be at least 6 characters",
+  }),
+  confirmPassword: Joi.string().required().valid(Joi.ref("password")).messages({
+    "any.only": "Passwords must match",
+    "string.empty": "Confirm password is required",
+  }),
+  address: Joi.object({
+    line1: Joi.string().allow("").optional(),
+    line2: Joi.string().allow("").optional(),
+  }).optional(),
+  gender: Joi.string().valid("male", "female", "Not Selected").optional(),
+  dob: Joi.date().iso().optional().messages({
+    "date.format": "Date of birth must be in YYYY-MM-DD format",
+  }),
+  phone: Joi.string()
+    .pattern(/^[0-9+]+$/)
+    .min(10)
+    .max(15)
+    .required()
+    .messages({
+      "string.pattern.base": "Phone must contain only numbers and +",
+      "string.empty": "Phone is required",
+    }),
+  role: Joi.string()
+    .valid(...Object.values(UserRole))
+    .optional(),
+});
 const User = mongoose.model<IUser>("User", UserSchema);
 
 export default User;
