@@ -18,7 +18,7 @@ export const TextInput = ({ label, Icon, type = "text", placeholder, register, e
           type={type === "password" ? (showPassword ? "text" : "password") : type}
           {...register}
           placeholder={placeholder}
-          className="block w-full px-10 py-4 text-sm border border-primaryBorder rounded-md placeholder:primaryText focus:outline-none bg-background transition duration-200"
+          className="block w-full pl-4 pr-10 py-4 text-sm border border-primaryBorder rounded-md placeholder:primaryText focus:outline-none bg-background transition duration-200"
           required
           autoFocus
         />

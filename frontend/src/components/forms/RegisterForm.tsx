@@ -1,16 +1,26 @@
-import { User, Mail, Lock, Phone } from "lucide-react";
+import { User, Mail, Lock, Phone, Loader2 } from "lucide-react";
 import { TextInput } from "../ui/TextInput";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "../ui/Button";
 import { Link } from "react-router-dom";
 import AppForm from "./AppForm";
+import { useRegister } from "../../hooks/useRegister";
+import { registerSchema } from "../../validations/registerSchema";
+import type { RegisterFormData } from "../../types/types";
+
 
 export const RegisterForm = () => {
-    const { register, handleSubmit, formState: { errors }, watch } = useForm();
-    const password = watch("password");
-
-    const onSubmit = (data: any) => {
-        console.log("SIGNUP DATA:", data);
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: yupResolver(registerSchema),
+    });
+    const { mutate, isPending } = useRegister();
+    const onSubmit = (data: RegisterFormData) => {
+        mutate(data);
     };
 
     return (
@@ -21,8 +31,8 @@ export const RegisterForm = () => {
                     Icon={User}
                     type="text"
                     placeholder="أدخل اسمك الكامل"
-                    register={register("fullName")}
-                    error={errors.fullName}
+                    register={register("name")}
+                    error={errors.name}
                 />
 
                 <TextInput
@@ -32,6 +42,15 @@ export const RegisterForm = () => {
                     placeholder="أدخل بريدك الإلكتروني"
                     register={register("email")}
                     error={errors.email}
+                />
+
+                <TextInput
+                    label="رقم الهاتف"
+                    Icon={Phone}
+                    type="text"
+                    placeholder="أدخل رقم الهاتف"
+                    register={register("phone")}
+                    error={errors.phone}
                 />
 
                 <TextInput
@@ -52,26 +71,15 @@ export const RegisterForm = () => {
                     error={errors.confirmPassword}
                 />
 
-                {/* <div className="mb-4">
-                    <label className="flex items-center cursor-pointer">
-                        <input
-                            type="checkbox"
-                            {...register("terms", { required: "يجب الموافقة على الشروط والأحكام" })}
-                            className="h-4 w-4 text-primary border-primaryBorder rounded cursor-pointer"
-                        />
-                        <span className="mr-2 text-sm text-primaryText">
-                            أوافق على <Link to="/terms" className="text-secondary hover:text-primary">الشروط والأحكام</Link> و <Link to="/privacy" className="text-secondary hover:text-primary">سياسة الخصوصية</Link>
-                        </span>
-                    </label>
-                    {errors.terms && (
-                        <p className="text-red-500 text-sm mt-2 text-right">
-                            {errors.terms.message}
-                        </p>
+                <Button className="w-full py-4" type="submit" disabled={isPending}>
+                    {isPending ? (
+                        <div className="flex items-center justify-center">
+                            <Loader2 className="h-4 w-4 animate-spin ml-2" />
+                            جاري الإنشاء
+                        </div>
+                    ) : (
+                        "إنشاء الحساب"
                     )}
-                </div> */}
-
-                <Button className="w-full py-4" type="submit">
-                    إنشاء الحساب
                 </Button>
 
                 <div className="mt-6 text-center">
@@ -85,7 +93,6 @@ export const RegisterForm = () => {
                         </Link>
                     </p>
                 </div>
-
             </form>
         </AppForm>
     );

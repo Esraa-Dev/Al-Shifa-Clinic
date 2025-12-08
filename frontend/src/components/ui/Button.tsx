@@ -17,7 +17,8 @@ export const Button = ({
         <button
             type={type}
             className={`
-                flex items-center justify-center font-semibold rounded-sm text-sm shadow-lg transform cursor-pointer transition duration-200 px-6 py-2 bg-primary text-white hover:bg-primary/80"
+                flex items-center justify-center font-semibold rounded-sm text-sm shadow-lg transform 
+                cursor-pointer transition duration-200 px-6 py-2 bg-primary text-white hover:bg-primary/80
                 ${className}
             `}
             onClick={onClick}
@@ -27,3 +28,4 @@ export const Button = ({
         </button>
     );
 };
+

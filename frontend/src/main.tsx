@@ -1,13 +1,20 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
 import './index.css'
 import App from './App.tsx'
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <ToastContainer position="top-right" autoClose={3000} />
+      <App />
+    </QueryClientProvider>
+
   </StrictMode>,
 )

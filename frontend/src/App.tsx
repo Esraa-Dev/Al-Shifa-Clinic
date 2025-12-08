@@ -20,7 +20,6 @@ const App = () => {
   return (
     <BrowserRouter>
       <Navbar />
-
       <Routes>
         {/* Website */}
         <Route path="/" element={<HomePage />} />

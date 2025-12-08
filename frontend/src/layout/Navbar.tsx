@@ -9,8 +9,8 @@ export const Navbar = () => {
   const navigate=useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
-    <nav className="py-6 bg-white h-24">
-      <div className="flex-center justify-between container">
+    <nav className="py-6 bg-white">
+      <div className="flex-center justify-between container flex-wrap gap-y-2">
         <Logo />
         <NavLinks />
         <Button className="hidden lg:flex bg-primary text-white hover:bg-primary/80"onClick={()=>navigate("/login")}>
@@ -19,7 +19,7 @@ export const Navbar = () => {
         <button
           aria-label="Toggle Menu"
           onClick={() => setIsMenuOpen((prev) => !prev)}
-          className="flex lg:hidden bg-secondary text-white w-9 h-9 cursor-pointer justify-center items-center rounded-sm border-white"
+          className="flex lg:hidden bg-secondary hover:bg-secondary/70 text-white w-9 h-9 cursor-pointer justify-center items-center rounded-sm border-white"
         >
           {!isMenuOpen ? <Menu size={18} /> : <X size={18} />}
         </button>

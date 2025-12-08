@@ -1,15 +1,25 @@
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, Loader2 } from "lucide-react";
 import { TextInput } from "../ui/TextInput";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "../ui/Button";
 import { Link } from "react-router-dom";
 import AppForm from "./AppForm";
+import { useLogin } from "../../hooks/useLogin";
+import { loginSchema } from "../../validations/loginSchema"
+import type { LoginFormData } from "../../types/types";
 
 const LoginForm = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
-
-  const onSubmit = (data: any) => {
-    console.log("LOGIN DATA:", data);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(loginSchema),
+  });
+  const { mutate, isPending } = useLogin();
+  const onSubmit = (data: LoginFormData) => {
+    mutate(data);
   };
 
   return (
@@ -20,7 +30,7 @@ const LoginForm = () => {
           Icon={Mail}
           type="email"
           placeholder="أدخل بريدك الإلكتروني"
-          register={register("email", { required: "البريد مطلوبة" })}
+          register={register("email")}
           error={errors.email}
         />
 
@@ -29,29 +39,20 @@ const LoginForm = () => {
           Icon={Lock}
           type="password"
           placeholder="أدخل كلمة المرور"
-          register={register("password", { required: "كلمة المرور مطلوبة" })}
+          register={register("password")}
           error={errors.password}
         />
 
-        <div className="flex-center justify-between mb-4">
-          <label className="flex-center">
-            <input
-              type="checkbox"
-              {...register("rememberMe")}
-              className="h-4 w-4 text-primary border-primaryBorder rounded cursor-pointer"
-            />
-            <span className="mr-2 text-sm text-primaryText hover:text-secondary cursor-pointer">تذكرني</span>
-          </label>
-
-          <Link
-            to="/forgot-password"
-            className="text-sm text-secondary hover:text-primary font-medium"
-          >
-            نسيت كلمة المرور؟
-          </Link>
-        </div>
-
-        <Button className="w-full py-4" type="submit">تسجيل الدخول</Button>
+        <Button className="w-full py-4" type="submit" disabled={isPending}>
+          {isPending ? (
+            <div className="flex items-center justify-center">
+              <Loader2 className="h-4 w-4 animate-spin ml-2" />
+              جاري التسجيل
+            </div>
+          ) : (
+            "تسجيل الدخول"
+          )}
+        </Button>
 
         <div className="mt-6 text-center">
           <p className="text-primaryText text-sm">
@@ -64,7 +65,6 @@ const LoginForm = () => {
             </Link>
           </p>
         </div>
-
       </form>
     </AppForm>
   );
