@@ -40,7 +40,6 @@ const EmailVerificationForm = () => {
   };
 
   const handlePaste = (e: React.ClipboardEvent) => {
-    e.preventDefault();
     const OtpPastedText = e.clipboardData.getData("text").trim();
     if (/^\d{6}$/.test(OtpPastedText)) {
       const otp = OtpPastedText.split("")
@@ -51,26 +50,26 @@ const EmailVerificationForm = () => {
     }
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
-    e.preventDefault();
-    const newArr = [...code];
-    if (e.key === "Backspace") {
-      if (newArr[index]) {
-        newArr[index] = "";
-        setCode(newArr);
-        return;
-      }
-      if (index > 0) {
-        inputRefs.current[index - 1]?.focus();
-      }
+const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
+  const newArr = [...code];
+  if (e.key === "Backspace") {
+    if (newArr[index]) {
+      newArr[index] = "";
+      setCode(newArr);
+      return;
     }
-    if (e.key === "ArrowLeft" && index > 0) {
+    if (index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
-    if (e.key === "ArrowRight" && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  };
+    return;
+  }
+  if (e.key === "ArrowLeft" && index > 0) {
+    inputRefs.current[index - 1]?.focus();
+  }
+  if (e.key === "ArrowRight" && index < 5) {
+    inputRefs.current[index + 1]?.focus();
+  }
+};
 
   const onSubmit = async (data: VerifyFormData) => {
     mutate(data);
