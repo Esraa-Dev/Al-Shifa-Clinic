@@ -16,6 +16,9 @@ import ResetPasswordForm from "./components/forms/ResetPasswordForm";
 import RegisterPage from "./pages/RegisterPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetOtpVerificationPage from "./pages/ResetOtpVerificationPage";
+import { ProtectedRoute } from "./routes/ProtectedRoute";
+import NoAccess from "./pages/NoAccess";
+import NotFoundPage from "./pages/NotFoundPage";
 
 const App = () => {
   return (
@@ -29,7 +32,11 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<ContactPage />} />
-        <Route path="/profile" element={<MyProfile />} />
+
+        <Route element={<ProtectedRoute allowedRoles={["patient"]} />}>
+          <Route path="/profile" element={<MyProfile />} />
+        </Route>
+        <Route path="/no-access" element={<NoAccess />} />
 
         <Route path="/appointments" element={<MyAppointment />} />
         <Route path="/appointments/:docId" element={<Appointment />} />
@@ -43,6 +50,7 @@ const App = () => {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashboardOverview />} />
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Footer />
     </BrowserRouter>

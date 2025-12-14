@@ -12,3 +12,6 @@ export interface AppFormProps {
   title?: string;
   children: React.ReactNode;
 }
+export interface ProtectedRouteProps {
+  allowedRoles?: string[];
+}
