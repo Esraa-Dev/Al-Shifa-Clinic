@@ -306,9 +306,10 @@ export const logout = AsyncHandler(async (req: Request, res: Response) => {
 export const getCurrentUser = AsyncHandler(
   async (req: Request, res: Response) => {
     const _id = req.user?._id;
-    const user = User.findById({ _id }).select("-password -refreshToken");
+    console.log(_id)
+    const user =await User.findById( _id ).select("-password -refreshToken");
     res
       .status(200)
-      .json(new ApiResponse("User retrieved successfully", { user }, 200));
+      .json(new ApiResponse("User retrieved successfully", user , 200));
   }
 );

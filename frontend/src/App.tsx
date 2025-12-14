@@ -20,7 +20,7 @@ import ResetOtpVerificationPage from "./pages/ResetOtpVerificationPage";
 const App = () => {
   return (
     <BrowserRouter>
-      {/* <Navbar /> */}
+      <Navbar />
       <Routes>
         {/* Website */}
         <Route path="/" element={<HomePage />} />

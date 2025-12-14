@@ -7,7 +7,8 @@ import {
   verifyResetOtp,
   resetPassword,
   logout,
-} from "../controllers/userController.js";
+  getCurrentUser,
+} from "../controllers/authController.js";
 import { verifyToken } from "../middlewares/verify.js";
 
 const router = express.Router();
@@ -18,5 +19,6 @@ router.post("/forgot-password", forgotPassword);
 router.post("/verify-reset-otp", verifyResetOtp);
 router.post("/reset-password", resetPassword);
 router.post("/logout", verifyToken, logout);
+router.get("/profile", verifyToken, getCurrentUser);
 
 export default router;
