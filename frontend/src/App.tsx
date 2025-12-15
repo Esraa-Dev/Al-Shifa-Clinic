@@ -1,5 +1,4 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import { Navbar } from "./layout/Navbar";
 import { Footer } from "./layout/Footer";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -19,40 +18,35 @@ import ResetOtpVerificationPage from "./pages/ResetOtpVerificationPage";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
 import NoAccess from "./pages/NoAccess";
 import NotFoundPage from "./pages/NotFoundPage";
+import PublicRoute from "./routes/PublicRoute";
 
 const App = () => {
   return (
     <BrowserRouter>
-      <Navbar />
       <Routes>
-        {/* Website */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/doctors" element={<DoctorPage />} />
-        <Route path="/doctors/:specialty" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<ContactPage />} />
-
-        <Route element={<ProtectedRoute allowedRoles={["patient"]} />}>
-          <Route path="/profile" element={<MyProfile />} />
+        <Route element={<PublicRoute />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordForm />} />
+          <Route path="/verify-email" element={<EmailVerificationForm />} />
+          <Route path="/verify-reset-otp" element={<ResetOtpVerificationPage />} />
+          <Route path="/doctors" element={<DoctorPage />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/no-access" element={<NoAccess />} />
+          <Route element={<ProtectedRoute allowedRoles={["patient"]} />}>
+            <Route path="/profile" element={<MyProfile />} />
+            <Route path="/appointments" element={<MyAppointment />} />
+            <Route path="/appointments/:docId" element={<Appointment />} />
+          </Route>
         </Route>
-        <Route path="/no-access" element={<NoAccess />} />
-
-        <Route path="/appointments" element={<MyAppointment />} />
-        <Route path="/appointments/:docId" element={<Appointment />} />
-        {/* <Route path="/departments" element={<LoginPage />} /> */}
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/reset-password" element={<ResetPasswordForm />} />
-        <Route path="/verify-email" element={<EmailVerificationForm />} />
-        <Route path="/verify-reset-otp" element={<ResetOtpVerificationPage />} />
-        {/* Dashboard */}
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashboardOverview />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-      <Footer />
     </BrowserRouter>
   );
 };
