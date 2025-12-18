@@ -48,3 +48,12 @@ export const DaysOfWeek = {
   SATURDAY: "saturday",
   SUNDAY: "sunday",
 } as const;
+
+export const EmergencyRelationship = {
+  SPOUSE: "spouse",
+  PARENT: "parent",
+  CHILD: "child",
+  SIBLING: "sibling",
+  FRIEND: "friend",
+  OTHER: "other",
+} as const;

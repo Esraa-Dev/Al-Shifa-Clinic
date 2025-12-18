@@ -1,6 +1,12 @@
 import mongoose, { Schema } from "mongoose";
 import { User, IUser } from "./UserSchema.js";
-import { UserRole, Gender, BloodGroup } from "../constants.js";
+import {
+  UserRole,
+  Gender,
+  BloodGroup,
+  EmergencyRelationship,
+} from "../constants.js";
+import Joi from "joi";
 
 export interface IPatient extends IUser {
   dateOfBirth: Date;
@@ -55,8 +61,7 @@ const PatientSchema: Schema = new Schema({
   emergencyContact: {
     name: { type: String, default: null },
     relationship: {
-      type: String,
-      enum: ["spouse", "parent", "child", "sibling", "friend", "other"],
+      type: Object.values(EmergencyRelationship),
       default: null,
     },
     phone: { type: String, default: null },
@@ -83,6 +88,35 @@ const PatientSchema: Schema = new Schema({
     enum: ["active", "inactive"],
     default: "active",
   },
+});
+
+export const updateProfileSchema = Joi.object({
+  firstName: Joi.string().min(2).max(50),
+  lastName: Joi.string().min(2).max(50),
+  phone: Joi.string().pattern(/^\+?[0-9]{10,15}$/),
+  dateOfBirth: Joi.date().iso(),
+  gender: Joi.string().valid(...Object.values(Gender)),
+  bloodGroup: Joi.string().valid(...Object.values(BloodGroup)),
+
+  address: Joi.object({
+    address1: Joi.string().allow("", null),
+    address2: Joi.string().allow("", null),
+    city: Joi.string().allow("", null),
+    state: Joi.string().allow("", null),
+    country: Joi.string().allow("", null),
+    pincode: Joi.string().allow("", null),
+  }),
+
+  emergencyContact: Joi.object({
+    name: Joi.string().allow("", null),
+    relationship: Joi.string()
+      .valid(...Object.values(EmergencyRelationship))
+      .allow("", null),
+    phone: Joi.string().allow("", null),
+  }).allow(null),
+
+  medicalHistory: Joi.string().allow("", null),
+  allergies: Joi.array().items(Joi.string()).default([]),
 });
 
 export const Patient = User.discriminator<IPatient>(
