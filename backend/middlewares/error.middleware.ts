@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { ApiError } from "../utils/ApiError.js";
+import mongoose from "mongoose";
 
 export const errorHandler = (
   err: any,
@@ -17,7 +18,17 @@ export const errorHandler = (
     });
   }
 
-  console.error("Unexpected Error:", err);
+  if (err instanceof mongoose.Error.ValidationError) {
+    const errors = Object.values(err.errors).map((e: any) => e.message);
+
+    return res.status(400).json({
+      success: false,
+      statusCode: 400,
+      message: "Validation Error",
+      data: null,
+      errors,
+    });
+  }
 
   return res.status(500).json({
     success: false,

@@ -15,7 +15,7 @@ router.post(
   upload.single("image"),
   createDepartment
 );
-router.get("/departments", getAllDepartments);
+router.get("/", getAllDepartments);
 router.get("/departments/count", getDepartmentCount);
 
 export default router;

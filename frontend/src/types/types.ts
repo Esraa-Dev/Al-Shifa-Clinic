@@ -99,3 +99,14 @@ export interface ButtonProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
 }
+
+export interface Department {
+  _id: string;
+  name: string;
+  description?: string;
+  icon?: string;
+  isActive: boolean;
+  doctorsCount: number;
+  createdAt: string;
+  updatedAt: string;
+}

@@ -1,5 +1,5 @@
 import { UserPlus } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Banner = () => {
     const navigate = useNavigate();
@@ -23,14 +23,14 @@ const Banner = () => {
                             رعاية صحية شاملة عندما تحتاجها.
                         </p>
 
-                        <div className="flex flex-col sm:flex-row gap-4" onClick={() => { navigate("/login"), scrollTo(0, 0) }}>
-                            <button className="inline-flex items-center justify-center gap-2 bg-white text-primary px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-colors">
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <button  onClick={() => { navigate("/register"), scrollTo(0, 0) }} className="inline-flex items-center justify-center gap-2 bg-white text-primary px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-colors cursor-pointer">
                                 <UserPlus className="w-5 h-5" />
                                 إنشاء حساب
                             </button>
-                            <button className="inline-flex items-center justify-center gap-2 bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/10 transition-colors">
+                            <Link to="/appointments/book" className="inline-flex items-center justify-center gap-2 bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/10 transition-colors">
                                 احجز الأن
-                            </button>
+                            </Link>
                         </div>
                     </div>
 

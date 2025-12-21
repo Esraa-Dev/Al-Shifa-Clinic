@@ -1,5 +1,6 @@
 import { Calendar, Phone } from "lucide-react";
 import { Button } from "./ui/Button";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -17,9 +18,9 @@ const Hero = () => {
             </p>
 
             <div className="flex gap-4 mt-6">
-              <Button className="flex items-center gap-2 bg-primary text-white hover:bg-primary/80 hover:border hover:border-white">
+              <Link to="/appointments/book" className="flex items-center gap-2 bg-primary px-6 py-2 text-white hover:bg-primary/80 hover:border hover:border-white">
                 <Calendar className="w-5 h-5" /> احجز موعدك الآن
-              </Button>
+              </Link>
 
               <Button className="flex items-center gap-2 bg-secondary hover:bg-secondary/80 hover:border hover:border-white text-white ">
                 <Phone className="w-5 h-5" /> اتصل بنا
