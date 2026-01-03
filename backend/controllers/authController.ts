@@ -5,7 +5,6 @@ import User, {
   forgotPasswordValidation,
   verifyResetOtpValidation,
   resetPasswordValidation,
-  resendOtpValidation,
 } from "../models/UserSchema.js";
 import bcrypt from "bcrypt";
 import { AsyncHandler } from "../utils/AsyncHandler.js";
@@ -34,24 +33,24 @@ const generateAccessAndRefreshToken = async (userId: string) => {
 
 export const registerUser = AsyncHandler(
   async (req: Request, res: Response) => {
-    const { error } = registerValidation.validate(req.body, {
+    const { value, error } = registerValidation.validate(req.body, {
       abortEarly: false,
     });
 
     if (error) {
-      const messages = error.details.map((err) => {
-        return err.message.replace(/["]/g, "");
-      });
+      const messages = error.details.map(err =>
+        err.message.replace(/["]/g, "")
+      );
       throw new ApiError("Validation failed", 400, messages);
     }
 
-    const { firstName,lastName, email, password, address, gender, dob, phone, role } =
-      req.body;
+    const { firstName, lastName, email, password, phone, role } = value;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       throw new ApiError("User already exists", 400);
     }
+
     const verifyOtp = Math.floor(100000 + Math.random() * 900000).toString();
 
     const newUser = new User({
@@ -59,13 +58,11 @@ export const registerUser = AsyncHandler(
       lastName,
       email,
       password,
-      address,
-      gender,
-      dob,
       phone,
       role,
       verifyOtp,
-      verifyOtpExpireAt: Date.now() + 60 * 1000,
+      verifyOtpExpireAt: new Date(Date.now() + 10 * 60 * 1000),
+      profileStatus: "incomplete",
     });
 
     await newUser.save();
@@ -78,15 +75,13 @@ export const registerUser = AsyncHandler(
       mailgenContent,
     });
 
-    res
-      .status(201)
-      .json(
-        new ApiResponse(
-          "User registered successfully and verification email has been sent",
-          null,
-          201
-        )
-      );
+    res.status(201).json(
+      new ApiResponse(
+        "User registered successfully and verification email has been sent",
+        newUser,
+        201
+      )
+    );
   }
 );
 
@@ -158,10 +153,12 @@ export const login = AsyncHandler(async (req: Request, res: Response) => {
   const userResponse = {
     id: user._id,
     firstName: user.firstName,
+    lastName: user.lastName,
     email: user.email,
     role: user.role,
     image: user.image,
     isEmailVerified: user.isEmailVerified,
+    profileStatus: user.profileStatus,
   };
 
   res
@@ -207,7 +204,10 @@ export const forgotPassword = AsyncHandler(
     }
     const resetOtp = user.generateOtp("reset");
     await user.save({ validateBeforeSave: false });
-    const mailgenContent = await forgotPasswordContent(user.firstName, resetOtp);
+    const mailgenContent = await forgotPasswordContent(
+      user.firstName,
+      resetOtp
+    );
 
     await sendEmail({
       email: user.email,
@@ -307,10 +307,14 @@ export const logout = AsyncHandler(async (req: Request, res: Response) => {
 export const getCurrentUser = AsyncHandler(
   async (req: Request, res: Response) => {
     const _id = req.user?._id;
-    console.log(_id)
-    const user =await User.findById( _id ).select("-password -refreshToken");
+    const user = await User.findById(_id).select("-password -refreshToken");
+    
+    if (!user) {
+      throw new ApiError("User not found", 404);
+    }
+    
     res
       .status(200)
-      .json(new ApiResponse("User retrieved successfully", user , 200));
+      .json(new ApiResponse("User retrieved successfully", user, 200));
   }
 );

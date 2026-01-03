@@ -17,52 +17,70 @@ import ResetOtpVerificationPage from "./pages/ResetOtpVerificationPage";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
 import NoAccess from "./pages/NoAccess";
 import NotFoundPage from "./pages/NotFoundPage";
-
 import MainLayout from "./layout/MainLayout";
+import  BookAppointment  from "./pages/BookAppointment";
+import PatientOnboarding from "./pages/PatientOnboarding";
+import DoctorOnboarding from "./pages/DoctorOnboarding";
+// import DoctorDashboard from "./pages/DoctorDashboard";
+// import DoctorAppointments from "./pages/DoctorAppointments";
+// import AdminDashboard from "./pages/AdminDashboard";
+import { AuthProvider } from "./context/AuthContext";
+import DoctorDashboard from "./pages/DoctorDashboard";
+import DoctorList from "./pages/DoctorList";
 
 const App = () => {
   return (
     <BrowserRouter>
-      <Routes>
-
-        {/*  Layout Route */}
-        <Route element={<MainLayout />}>
-
-          {/* Public Routes */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password" element={<ResetPasswordForm />} />
-          <Route path="/verify-email" element={<EmailVerificationForm />} />
-          <Route path="/verify-reset-otp" element={<ResetOtpVerificationPage />} />
-          <Route path="/doctors" element={<DoctorPage />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/no-access" element={<NoAccess />} />
-
-          {/*  Patient */}
-          <Route element={<ProtectedRoute allowedRoles={["patient"]} />}>
+      <AuthProvider>
+        <Routes>
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordForm />} />
+            <Route path="/verify-email" element={<EmailVerificationForm />} />
+            <Route path="/verify-reset-otp" element={<ResetOtpVerificationPage />} />
+            <Route path="/doctors" element={<DoctorPage />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/doctor/onboarding" element={<DoctorOnboarding />} />
+            <Route path="/patient/onboarding" element={<PatientOnboarding />} />
             <Route path="/profile" element={<MyProfile />} />
-            <Route path="/appointments" element={<MyAppointment />} />
-            <Route path="/appointments/:docId" element={<Appointment />} />
+
           </Route>
 
-          {/*  Admin / Doctor */}
-          <Route element={<ProtectedRoute allowedRoles={["admin", "doctor"]} />}>
-            <Route path="/dashboard" element={<DashboardLayout />}>
-              <Route index element={<DashboardOverview />} />
+          <Route element={<ProtectedRoute allowedRoles={["patient"]} />}>
+            <Route element={<MainLayout />}>
+              <Route path="/dashboard" element={<DashboardOverview />} />
+              <Route path="/appointments" element={<MyAppointment />} />
+              <Route path="/booking/:id" element={<BookAppointment />} />
+              <Route path="/appointments/:docId" element={<Appointment />} />
+              <Route path="/doctor-list" element={<DoctorList />} />
+
+            </Route>
+
+          </Route>
+
+          <Route element={<ProtectedRoute allowedRoles={["doctor"]} />}>
+            <Route element={<DashboardLayout />}>
+              <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
+              {/* <Route path="/doctor/appointments" element={<DoctorAppointments />} /> */}
             </Route>
           </Route>
 
-        </Route>
+          <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+            <Route element={<DashboardLayout />}>
+              {/* <Route path="/admin/dashboard" element={<AdminDashboard />} /> */}
+            </Route>
+          </Route>
 
-        <Route path="*" element={<NotFoundPage />} />
-
-      </Routes>
+          <Route path="/no-access" element={<NoAccess />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 };
 
 export default App;
-
