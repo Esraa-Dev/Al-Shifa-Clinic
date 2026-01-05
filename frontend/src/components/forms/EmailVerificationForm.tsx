@@ -6,12 +6,18 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { otpSchema, type VerifyOtpFormData } from "../../validations/otpSchema";
 import { useVerifyEmail } from "../../hooks/auth/useVerifyEmail";
+import { useResendOtp } from "../../hooks/auth/useResendOtp";
+import { useLocation } from "react-router-dom";
+import { CountdownTimer } from "../CountdownTimer";
 
-const EmailVerificationForm = () => {
+export const EmailVerificationForm = () => {
   const [code, setCode] = useState(Array(6).fill(""));
   const inputRefs = useRef<(null | HTMLInputElement)[]>([]);
-  const { mutate, isPending: isVerifying } = useVerifyEmail();
-
+  const { mutate: verifyEmail, isPending: isVerifying } = useVerifyEmail();
+  const { mutate: resendOtp, isPending: isResending } = useResendOtp();
+  const location = useLocation();
+  const userEmail = location.state;
+  console.log(userEmail)
   const {
     handleSubmit,
     setValue,
@@ -25,7 +31,6 @@ const EmailVerificationForm = () => {
   useEffect(() => {
     inputRefs.current[0]?.focus();
   }, []);
-
 
   const handleInputChange = (index: number, value: string) => {
     if (!/^\d?$/.test(value)) return;
@@ -42,13 +47,13 @@ const EmailVerificationForm = () => {
   const handlePaste = (e: React.ClipboardEvent) => {
     const OtpPastedText = e.clipboardData.getData("text").trim();
     if (/^\d{6}$/.test(OtpPastedText)) {
-      const otp = OtpPastedText.split("")
+      const otp = OtpPastedText.split("");
       setCode(otp);
       setValue("verifyOtp", otp.join(""), { shouldValidate: true });
       trigger("verifyOtp");
       inputRefs.current[5]?.focus();
     }
-  }
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
     const newArr = [...code];
@@ -72,8 +77,16 @@ const EmailVerificationForm = () => {
   };
 
   const onSubmit = async (data: VerifyOtpFormData) => {
-    mutate(data);
+    verifyEmail(data);
   };
+
+  const handleResendOtp = () => {
+    resendOtp({
+      email: userEmail,
+      type: "verification"
+    });
+  };
+
   return (
     <AppForm title="تأكيد البريد الإلكتروني">
       <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -85,7 +98,7 @@ const EmailVerificationForm = () => {
             تم إرسال رمز التحقق إلى
           </p>
           <p className="text-sm text-gray-600 font-medium">
-            {"esraa@gmail.com"}
+            {userEmail || "esraa@gmail.com"}
           </p>
         </div>
 
@@ -117,6 +130,7 @@ const EmailVerificationForm = () => {
             {errors.verifyOtp.message}
           </p>
         )}
+
         <Button type="submit" className="w-full py-3" disabled={isVerifying}>
           {isVerifying ? (
             <div className="flex items-center justify-center gap-2">
@@ -127,9 +141,23 @@ const EmailVerificationForm = () => {
           )}
         </Button>
 
+        <div className="flex justify-center">
+          {isResending ? (
+            <div className="text-sm text-gray-600 flex items-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              جاري الإرسال...
+            </div>
+          ) : (
+            <CountdownTimer
+              storageKey="email_verify_timer"
+              userEmail={userEmail}
+              onResend={handleResendOtp}
+              resendText="إعادة إرسال الرمز"
+              timerText="إعادة الإرسال بعد"
+            />
+          )}
+        </div>
       </form>
     </AppForm>
   );
 };
-
-export default EmailVerificationForm;

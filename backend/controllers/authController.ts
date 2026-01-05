@@ -5,6 +5,7 @@ import User, {
   forgotPasswordValidation,
   verifyResetOtpValidation,
   resetPasswordValidation,
+  resendOtpValidation,
 } from "../models/UserSchema.js";
 import bcrypt from "bcrypt";
 import { AsyncHandler } from "../utils/AsyncHandler.js";
@@ -15,6 +16,13 @@ import {
   sendEmail,
 } from "../utils/email.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import jwt from "jsonwebtoken";
+import { JwtPayload } from "jsonwebtoken";
+
+export interface DecodedUser extends JwtPayload {
+  _id: string;
+  role: string;
+}
 
 const generateAccessAndRefreshToken = async (userId: string) => {
   const user = await User.findById(userId);
@@ -38,7 +46,7 @@ export const registerUser = AsyncHandler(
     });
 
     if (error) {
-      const messages = error.details.map(err =>
+      const messages = error.details.map((err) =>
         err.message.replace(/["]/g, "")
       );
       throw new ApiError("Validation failed", 400, messages);
@@ -75,13 +83,15 @@ export const registerUser = AsyncHandler(
       mailgenContent,
     });
 
-    res.status(201).json(
-      new ApiResponse(
-        "User registered successfully and verification email has been sent",
-        newUser,
-        201
-      )
-    );
+    res
+      .status(201)
+      .json(
+        new ApiResponse(
+          "User registered successfully and verification email has been sent",
+          newUser,
+          201
+        )
+      );
   }
 );
 
@@ -308,13 +318,116 @@ export const getCurrentUser = AsyncHandler(
   async (req: Request, res: Response) => {
     const _id = req.user?._id;
     const user = await User.findById(_id).select("-password -refreshToken");
-    
+
     if (!user) {
       throw new ApiError("User not found", 404);
     }
-    
+
     res
       .status(200)
       .json(new ApiResponse("User retrieved successfully", user, 200));
   }
 );
+
+export const refreshAccessToken = AsyncHandler(
+  async (req: Request, res: Response) => {
+    const refreshToken = req.cookies?.refreshToken;
+    if (!refreshToken) {
+      throw new ApiError("Refresh token not found", 401);
+    }
+
+    if (!process.env.REFRESH_TOKEN_SECRET) {
+      throw new Error("REFRESH_TOKEN_SECRET is missing");
+    }
+
+    const decoded = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    ) as DecodedUser;
+
+    const user = await User.findById(decoded._id);
+    if (!user || !user.refreshToken) {
+      throw new ApiError("User not found", 401);
+    }
+    if (user.refreshToken !== refreshToken) {
+      throw new ApiError("Invalid refresh token", 401);
+    }
+    const newAccessToken = user.generateAccessToken();
+    const newRefreshToken = user.generateRefreshToken();
+
+    user.refreshToken = newRefreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict" as const,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    };
+
+    res
+      .status(200)
+      .cookie("accessToken", newAccessToken, cookieOptions)
+      .cookie("refreshToken", newRefreshToken, cookieOptions)
+      .json(
+        new ApiResponse(
+          "Token refreshed successfully",
+          { accessToken: newAccessToken },
+          200
+        )
+      );
+  }
+);
+
+export const resendOtp = AsyncHandler(async (req: Request, res: Response) => {
+  const { value, error } = resendOtpValidation.validate(req.body);
+  if (error) {
+    const messages = error.details.map((err) =>
+      err.message.replace(/["]/g, "")
+    );
+    throw new ApiError("Validation failed", 400, messages);
+  }
+  const { email, type } = value;
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new ApiError("User not found", 404);
+  }
+  
+  let otp;
+  let mailgenContent;
+
+  if (type === "verification") {
+    if (user.isEmailVerified) {
+      throw new ApiError("Email is already verified", 400);
+    }
+    otp = user.generateOtp("verification");
+    mailgenContent = await emailVerificationContent(user.firstName, otp);
+  } else if (type === "reset") {
+    if (!user.isEmailVerified) {
+      throw new ApiError("Email not verified", 403);
+    }
+    otp = user.generateOtp("reset");
+    mailgenContent = await forgotPasswordContent(user.firstName, otp);
+  } else {
+    throw new ApiError("Invalid OTP type", 400);
+  }
+
+  await user.save({ validateBeforeSave: false });
+
+  if (!mailgenContent || !mailgenContent.body) {
+    throw new ApiError("Failed to generate email content", 500);
+  }
+
+  await sendEmail({
+    email: user.email,
+    subject: type === "verification" ? "Email Verification OTP" : "Password Reset OTP",
+    mailgenContent,
+  });
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse("OTP resent successfully", { email: user.email }, 200)
+    );
+});

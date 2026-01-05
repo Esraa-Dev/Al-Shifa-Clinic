@@ -1,5 +1,4 @@
-import { authApi } from "./api";
-import api from "./axiosInstance";
+import api, { authApi } from "./axiosInstance";
 
 export const authService = {
   login: async (data: any) => {
@@ -24,6 +23,10 @@ export const authService = {
   },
   resetPassword: async (data: any) => {
     const response = await authApi.post("auth/reset-password", data);
+    return response.data;
+  },
+  resendOtp: async (data: any) => {
+    const response = await authApi.post("auth/resend-otp", data);
     return response.data;
   },
   logout: async () => {

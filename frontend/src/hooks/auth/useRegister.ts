@@ -10,7 +10,7 @@ export const useRegister = () => {
     mutationFn: authService.register,
     onSuccess: (data) => {
       toast.success(data.message);
-      navigate("/verify-email")
+      navigate("/verify-email", { state: data.data.email })
     },
     onError: (error: any) => {
       toast.error(getApiErrorMessage(error, "Registration failed"));

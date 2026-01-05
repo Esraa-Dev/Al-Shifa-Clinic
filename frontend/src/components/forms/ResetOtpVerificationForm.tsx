@@ -6,13 +6,18 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { resetOtpSchema, type ResetOtpFormData } from "../../validations/resetOtpSchema";
 import { useVerifyResetOtp } from "../../hooks/auth/useVerifyResetOtp";
+import { useResendOtp } from "../../hooks/auth/useResendOtp";
 import { useLocation } from "react-router-dom";
+import { CountdownTimer } from "../CountdownTimer";
+
 export const ResetOtpVerificationForm = () => {
     const [code, setCode] = useState(Array(6).fill(""));
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-    const { mutate, isPending } = useVerifyResetOtp();
+    const { mutate: verifyResetOtp, isPending } = useVerifyResetOtp();
+    const { mutate: resendOtp, isPending: isResending } = useResendOtp();
     const location = useLocation();
     const userEmail = location.state?.email;
+
     const {
         handleSubmit,
         setValue,
@@ -70,7 +75,16 @@ export const ResetOtpVerificationForm = () => {
     };
 
     const onSubmit = (data: ResetOtpFormData) => {
-        mutate({ ...data, email: userEmail })
+        verifyResetOtp({ ...data, email: userEmail });
+    };
+
+    const handleResendOtp = () => {
+        if (userEmail) {
+            resendOtp({
+                email: userEmail,
+                type: "reset"
+            });
+        }
     };
 
     return (
@@ -84,6 +98,11 @@ export const ResetOtpVerificationForm = () => {
                     <p className="text-base font-semibold text-primaryText">
                         تم إرسال رمز إعادة التعيين إلى بريدك الإلكتروني
                     </p>
+                    {userEmail && (
+                        <p className="text-sm text-gray-600 font-medium mt-2">
+                            {userEmail}
+                        </p>
+                    )}
                 </div>
 
                 <div className="flex justify-center gap-3" dir="ltr">
@@ -122,8 +141,25 @@ export const ResetOtpVerificationForm = () => {
                         "تأكيد الرمز"
                     )}
                 </Button>
+
+                <div className="flex justify-center">
+                    {isResending ? (
+                        <div className="text-sm text-gray-600 flex items-center gap-2">
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            جاري الإرسال...
+                        </div>
+                    ) : (
+                        <CountdownTimer
+                            storageKey="otp_expiry_reset"
+                            userEmail={userEmail}
+                            onResend={handleResendOtp}
+                            resendText="إعادة إرسال الرمز"
+                            timerText="إعادة الإرسال بعد"
+                        />
+
+                    )}
+                </div>
             </form>
         </AppForm>
     );
 };
-

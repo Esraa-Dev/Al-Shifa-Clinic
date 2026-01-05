@@ -23,7 +23,7 @@ export interface IUser extends Document {
   resetPasswordOtpExpireAt?: Date;
   refreshToken?: string;
   isActive: boolean;
-  profileStatus?: string; 
+  profileStatus?: string;
   isPasswordValid(password: string): Promise<boolean>;
   generateOtp(type: string): string;
   generateAccessToken(): string;
@@ -107,10 +107,10 @@ UserSchema.methods.generateOtp = function (type = "verification") {
 
   if (type === "verification") {
     this.verifyOtp = otp;
-    this.verifyOtpExpireAt = new Date(Date.now() + 10 * 80 * 1000);
+    this.verifyOtpExpireAt = new Date(Date.now() + 2 * 60 * 1000); // 2 minutes
   } else if (type === "reset") {
     this.resetPasswordOtp = otp;
-    this.resetPasswordOtpExpireAt = new Date(Date.now() + 10 * 80 * 1000);
+    this.resetPasswordOtpExpireAt = new Date(Date.now() + 2 * 60 * 1000); // 2 minutes
   }
 
   return otp;
@@ -193,12 +193,12 @@ export const verifyResetOtpValidation = Joi.object({
     "string.email": "Invalid email format",
   }),
   resetPasswordOtp: Joi.string()
-    .length(8)
+    .length(6)
     .pattern(/^\d+$/)
     .required()
     .messages({
       "string.empty": "OTP is required",
-      "string.length": "OTP must be 8 digits",
+      "string.length": "OTP must be 6 digits",
       "string.pattern.base": "OTP must contain only numbers",
     }),
 });
@@ -224,10 +224,10 @@ export const resendOtpValidation = Joi.object({
     "string.email": "Invalid email format",
   }),
   type: Joi.string()
-    .valid("reset-password", "email-verification")
+    .valid("reset", "verification")
     .required()
     .messages({
-      "any.only": "Type must be either reset-password or email-verification",
+      "any.only": "Type must be either reset or verification",
     }),
 });
 
