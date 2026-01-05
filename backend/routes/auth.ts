@@ -8,6 +8,8 @@ import {
   resetPassword,
   logout,
   getCurrentUser,
+  refreshAccessToken,
+  resendOtp,
 } from "../controllers/authController.js";
 import { verifyToken } from "../middlewares/verify.js";
 
@@ -20,5 +22,6 @@ router.post("/verify-reset-otp", verifyResetOtp);
 router.post("/reset-password", resetPassword);
 router.post("/logout", verifyToken, logout);
 router.get("/profile", verifyToken, getCurrentUser);
-
+router.post("/refresh-token", refreshAccessToken);
+router.post("/resend-otp", resendOtp)
 export default router;
