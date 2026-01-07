@@ -4,7 +4,6 @@ import Joi from "joi";
 export interface IAppointment extends Document {
   patientId: Types.ObjectId;
   doctorId: Types.ObjectId;
-  departmentId: Types.ObjectId;
   appointmentDate: Date;
   startTime: string;
   endTime: string;
@@ -14,17 +13,13 @@ export interface IAppointment extends Document {
   paymentStatus: "pending" | "paid" | "refunded";
   paymentId?: string;
   symptoms?: string;
+  roomId: string;
 }
 
 const appointmentSchema = new Schema<IAppointment>(
   {
     patientId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     doctorId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    departmentId: {
-      type: Schema.Types.ObjectId,
-      ref: "Department",
-      required: true,
-    },
     appointmentDate: { type: Date, required: true },
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
@@ -53,26 +48,25 @@ const appointmentSchema = new Schema<IAppointment>(
 );
 
 export const validateBookAppointment = Joi.object({
-  doctorId: Joi.string().required().messages({
-    "any.required": "User ID is required",
-    "string.empty": "User ID cannot be empty",
+  appointmentDate: Joi.date().iso().required().min("now").messages({
+    "any.required": "Appointment date is required",
+    "date.format": "Date must be in ISO format",
+    "date.min": "Cannot book appointments in the past",
   }),
-  departmentId: Joi.string().required().messages({
-    "any.required": "Department ID is required",
-    "string.empty": "Department ID cannot be empty",
-  }),
-  appointmentDate: Joi.date().iso().required().messages({
-    "any.required": "Appointment appointmentDate is required",
-    "appointmentDate.format": "Date must be in ISO format",
-  }),
-  startTime: Joi.string().required().messages({
-    "any.required": "Start time is required",
-    "string.empty": "Start time cannot be empty",
-  }),
-  endTime: Joi.string().required().messages({
-    "any.required": "End time is required",
-    "string.empty": "End time cannot be empty",
-  }),
+  startTime: Joi.string()
+    .pattern(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .required()
+    .messages({
+      "any.required": "Start time is required",
+      "string.pattern.base": "Start time must be in HH:MM format (24-hour)",
+    }),
+  endTime: Joi.string()
+    .pattern(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .required()
+    .messages({
+      "any.required": "End time is required",
+      "string.pattern.base": "End time must be in HH:MM format (24-hour)",
+    }),
   type: Joi.string().valid("clinic", "video", "voice").default("clinic"),
   fee: Joi.number().positive().required().messages({
     "any.required": "Fee is required",
@@ -84,15 +78,27 @@ export const validateBookAppointment = Joi.object({
 
 export const validateBookedSlots = Joi.object({
   doctorId: Joi.string().hex().length(24).required().messages({
-    'any.required': 'Doctor ID is required',
-    'string.hex': 'Doctor ID must be a valid MongoDB ObjectId',
-    'string.length': 'Doctor ID must be 24 characters'
+    "any.required": "Doctor ID is required",
+    "string.hex": "Doctor ID must be a valid MongoDB ObjectId",
+    "string.length": "Doctor ID must be 24 characters",
   }),
   date: Joi.date().iso().required().messages({
-    'any.required': 'Date is required',
-    'date.format': 'Date must be in ISO format (YYYY-MM-DD)'
-  })
+    "any.required": "Date is required",
+    "date.format": "Date must be in ISO format (YYYY-MM-DD)",
+  }),
 });
+
+export const validateUpdateAppointmentStatus = Joi.object({
+  status: Joi.string()
+    .valid("Scheduled", "Completed", "Cancelled", "In Progress")
+    .required()
+    .messages({
+      "any.required": "Status is required",
+      "any.only":
+        "Status must be one of: Scheduled, Completed, Cancelled, In Progress",
+    }),
+});
+
 export const Appointment = mongoose.model<IAppointment>(
   "Appointment",
   appointmentSchema
