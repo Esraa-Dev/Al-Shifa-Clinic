@@ -1,18 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=El+Messiri:wght@400..700&display=swap");
 @import "tailwindcss";
 
-:root {
-  direction: rtl;
-  text-align: right;
-}
 
 html,
 body,
 :root {
   height: 100%;
   font-family: "El Messiri", sans-serif;
-  direction: rtl;
-  text-align: right;
   scroll-behavior: smooth;
 }
 
@@ -37,6 +31,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   height: 20px;
   cursor: pointer;
   filter: invert(22%) sepia(7%) saturate(300%) hue-rotate(10deg) brightness(95%) contrast(90%);
+  -webkit-filter: invert(22%) sepia(7%) saturate(300%) hue-rotate(10deg) brightness(95%) contrast(90%);
 }
 input[type="date"] {
   direction: rtl;
