@@ -8,10 +8,16 @@ export const doctorService = {
     });
     return response.data.data;
   },
+
   getTopDoctors: async (limit: number = 4) => {
     const response = await api.get("/doctors/top", {
       params: { limit },
     });
+    return response.data.data;
+  },
+
+  getDoctorById: async (id: string) => {
+    const response = await api.get(`/doctors/${id}`);
     return response.data.data;
   },
 };

@@ -1,11 +1,7 @@
 import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
-  Users,
   Calendar,
-  Stethoscope,
-  Settings,
-  Building,
 } from "lucide-react";
 export const SidebarMenu = () => {
   const menuItems = [
@@ -15,11 +11,7 @@ export const SidebarMenu = () => {
       href: "/dashboard",
       active: true,
     },
-    { icon: Users, label: "المرضى", href: "/dashboard/patients" },
-    { icon: Stethoscope, label: "الأطباء", href: "/dashboard/doctors" },
-    { icon: Calendar, label: "المواعيد", href: "/dashboard/appointments" },
-    { icon: Building, label: "الأقسام", href: "/dashboard/departments" },
-    { icon: Settings, label: "الإعدادات", href: "/dashboard/settings" },
+    { icon: Calendar, label: "المواعيد", href: "/doctor/appointments" },
   ];
   return (
     <nav className="flex flex-col mt-8">

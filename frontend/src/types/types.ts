@@ -151,6 +151,10 @@ export interface Doctor {
   totalReviews: number;
   dateOfBirth?: string | Date;
   yearOfExperience?: number;
+  specialization?: string;
+  qualification?: string;
+  experience: number;
+  fee: number;
   department?: {
     _id: string;
     name: string;
@@ -158,7 +162,6 @@ export interface Doctor {
   designation?: string;
   bio?: string;
   aboutDoctor?: string;
-
   address?: {
     address1?: string;
     address2?: string;
@@ -167,12 +170,10 @@ export interface Doctor {
     country?: string;
     pincode?: string;
   };
-
   session?: {
     from?: string;
     to?: string;
   };
-
   appointmentSettings?: {
     appointmentType?: string;
     acceptBookingsInAdvance?: number;
@@ -181,31 +182,26 @@ export interface Doctor {
     maxBookingsPerSlot?: number;
     displayOnBookingPage?: boolean;
   };
-
   schedule?: {
     day?: string;
     from?: string;
     to?: string;
     isAvailable?: boolean;
   }[];
-
   education?: {
     degree?: string;
     university?: string;
     from?: number;
     to?: number;
   }[];
-
   awards?: {
     name?: string;
     from?: number;
   }[];
-
   certifications?: {
     name?: string;
     from?: number;
   }[];
-
   createdAt: string | Date;
   updatedAt: string | Date;
 }
@@ -214,27 +210,68 @@ export interface BookedSlotsParams {
   doctorId: string;
   date: string;
 }
+export interface BookAppointmentParams {
+  doctorId: string;
+  data: {
+    appointmentDate: string;
+    startTime: string;
+    endTime: string;
+    type: "clinic" | "video" | "voice";
+    fee: number;
+    symptoms?: string;
+  };
+}
+
 export interface Appointment {
   _id: string;
-  appointmentDate: string;
-  startTime: string;
-  endTime: string;
-  type: "clinic" | "video" | "phone";
-  status: "pending" | "confirmed" | "completed" | "cancelled";
-  symptoms?: string;
+  id?: string;
   patientId: {
     _id: string;
     firstName: string;
     lastName: string;
+    email?: string;
     phone: string;
     image?: string;
+    dateOfBirth?: string | Date;
+    gender?: string;
   };
+  doctorId: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    email?: string;
+    phone: string;
+    image?: string;
+    specialization: string;
+    fee: number;
+    clinicAddress?: string;
+  };
+  appointmentDate: string;
+  startTime: string;
+  endTime: string;
+  type: "clinic" | "video" | "voice";
+  status: "Scheduled" | "Completed" | "Cancelled" | "In Progress";
   fee: number;
-}
-
-export interface BookedSlotsParams {
-  doctorId: string;
-  date: string;
+  paymentStatus: "pending" | "paid" | "refunded";
+  symptoms?: string;
+  roomId?: string;
+  callStatus?: "idle" | "ringing" | "ongoing" | "ended" | "missed";
+  callStartedAt?: Date;
+  callEndedAt?: Date;
+  callDuration?: number;
+  chatEnabled?: boolean;
+  lastMessageAt?: Date;
+  unreadCount?: {
+    patient: number;
+    doctor: number;
+  };
+  metadata?: {
+    recordingUrl?: string;
+    callQuality?: number;
+    notes?: string;
+  };
+  createdAt: string | Date;
+  updatedAt: string | Date;
 }
 
 export interface TextareaProps {
@@ -247,6 +284,7 @@ export interface TextareaProps {
   rows?: number;
   className?: string;
 }
+
 export interface DoctorFilters {
   search: string;
   department: string | null;
@@ -255,6 +293,7 @@ export interface DoctorFilters {
   schedule: string | null;
   sortBy: string;
 }
+
 export interface DoctorOnboardingData {
   department: string;
   specialization: string;
@@ -264,14 +303,63 @@ export interface DoctorOnboardingData {
   description?: string;
   schedule: {
     day:
-    | "monday"
-    | "tuesday"
-    | "wednesday"
-    | "thursday"
-    | "friday"
-    | "saturday"
-    | "sunday";
+      | "monday"
+      | "tuesday"
+      | "wednesday"
+      | "thursday"
+      | "friday"
+      | "saturday"
+      | "sunday";
     startTime: string;
     endTime: string;
   }[];
+}
+
+export interface Notification {
+  id: string;
+  type: "call" | "message" | "appointment" | "system";
+  title: string;
+  message: string;
+  appointmentId?: string;
+  userId?: string;
+  read: boolean;
+  timestamp: Date;
+  metadata?: Record<string, any>;
+}
+
+export interface CallData {
+  roomId: string;
+  appointmentId: string;
+  callerId: string;
+  callerName: string;
+  callerImage?: string;
+  type: "video" | "voice";
+}
+
+export interface Message {
+  _id: string;
+  appointmentId: string;
+  senderId:
+    | string
+    | {
+        _id: string;
+        firstName: string;
+        lastName: string;
+        image?: string;
+        role: string;
+      };
+  receiverId: string;
+  content: string;
+  messageType: "text" | "image" | "file" | "audio";
+  read: boolean;
+  readAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface VideoCallData {
+  roomId: string;
+  userType: "doctor" | "patient";
+  userName: string;
+  appointmentId?: string;
 }
