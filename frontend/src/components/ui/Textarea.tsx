@@ -8,14 +8,16 @@ export const Textarea = ({
     error,
     id,
     className = "",
+    requiredInput
 }: TextareaProps) => {
     const { i18n } = useTranslation();
     const isRtl = i18n.dir() === "rtl";
 
     return (
         <div className={`mb-4 ${className}`} dir={isRtl ? "rtl" : "ltr"}>
-                <label htmlFor={id} className="block text-base! font-medium! text-primaryText mb-4 text-start">
+            <label htmlFor={id} className="block text-base! font-medium! text-primaryText mb-4 text-start">
                 {label}
+                {requiredInput && <span className="text-red-500 mx-1">*</span>}
             </label>
             <textarea
                 id={id}
@@ -25,8 +27,8 @@ export const Textarea = ({
                 className={`
                     block w-full p-3 text-sm border rounded-md
                     bg-background focus:outline-none transition duration-200
-                    ${error 
-                        ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' 
+                    ${error
+                        ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500'
                         : 'border-primaryBorder focus:ring-primary/20 focus:border-primary'
                     }
                     ${isRtl ? 'text-right' : 'text-left'}

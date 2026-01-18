@@ -16,5 +16,20 @@
   "defaultError": "An error occurred",
   "profile": "Profile",
   "logout": "Logout",
-  "appointment": "Appointment"
+  "appointment": "Appointment",
+  "loading": "Loading...",
+  "noAccessPage": {
+    "title": "403",
+    "subtitle": "Access Denied",
+    "description": "Sorry, you don't have permission to access this page",
+    "backHome": "Back to Home"
+  },
+  "notFoundPage": {
+    "title": "404",
+    "subtitle": "Page Not Found",
+    "description": "Sorry, the page you are looking for does not exist",
+    "backHome": "Back to Home"
+  },
+  "currency": "EGP",
+  "clearSearch": "Clear search"
 }

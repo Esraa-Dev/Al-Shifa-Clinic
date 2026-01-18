@@ -13,5 +13,10 @@
   "doctorNotFound": "الطبيب غير موجود",
   "appointmentNotFound": "الموعد غير موجود",
   "departmentNotFound": "القسم غير موجود",
-  "defaultError": "حدث خطأ ما"
+  "defaultError": "حدث خطأ ما",
+  "countFetched": "تم جلب العدد بنجاح",
+  "imageRequired": "يرجى تحميل صورة الملف الشخصي",
+  "duplicateDays": "لا يمكن تكرار نفس اليوم أكثر من مرة",
+  "allDaysAdded": "تمت إضافة جميع أيام الأسبوع",
+  "timeOrder": "يجب أن يكون وقت الانتهاء بعد وقت البدء"
 }

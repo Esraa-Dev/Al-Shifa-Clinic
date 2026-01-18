@@ -1,21 +1,62 @@
 {
   "product": {
-    "name": "Medical Appointment System",
-    "link": "Al-Shifa Clinic",
-    "copyright": "All rights reserved © {{year}}"
+    "name": "Al Shifa Clinic",
+    "copyright": "Copyright © {{year}} Al Shifa Clinic. All rights reserved."
   },
   "verification": {
-    "subject": "Email Verification",
-    "greeting": "Hello",
-    "intro": "Hello {{username}}! Please use the following verification code to confirm your email: {{otp}}",
-    "outro": "This code is valid for 10 minutes only.",
-    "signature": "Best regards"
+    "greeting": "Hello {{username}},",
+    "signature": "Best regards,<br>Al Shifa Clinic Team",
+    "intro": "Your verification code is: {{otp}}",
+    "outro": "This code will expire in 5 minutes."
   },
   "resetPassword": {
-    "subject": "Password Reset OTP",
-    "greeting": "Hello",
-    "intro": "Hello {{username}}! We received a request to reset your password.\n\nYour verification code is: {{otp}}",
-    "outro": "This code is valid for 10 minutes only.",
-    "signature": "Best regards"
+    "greeting": "Hello {{username}},",
+    "signature": "Best regards,<br>Al Shifa Clinic Team",
+    "intro": "Your password reset code is: {{otp}}",
+    "outro": "This code will expire in 5 minutes."
+  },
+  "contact": {
+    "greeting": "Dear Admin,",
+    "signature": "Best regards,<br>Al Shifa Clinic",
+    "intro": "A new contact message has been received:",
+    "instructions": "Message details:",
+    "viewMessage": "View Message",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "subject": "Subject",
+    "message": "Message",
+    "outro": "Please respond within 24 hours."
+  },
+  "contactConfirmation": {
+    "greeting": "Dear {{name}},",
+    "signature": "Best regards,<br>Al Shifa Clinic Support",
+    "intro": "Thank you for contacting Al Shifa Clinic. We have received your message.",
+    "outro": "For urgent inquiries, please contact us at {{phone}} or {{email}}."
+  },
+  "appointmentConfirmation": {
+    "greeting": "Dear {{patientName}},",
+    "signature": "Best regards,<br>Al Shifa Clinic",
+    "intro": "Your appointment has been confirmed.",
+    "details": "Appointment Details:",
+    "doctor": "Doctor",
+    "date": "Date",
+    "time": "Time",
+    "type": "Type",
+    "location": "Location",
+    "fee": "Fee",
+    "outro": "Please arrive 15 minutes before your appointment."
+  },
+  "appointmentReminder": {
+    "greeting": "Dear {{patientName}},",
+    "signature": "Best regards,<br>Al Shifa Clinic",
+    "intro": "Reminder for your upcoming appointment.",
+    "details": "Appointment Details:",
+    "doctor": "Doctor",
+    "date": "Date",
+    "time": "Time",
+    "type": "Type",
+    "location": "Location",
+    "outro": "Please confirm your attendance."
   }
 }

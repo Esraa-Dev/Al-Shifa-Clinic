@@ -13,5 +13,10 @@
   "doctorNotFound": "Doctor not found",
   "appointmentNotFound": "Appointment not found",
   "departmentNotFound": "Department not found",
-  "defaultError": "An error occurred"
+  "defaultError": "An error occurred",
+  "countFetched": "Count fetched successfully",
+  "imageRequired": "Please upload a profile image",
+  "duplicateDays": "You cannot add the same day more than once",
+  "allDaysAdded": "All days of the week have been added",
+  "timeOrder": "End time must be after start time"
 }

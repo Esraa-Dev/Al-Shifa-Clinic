@@ -89,4 +89,68 @@ const forgotPasswordContent = async (
   };
 };
 
-export { sendEmail, emailVerificationContent, forgotPasswordContent };
+const contactMessageContent = async (
+  name: string,
+  email: string,
+  phone: string,
+  subject: string,
+  message: string,
+  language: string = 'en'
+): Promise<Mailgen.Content> => {
+  const t = i18n.getFixedT(language, 'email');
+  
+  return {
+    body: {
+      name: name,
+      greeting: t('contact.greeting'),
+      signature: t('contact.signature'),
+      intro: t('contact.intro'),
+      action: {
+        instructions: t('contact.instructions'),
+        button: {
+          color: '#007bff',
+          text: t('contact.viewMessage'),
+          link: `${process.env.ADMIN_DASHBOARD_URL || process.env.FRONTEND_URL}/admin/contacts`
+        }
+      },
+      table: {
+        data: [
+          { key: t('contact.name'), value: name },
+          { key: t('contact.email'), value: email },
+          { key: t('contact.phone'), value: phone },
+          { key: t('contact.subject'), value: subject },
+          { key: t('contact.message'), value: message }
+        ]
+      },
+      outro: t('contact.outro')
+    }
+  };
+};
+
+const contactConfirmationContent = async (
+  name: string,
+  language: string = 'en'
+): Promise<Mailgen.Content> => {
+  const t = i18n.getFixedT(language, 'email');
+  
+  return {
+    body: {
+      name: name,
+      greeting: t('contactConfirmation.greeting'),
+      signature: t('contactConfirmation.signature'),
+      intro: t('contactConfirmation.intro'),
+      outro: t('contactConfirmation.outro', { 
+        phone: process.env.SUPPORT_PHONE || '+1234567890',
+        email: process.env.SUPPORT_EMAIL || 'support@example.com'
+      })
+    }
+  };
+};
+
+export { 
+  sendEmail, 
+  emailVerificationContent, 
+  forgotPasswordContent,
+  contactMessageContent,
+  contactConfirmationContent 
+};

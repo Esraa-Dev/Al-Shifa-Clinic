@@ -141,6 +141,7 @@ export interface Department {
   doctorsCount?: number;
   createdAt?: string;
   updatedAt?: string;
+  doctorCount?: number;
 }
 
 export interface Doctor {
@@ -157,7 +158,7 @@ export interface Doctor {
   verifyOtpExpireAt?: string | Date;
   isActive: boolean;
   profileStatus: string;
-  department?: Department | string;
+  department?: Department;
   specialization_en: string;
   specialization_ar: string;
   qualification_en: string;
@@ -276,6 +277,14 @@ export interface DoctorFilters {
   experience: number | null;
   schedule: string | null;
   sortBy: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
 export interface DoctorOnboardingData {
@@ -311,7 +320,7 @@ export interface SelectProps {
   requiredSelect?: boolean;
   disabled?: boolean;
   className?: string;
-  placeholder?:string;
+  placeholder?: string;
 }
 
 export interface AppointmentCardProps {
@@ -435,4 +444,17 @@ export interface NavLink {
   href: string;
   labelKey: string;
   translationKey: string;
+}
+
+export interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
+export interface EmptyStateProps {
+  icon: LucideIcon;
+  titleKey: string;
+  descriptionKey?: string;
+  actionLabelKey?: string;
+  onAction?: () => void;
 }

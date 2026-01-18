@@ -1,52 +1,81 @@
 {
-  "heroDescription": "We're here to help. Contact us for immediate support",
-  "sendMessage": "Send a Message",
-  "fullName": "Full Name",
-  "enterFullName": "Enter your full name",
-  "email": "Email Address",
-  "enterEmail": "Enter your email",
-  "phone": "Phone Number",
-  "enterPhone": "Enter your phone number",
-  "subject": "Subject",
-  "enterSubject": "Enter message subject",
-  "message": "Message",
-  "enterMessage": "Write your message here...",
-  "sendMessageButton": "Send Message",
-  "sending": "Sending...",
-  "successMessage": "Your message has been sent successfully! We'll get back to you soon.",
-  "submitError": "Failed to send message",
-  "defaultError": "An error occurred while sending the message. Please try again.",
-  "contactInfo": "Contact Information",
-  "contactDescription": "Feel free to contact us for any inquiries or assistance",
-  "faqTitle": "Frequently Asked Questions",
-  "contact": {
-    "phone": "Phone",
-    "available247": "Available 24/7",
-    "email": "Email",
-    "responseTime": "Response within 24 hours",
-    "address": "Address",
-    "addressDetail": "Riyadh, Saudi Arabia",
-    "workingHours": "Working Hours",
-    "hours": "9 AM - 5 PM",
-    "workingDays": "Sunday to Thursday"
+  "pageTitle": "Contact Us",
+  "heroDescription": "We're here to help. Contact us for immediate support.",
+  "successMessage": "Your message has been sent successfully!",
+  "errorMessage": "An error occurred while sending your message. Please try again.",
+  
+  "form": {
+    "title": "Send a Message",
+    "fullName": {
+      "label": "Full Name",
+      "placeholder": "Enter your full name"
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "Enter your email address"
+    },
+    "phone": {
+      "label": "Phone Number",
+      "placeholder": "Enter your phone number"
+    },
+    "subject": {
+      "label": "Subject",
+      "placeholder": "Enter message subject"
+    },
+    "message": {
+      "label": "Message",
+      "placeholder": "Enter your message here..."
+    },
+    "submit": "Send Message",
+    "sending": "Sending..."
   },
-  "faq1": {
-    "question": "How can I book an appointment?",
-    "answer": "You can book an appointment through the website or app with simple steps"
+  
+  "info": {
+    "title": "Contact Information",
+    "description": "Feel free to contact us for any inquiries or assistance"
   },
-  "faq2": {
-    "question": "Is the service available 24/7?",
-    "answer": "Yes, booking and technical support services are available 24/7"
+  
+  "phone": {
+    "title": "Phone",
+    "details": "+123 456 7890",
+    "description": "24/7 Available"
   },
-  "faq3": {
-    "question": "How can I cancel an appointment?",
-    "answer": "You can cancel appointments from My Appointments page up to 24 hours before"
+  
+  "email": {
+    "title": "Email",
+    "details": "support@medibook.com",
+    "description": "Response within 24 hours"
   },
-  "contactFormErrors": {
-    "name": "Name must be at least 2 characters",
-    "email": "Invalid email address",
-    "phone": "Phone must be at least 10 digits",
-    "subject": "Subject must be at least 3 characters",
-    "message": "Message must be at least 10 characters"
+  
+  "address": {
+    "title": "Main Office",
+    "details": "Cairo, Egypt",
+    "description": "Sunday to Thursday"
+  },
+  
+  "hours": {
+    "title": "Working Hours",
+    "details": "9 AM - 5 PM",
+    "description": "Sunday to Thursday"
+  },
+  
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "booking": {
+      "question": "How can I book an appointment?",
+      "answer": "You can book an appointment through the website or app with simple steps"
+    },
+    "availability": {
+      "question": "Is the service available 24/7?",
+      "answer": "Yes, booking and technical support services are available around the clock"
+    },
+    "cancellation": {
+      "question": "How can I cancel an appointment?",
+      "answer": "You can cancel appointments from My Appointments page 24 hours before the appointment"
+    },
+    "support": {
+      "question": "How can I get technical support?",
+      "answer": "You can contact technical support via phone, email, or live chat"
+    }
   }
 }

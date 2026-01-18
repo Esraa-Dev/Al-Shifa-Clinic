@@ -1,0 +1,26 @@
+{
+  "successMessage": "Your message has been sent successfully!",
+  "fetchSuccess": "Contacts retrieved successfully",
+  "updateSuccess": "Contact status updated",
+  "deleteSuccess": "Contact deleted successfully",
+  "notFound": "Contact not found",
+  "nameRequired": "Name field is required",
+  "nameMin": "Name must be at least 3 characters long",
+  "nameMax": "Name cannot exceed 50 characters",
+  "emailRequired": "Email is required for communication",
+  "emailInvalid": "Please enter a valid email address",
+  "phoneRequired": "Phone number is required",
+  "subjectRequired": "Subject is required",
+  "subjectMin": "Subject is too short, at least 5 characters required",
+  "messageRequired": "Message body is required",
+  "messageMin": "Please provide more details, at least 10 characters",
+  "email": {
+    "greeting": "Hello {{username}}",
+    "intro": "Thank you for contacting us! We have received your message and will get back to you soon",
+    "outro": "Your message details",
+    "subject": "Subject",
+    "referenceId": "Reference ID",
+    "dateSent": "Date Sent",
+    "signature": "Best regards, Support Team"
+  }
+}

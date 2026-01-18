@@ -1,208 +1,179 @@
 import { Phone, Mail, MapPin, Clock, MessageSquare, Send } from "lucide-react";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "../components/ui/Button";
+import { TextInput } from "../components/ui/TextInput";
+import { Textarea } from "../components/ui/Textarea";
+import { useTranslation } from "react-i18next";
+import { contactSchema, type ContactFormData } from "../validations/contactSchema";
+import { useSendMessage } from "../hooks/contact/useSendMessage";
+import { ContactFaq } from "../components/features/contact/ContactFaq";
+import { ContactInfo } from "../components/features/contact/ContactInfo";
 
 const ContactPage = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    subject: "",
-    message: ""
+  const { t } = useTranslation('contact');
+  const { t: tNav } = useTranslation('nav');
+  const { mutate, isPending } = useSendMessage();
+
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<ContactFormData>({
+    resolver: zodResolver(contactSchema),
   });
+
+  const onSubmit = async (data: ContactFormData) => {
+    mutate(data, {
+      onSuccess: () => {
+        reset();
+      }
+    })
+  }
 
   const contactMethods = [
     {
-      icon: <Phone className="w-6 h-6" />,
-      title: "الهاتف",
-      details: "+123 456 7890",
-      description: "24/7 متاح"
+      icon: Phone,
+      title: t('phone.title'),
+      details: t('phone.details'),
+      description: t('phone.description')
     },
     {
-      icon: <Mail className="w-6 h-6" />,
-      title: "البريد الإلكتروني",
-      details: "support@medibook.com",
-      description: "رد خلال 24 ساعة"
+      icon: Mail,
+      title: t('email.title'),
+      details: t('email.details'),
+      description: t('email.description')
     },
     {
-      icon: <MapPin className="w-6 h-6" />,
-      title: "المكتب الرئيسي",
-      details: "القاهرة، مصر",
-      description: "من الأحد إلى الخميس"
+      icon: MapPin,
+      title: t('address.title'),
+      details: t('address.details'),
+      description: t('address.description')
     },
     {
-      icon: <Clock className="w-6 h-6" />,
-      title: "ساعات العمل",
-      details: "9 ص - 5 م",
-      description: "من الأحد إلى الخميس"
+      icon: Clock,
+      title: t('hours.title'),
+      details: t('hours.details'),
+      description: t('hours.description')
+    }
+  ].map(method => ({
+    icon: <method.icon className="w-6 h-6" />,
+    title: method.title,
+    details: method.details,
+    description: method.description
+  }));
+
+  const faqs = [
+    {
+      question: t('faq.booking.question'),
+      answer: t('faq.booking.answer')
+    },
+    {
+      question: t('faq.availability.question'),
+      answer: t('faq.availability.answer')
+    },
+    {
+      question: t('faq.cancellation.question'),
+      answer: t('faq.cancellation.answer')
+    },
+    {
+      question: t('faq.support.question'),
+      answer: t('faq.support.answer')
     }
   ];
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Handle form submission
-  };
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
   return (
-    <div className="bg-background">
-      {/* Hero */}
-      <section className="py-20 bg-gradient-to-r from-primary to-secondary text-white">
+    <div className="bg-background min-h-screen">
+      <section className="py-20 bg-linear-to-r from-primary to-secondary text-white">
         <div className="container text-center">
-          <h1 className="text-5xl font-bold mb-6">اتصل بنا</h1>
-          <p className="text-xl opacity-90 max-w-2xl mx-auto">
-            نحن هنا لمساعدتك. تواصل معنا للحصول على دعم فوري
-          </p>
+          <h1 className="text-5xl font-bold mb-6">{tNav('contact') || t('pageTitle')}</h1>
+          <p className="text-xl opacity-90 max-w-2xl mx-auto">{t('heroDescription')}</p>
         </div>
       </section>
 
       <div className="container py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
-          <div className="bg-white p-8 rounded-2xl border border-primaryBorder">
+          <div className="bg-white p-8 rounded-2xl border border-primaryBorder shadow-sm">
             <div className="flex items-center gap-3 mb-8">
               <MessageSquare className="w-8 h-8 text-primary" />
-              <h2 className="text-2xl font-bold text-primaryText">أرسل رسالة</h2>
+              <h2 className="text-2xl font-bold text-primaryText">{t('form.title')}</h2>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-primaryText mb-2">
-                    الاسم الكامل
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-primaryBorder rounded-xl focus:border-primary focus:outline-none text-right"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-primaryText mb-2">
-                    البريد الإلكتروني
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-primaryBorder rounded-xl focus:border-primary focus:outline-none text-right"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-primaryText mb-2">
-                    رقم الهاتف
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-primaryBorder rounded-xl focus:border-primary focus:outline-none text-right"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-primaryText mb-2">
-                    الموضوع
-                  </label>
-                  <input
-                    type="text"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-primaryBorder rounded-xl focus:border-primary focus:outline-none text-right"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-primaryText mb-2">
-                  الرسالة
-                </label>
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  rows={5}
-                  className="w-full p-3 border border-primaryBorder rounded-xl focus:border-primary focus:outline-none text-right resize-none"
-                  required
+                <TextInput
+                  id="fullName"
+                  label={t('form.fullName.label')}
+                  placeholder={t('form.fullName.placeholder')}
+                  register={register("name")}
+                  error={errors.name}
+                  requiredInput
+                />
+                <TextInput
+                  id="email"
+                  label={t('form.email.label')}
+                  type="email"
+                  placeholder={t('form.email.placeholder')}
+                  register={register("email")}
+                  error={errors.email}
+                  requiredInput
                 />
               </div>
 
-              <button
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <TextInput
+                  id="phone"
+                  label={t('form.phone.label')}
+                  type="tel"
+                  placeholder={t('form.phone.placeholder')}
+                  register={register("phone")}
+                  error={errors.phone}
+                  requiredInput
+                />
+                <TextInput
+                  id="subject"
+                  label={t('form.subject.label')}
+                  placeholder={t('form.subject.placeholder')}
+                  register={register("subject")}
+                  error={errors.subject}
+                  requiredInput
+                />
+              </div>
+
+              <Textarea
+                id="message"
+                label={t('form.message.label')}
+                placeholder={t('form.message.placeholder')}
+                register={register("message")}
+                error={errors.message}
+                rows={5}
+                requiredInput
+              />
+
+              <Button
                 type="submit"
-                className="w-full flex items-center justify-center gap-2 py-4 bg-primary text-white rounded-xl font-semibold hover:bg-secondary transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-4"
+                disabled={isPending}
               >
-                <Send className="w-5 h-5" />
-                إرسال الرسالة
-              </button>
+                {isPending ? (
+                  <span className="animate-pulse">{t('form.sending')}</span>
+                ) : (
+                  <>
+                    <Send className="w-5 h-5" />
+                    {t('form.submit')}
+                  </>
+                )}
+              </Button>
             </form>
           </div>
 
-          {/* Contact Info */}
           <div>
-            <div className="mb-12">
-              <h2 className="text-3xl font-bold text-primaryText mb-4">معلومات التواصل</h2>
-              <p className="text-secondary text-lg">
-                لا تتردد في التواصل معنا لأي استفسار أو مساعدة
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              {contactMethods.map((method, index) => (
-                <div key={index} className="flex items-center gap-4 p-6 bg-white rounded-2xl border border-primaryBorder">
-                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
-                    {method.icon}
-                  </div>
-                  <div className="text-right flex-1">
-                    <h3 className="font-bold text-primaryText text-lg">{method.title}</h3>
-                    <p className="text-primaryText">{method.details}</p>
-                    <p className="text-secondary text-sm">{method.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* FAQ */}
-            <div className="mt-12 bg-white p-6 rounded-2xl border border-primaryBorder">
-              <h3 className="text-xl font-bold text-primaryText mb-4">أسئلة شائعة</h3>
-              <div className="space-y-4">
-                <div className="border-b border-primaryBorder pb-4">
-                  <div className="font-medium text-primaryText mb-1">كيف يمكنني حجز موعد؟</div>
-                  <div className="text-secondary text-sm">
-                    يمكنك حجز موعد من خلال الموقع أو التطبيق بخطوات بسيطة
-                  </div>
-                </div>
-                <div className="border-b border-primaryBorder pb-4">
-                  <div className="font-medium text-primaryText mb-1">هل الخدمة متاحة 24/7؟</div>
-                  <div className="text-secondary text-sm">
-                    نعم، خدمة الحجز والدعم الفني متاحة على مدار الساعة
-                  </div>
-                </div>
-                <div>
-                  <div className="font-medium text-primaryText mb-1">كيف يمكنني إلغاء موعد؟</div>
-                  <div className="text-secondary text-sm">
-                    يمكنك إلغاء الموعد من صفحة مواعيدي قبل 24 ساعة من الموعد
-                  </div>
-                </div>
-              </div>
-            </div>
+            <ContactInfo
+              methods={contactMethods}
+              title={t('info.title')}
+              description={t('info.description')}
+            />
+            <ContactFaq
+              faqs={faqs}
+              title={t('faq.title')}
+            />
           </div>
         </div>
       </div>

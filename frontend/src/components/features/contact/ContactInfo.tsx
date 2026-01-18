@@ -1,29 +1,39 @@
-import { useTranslation } from 'react-i18next';
-import { CONTACT_INFO } from '../../../constants/constants';
+import type { JSX } from "react";
+import { useTranslation } from "react-i18next";
 
-export const ContactInfo = () => {
-  const { t, i18n } = useTranslation();
+export const ContactInfo = ({
+  methods,
+  title,
+  description
+}: {
+  methods: Array<{ icon: JSX.Element; title: string; details: string; description: string }>;
+  title: string;
+  description: string;
+}) => {
+  const { i18n } = useTranslation();
   const isRTL = i18n.language === 'ar';
 
   return (
-    <div className={`order-2 lg:order-2 ${isRTL ? 'text-right!' : 'text-left!'}`}>
-      <h3 className="text-lg font-semibold mb-4">{t('footer.contactUs')}</h3>
-      <address className="not-italic text-gray-300 space-y-2">
-        {CONTACT_INFO.map((item, index) => (
-          <div
-            key={index}
-            className="flex gap-2 hover:text-primary transition-colors duration-200"
-          >
-            <item.icon size={18} className="text-primary shrink-0" />
-            <div>
-              <p className="font-medium">{t(item.textKey)}</p>
-              <p className="text-sm">
-                {item.detailsKey ? t(item.detailsKey) : item.details}
-              </p>
+    <div>
+      <div className="mb-12">
+        <h2 className="text-3xl font-bold text-primaryText mb-4">{title}</h2>
+        <p className="text-secondary text-lg">{description}</p>
+      </div>
+
+      <div className="space-y-6">
+        {methods.map((method, index) => (
+          <div key={index} className="flex items-center gap-4 p-6 bg-white rounded-2xl border border-primaryBorder">
+            <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+              {method.icon}
+            </div>
+            <div className={`${isRTL ? 'text-right' : 'text-left'} flex-1`}>
+              <h3 className="font-bold text-primaryText text-lg">{method.title}</h3>
+              <p className="text-primaryText">{method.details}</p>
+              <p className="text-secondary text-sm">{method.description}</p>
             </div>
           </div>
         ))}
-      </address>
+      </div>
     </div>
   );
 };
