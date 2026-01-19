@@ -1,0 +1,17 @@
+{
+  "departmentCreated": "Department created successfully",
+  "departmentsRetrieved": "Departments retrieved successfully",
+  "departmentRetrieved": "Department retrieved successfully",
+  "departmentUpdated": "Department updated successfully",
+  "departmentDeleted": "Department deleted successfully",
+  "departmentNotFound": "Department not found",
+  "imageUploadFailed": "Image upload failed",
+  "countFetched": "Department count fetched successfully",
+    "nameRequired": "Department name is required",
+    "descriptionRequired": "Department description is required",
+    "nameArRequired": "Department name in Arabic is required",
+    "nameEnRequired": "Department name in English is required",
+    "descriptionArRequired": "Department description in Arabic is required",
+    "descriptionEnRequired": "Department description in English is required"
+
+}

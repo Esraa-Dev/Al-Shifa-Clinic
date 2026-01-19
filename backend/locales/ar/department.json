@@ -1,0 +1,16 @@
+{
+  "departmentCreated": "تم إنشاء القسم بنجاح",
+  "departmentsRetrieved": "تم جلب الأقسام بنجاح",
+  "departmentRetrieved": "تم جلب القسم بنجاح",
+  "departmentUpdated": "تم تحديث القسم بنجاح",
+  "departmentDeleted": "تم حذف القسم بنجاح",
+  "departmentNotFound": "القسم غير موجود",
+  "imageUploadFailed": "فشل تحميل الصورة",
+  "countFetched": "تم جلب عدد الأقسام بنجاح",
+    "nameRequired": "اسم القسم مطلوب",
+    "descriptionRequired": "وصف القسم مطلوب",
+    "nameArRequired": "اسم القسم بالعربية مطلوب",
+    "nameEnRequired": "اسم القسم بالإنجليزية مطلوب",
+    "descriptionArRequired": "وصف القسم بالعربية مطلوب",
+    "descriptionEnRequired": "وصف القسم بالإنجليزية مطلوب"
+  }

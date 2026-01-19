@@ -1,0 +1,15 @@
+{
+  "doctorsRetrieved": "Doctors retrieved successfully",
+  "topDoctorsRetrieved": "Top doctors retrieved successfully",
+  "doctorNotFound": "Doctor not found",
+  "doctorProfileFetched": "Doctor profile fetched successfully",
+  "unauthorizedAccess": "Unauthorized access",
+  "doctorProfileUpdated": "Doctor profile updated successfully",
+  "doctorFetched": "Doctor fetched successfully",
+  "validationFailed": "Validation failed",
+  "profileIncomplete": "Profile is incomplete",
+  "profileStatusUpdated": "Profile status updated successfully",
+  "doctorStatusUpdated": "Doctor status updated successfully",
+  "doctorActivated": "Doctor activated successfully",
+  "doctorDeactivated": "Doctor deactivated successfully"
+}

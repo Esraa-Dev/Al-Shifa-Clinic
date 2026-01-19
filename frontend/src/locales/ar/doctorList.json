@@ -1,0 +1,55 @@
+{
+  "title": "اختر طبيبك",
+  "subtitle": "ابحث عن الطبيب المناسب لاحتياجاتك الصحية",
+  "browseByDepartment": "تصفح حسب القسم",
+  "allDepartments": "كل الأقسام",
+  "advancedFilters": "فلتر متقدم",
+  "toggleAdvancedFilters": "فلترة متقدمة",
+  "filters": {
+    "experience": {
+      "label": "الخبرة (سنة)",
+      "placeholder": "أي خبرة"
+    },
+    "fee": {
+      "label": "سعر الكشف (جنيه)",
+      "placeholder": "أي سعر"
+    },
+    "schedule": {
+      "label": "اليوم المتاح",
+      "options": {
+        "all": "كل الأيام",
+        "monday": "الإثنين",
+        "tuesday": "الثلاثاء",
+        "wednesday": "الأربعاء",
+        "thursday": "الخميس",
+        "friday": "الجمعة",
+        "saturday": "السبت",
+        "sunday": "الأحد"
+      }
+    },
+    "sortBy": {
+      "label": "ترتيب حسب",
+      "options": {
+        "experience": "الأكثر خبرة",
+        "fee": "السعر (من الأقل)",
+        "rating": "الأعلى تقييماً",
+        "name": "الاسم (أ-ي)"
+      }
+    }
+  },
+  "actions": {
+    "clearAllFilters": "مسح كل الفلتر",
+    "clearFilters": "مسح الفلاتر",
+    "close": "إغلاق"
+  },
+  "results": {
+    "loading": "جارٍ التحميل...",
+    "doctorsFound": "عرض {{count}} طبيب{{plural}}",
+    "pluralSuffix": "اء",
+    "noDoctorsFound": {
+      "title": "لم يتم العثور على أطباء",
+      "message": "حاول تعديل معايير البحث"
+    }
+  },
+  "search":"ابحث بواسطه اسم الطبيب او التخصص"
+}

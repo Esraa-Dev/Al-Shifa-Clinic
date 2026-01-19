@@ -458,3 +458,33 @@ export interface EmptyStateProps {
   actionLabelKey?: string;
   onAction?: () => void;
 }
+export interface DoctorListHeaderProps {
+    title: string;
+    subtitle: string;
+    searchPlaceholder: string;
+    onSearchChange: (value: string) => void;
+    onToggleFilters: () => void;
+    toggleFiltersLabel: string;
+}
+
+export interface DoctorListFiltersProps {
+  isDepartmentLoading: boolean;
+  departmentData: any;
+  selectedDepartment: string | null;
+  setSelectedDepartment: (id: string | null) => void;
+  showAdvancedFilters: boolean;
+  setShowAdvancedFilters: (show: boolean) => void;
+  filters: DoctorFilters;
+  onExperienceChange: (value: string) => void;
+  onFeeChange: (value: string) => void;
+  onScheduleChange: (value: string) => void;
+  onSortChange: (value: string) => void;
+  onClearFilters: () => void;
+}
+
+export interface DoctorListResultsProps {
+  isLoading: boolean;
+  doctors: Doctor[];
+  totalDoctors: number;
+  onClearFilters: () => void;
+}

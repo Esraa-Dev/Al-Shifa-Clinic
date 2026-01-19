@@ -4,16 +4,22 @@ import { AsyncHandler } from "../utils/AsyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import mongoose from "mongoose";
+import { getPaginationData } from "../utils/PaginationHelper.js";
 
 export const getAllDoctors = AsyncHandler(
   async (req: Request, res: Response) => {
-    const { search, department, fee, experience, schedule, sortBy } = req.query;
-    
-    let filter: any = {
-      status: "approved",
-      isActive: true,
-      profileStatus: "completed",
-    };
+    const {
+      page = 1,
+      limit = 10,
+      search,
+      department,
+      fee,
+      experience,
+      schedule,
+      sortBy,
+    } = req.query;
+
+    let filter: any = {};
 
     if (search && search !== "") {
       const regex = new RegExp(search.toString(), "i");
@@ -49,14 +55,29 @@ export const getAllDoctors = AsyncHandler(
       name: { firstName: 1, lastName: 1 },
     };
     const sortOption = sortOptions[sortBy?.toString() || "experience"];
-
+    const pageNumber = parseInt(page.toString()) || 1;
+    const limitNumber = parseInt(limit.toString()) || 10;
+    const skip = (pageNumber - 1) * limitNumber;
     const doctors = await Doctor.find(filter)
       .populate("department", "name icon color")
-      .sort(sortOption);
+      .sort(sortOption)
+      .skip(skip)
+      .limit(limitNumber);
+
+    const totalItems = await Doctor.countDocuments(filter);
+
+    const pagination = getPaginationData(page, limit, totalItems);
+
+    const responseData = {
+      doctors,
+      pagination,
+    };
 
     res
       .status(200)
-      .json(new ApiResponse(req.t("doctor:doctorsRetrieved"), doctors, 200));
+      .json(
+        new ApiResponse(req.t("doctor:doctorsRetrieved"), responseData, 200)
+      );
   }
 );
 
@@ -91,9 +112,7 @@ export const getDoctorProfile = AsyncHandler(
     }
     res
       .status(200)
-      .json(
-        new ApiResponse(req.t("doctor:doctorProfileFetched"), doctor, 200)
-      );
+      .json(new ApiResponse(req.t("doctor:doctorProfileFetched"), doctor, 200));
   }
 );
 
@@ -112,7 +131,7 @@ export const updateDoctorProfile = AsyncHandler(
 
     const { error } = validateUpdateDoctorProfile(req.t).validate(req.body);
     if (error) {
-      const messages = error.details.map((err) => 
+      const messages = error.details.map((err) =>
         err.message.replace(/["]/g, "")
       );
       throw new ApiError(req.t("doctor:validationFailed"), 400, messages);
@@ -194,13 +213,11 @@ export const toggleDoctorActiveStatus = AsyncHandler(
       throw new ApiError(req.t("doctor:doctorNotFound"), 404);
     }
 
-    const message = isActive 
+    const message = isActive
       ? req.t("doctor:doctorActivated")
       : req.t("doctor:doctorDeactivated");
 
-    res
-      .status(200)
-      .json(new ApiResponse(message, doctor, 200));
+    res.status(200).json(new ApiResponse(message, doctor, 200));
   }
 );
 

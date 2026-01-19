@@ -1,0 +1,15 @@
+{
+  "doctorsRetrieved": "تم استرجاع الأطباء بنجاح",
+  "topDoctorsRetrieved": "تم استرجاع أفضل الأطباء بنجاح",
+  "doctorNotFound": "الطبيب غير موجود",
+  "doctorProfileFetched": "تم جلب ملف الطبيب بنجاح",
+  "unauthorizedAccess": "وصول غير مصرح به",
+  "doctorProfileUpdated": "تم تحديث ملف الطبيب بنجاح",
+  "doctorFetched": "تم جلب بيانات الطبيب بنجاح",
+  "validationFailed": "فشل التحقق من البيانات",
+  "profileIncomplete": "الملف الشخصي غير مكتمل",
+  "profileStatusUpdated": "تم تحديث حالة الملف الشخصي",
+  "doctorStatusUpdated": "تم تحديث حالة الطبيب بنجاح",
+  "doctorActivated": "تم تفعيل الطبيب بنجاح",
+  "doctorDeactivated": "تم إيقاف تفعيل الطبيب بنجاح"
+}

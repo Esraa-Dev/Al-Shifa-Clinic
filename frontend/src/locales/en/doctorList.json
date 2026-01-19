@@ -1,0 +1,55 @@
+{
+  "title": "Choose Your Doctor",
+  "subtitle": "Find the right doctor for your health needs",
+  "browseByDepartment": "Browse by Department",
+  "allDepartments": "All Departments",
+  "advancedFilters": "Advanced Filter",
+  "toggleAdvancedFilters": "Advanced Filtering",
+  "filters": {
+    "experience": {
+      "label": "Experience (years)",
+      "placeholder": "Any experience"
+    },
+    "fee": {
+      "label": "Consultation Fee (EGP)",
+      "placeholder": "Any fee"
+    },
+    "schedule": {
+      "label": "Available Day",
+      "options": {
+        "all": "All Days",
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+      }
+    },
+    "sortBy": {
+      "label": "Sort By",
+      "options": {
+        "experience": "Most Experienced",
+        "fee": "Price (Low to High)",
+        "rating": "Highest Rated",
+        "name": "Name (A-Z)"
+      }
+    }
+  },
+  "actions": {
+    "clearAllFilters": "Clear All Filters",
+    "clearFilters": "Clear Filters",
+    "close": "Close"
+  },
+  "results": {
+    "loading": "Loading...",
+    "doctorsFound": "Showing {{count}} doctor{{plural}}",
+    "pluralSuffix": "s",
+    "noDoctorsFound": {
+      "title": "No Doctors Found",
+      "message": "Try adjusting your search criteria"
+    }
+  },
+  "search": "Search by doctor name or specialty"
+}
