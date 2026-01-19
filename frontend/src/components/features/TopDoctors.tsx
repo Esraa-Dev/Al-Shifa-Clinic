@@ -58,7 +58,7 @@ const TopDoctors = () => {
 
                 <div className="flex items-center gap-1 mb-4 text-sm text-primaryText">
                   <MapPin className="w-4 h-4" />
-                  <span>{doctor.address?.city || "غير محدد"}</span>
+                  <span>{doctor.address?.city_ar || "غير محدد"}</span>
                 </div>
 
                 <div className="flex items-center justify-between pt-3 border-t border-primaryBorder">

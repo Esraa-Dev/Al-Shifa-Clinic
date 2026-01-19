@@ -81,62 +81,61 @@ export const PatientPersonalInfo = ({ userData }: PatientPersonalInfoProps) => {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-primaryBorder p-6">
-        <h3 className="text-xl font-bold mb-6">العنوان</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <InfoItem
-            icon={MapPin}
-            label="العنوان"
-            value={userData.address?.address1 || "غير محدد"}
-          />
-          <InfoItem
-            icon={MapPin}
-            label="عنوان إضافي"
-            value={userData.address?.address2 || "غير محدد"}
-          />
-          <InfoItem
-            icon={MapPin}
-            label="المدينة"
-            value={userData.address?.city || "غير محدد"}
-          />
-          <InfoItem
-            icon={MapPin}
-            label="المحافظة"
-            value={userData.address?.state || "غير محدد"}
-          />
-          <InfoItem
-            icon={MapPin}
-            label="الدولة"
-            value={userData.address?.country || "غير محدد"}
-          />
-          <InfoItem
-            icon={MapPin}
-            label="الرمز البريدي"
-            value={userData.address?.pincode || "غير محدد"}
-          />
+      {userData.address && (
+        <div className="bg-white rounded-2xl border border-primaryBorder p-6">
+          <h3 className="text-xl font-bold mb-6">العنوان</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <InfoItem
+              icon={MapPin}
+              label="الشارع"
+              value={userData.address.street || "غير محدد"}
+            />
+            <InfoItem
+              icon={MapPin}
+              label="المدينة"
+              value={userData.address.city || "غير محدد"}
+            />
+            <InfoItem
+              icon={MapPin}
+              label="المحافظة"
+              value={userData.address.state || "غير محدد"}
+            />
+            <InfoItem
+              icon={MapPin}
+              label="الدولة"
+              value={userData.address.country || "غير محدد"}
+            />
+            <InfoItem
+              icon={MapPin}
+              label="الرمز البريدي"
+              value={userData.address.pincode || "غير محدد"}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
-      <div className="bg-white rounded-2xl border border-primaryBorder p-6">
-        <h3 className="text-xl font-bold mb-6">جهة الاتصال في الطوارئ</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <InfoItem
-            icon={User}
-            label="الاسم"
-            value={userData.emergencyContact?.name || "غير محدد"}
-          />
-          <InfoItem
-            icon={Heart}
-            label="صلة القرابة"
-            value={userData.emergencyContact?.relationship || "غير محدد"}
-          />
-          <InfoItem
-            icon={Phone}
-            label="الهاتف"
-            value={userData.emergencyContact?.phone || "غير محدد"}
-          />
+      {userData.emergencyContact && (
+        <div className="bg-white rounded-2xl border border-primaryBorder p-6">
+          <h3 className="text-xl font-bold mb-6">جهة الاتصال في الطوارئ</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <InfoItem
+              icon={User}
+              label="الاسم"
+              value={userData.emergencyContact?.name || "غير محدد"}
+            />
+            <InfoItem
+              icon={Heart}
+              label="صلة القرابة"
+              value={userData.emergencyContact?.relationship || "غير محدد"}
+            />
+            <InfoItem
+              icon={Phone}
+              label="الهاتف"
+              value={userData.emergencyContact?.phone || "غير محدد"}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="bg-white rounded-2xl border border-primaryBorder p-6">
         <h3 className="text-xl font-bold mb-6">المعلومات الطبية</h3>

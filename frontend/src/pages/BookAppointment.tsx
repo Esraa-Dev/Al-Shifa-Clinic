@@ -160,7 +160,7 @@ const BookAppointment = () => {
                                                 }`}
                                         >
                                             <Icon size={24} />
-                                            <span className="font-bold">{type.label}</span>
+                                            <span className="font-bold">{type.labelKey}</span>
                                         </button>
                                     );
                                 })}
@@ -217,7 +217,7 @@ const BookAppointment = () => {
                             <div className="flex justify-between items-center border-b border-primaryBorder pb-3">
                                 <span className="text-gray-500">نوع الاستشارة</span>
                                 <span className="font-semibold">
-                                    {APPOINTMENT_TYPES.find(t => t.id === consultationType)?.label || consultationType}
+                                    {APPOINTMENT_TYPES.find(t => t.id === consultationType)?.labelKey || consultationType}
                                 </span>
                             </div>
                             <div className="flex justify-between items-center border-b border-primaryBorder pb-3">

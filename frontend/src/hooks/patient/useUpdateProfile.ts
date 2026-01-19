@@ -5,7 +5,7 @@ import { patientService } from "../../services/patientService";
 
 export const useUpdateProfile = () => {
   return useMutation({
-    mutationFn: patientService.updateProfile,
+    mutationFn: patientService.updateProfileInfo,
     onSuccess: (data) => {
       toast.success(data?.message || "Profile updated successfully!");
     },

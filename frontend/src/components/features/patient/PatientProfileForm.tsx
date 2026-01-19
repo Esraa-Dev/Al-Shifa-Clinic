@@ -31,8 +31,7 @@ const PatientProfileForm = ({
       gender: undefined,
       bloodGroup: undefined,
       address: {
-        address1: "",
-        address2: "",
+        street: "",
         city: "",
         state: "",
         country: "",
@@ -60,11 +59,11 @@ const PatientProfileForm = ({
       dateOfBirth: userData.dateOfBirth
         ? new Date(userData.dateOfBirth).toISOString().split("T")[0]
         : "",
-      gender: userData.gender || undefined,
-      bloodGroup: userData.bloodGroup || undefined,
+      // Cast string to enum types
+      gender: userData.gender as "male" | "female" | "other" | "prefer-not-to-say" | undefined,
+      bloodGroup: userData.bloodGroup as "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-" | "Unknown" | undefined,
       address: {
-        address1: userData.address?.address1 ?? "",
-        address2: userData.address?.address2 ?? "",
+        street: userData.address?.street ?? "",
         city: userData.address?.city ?? "",
         state: userData.address?.state ?? "",
         country: userData.address?.country ?? "",
@@ -74,7 +73,9 @@ const PatientProfileForm = ({
         ? {
             name: userData.emergencyContact.name ?? "",
             phone: userData.emergencyContact.phone ?? "",
-            relationship: userData.emergencyContact.relationship || undefined,
+            // Cast string to enum type
+            relationship: userData.emergencyContact.relationship as 
+              "spouse" | "parent" | "child" | "sibling" | "friend" | "other" | undefined,
           }
         : {
             name: "",
@@ -196,16 +197,10 @@ const PatientProfileForm = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <TextInput
-          label="العنوان"
+          label="الشارع"
           placeholder="اسم الشارع / رقم المنزل"
-          register={register("address.address1")}
-          error={errors.address?.address1}
-        />
-        <TextInput
-          label="عنوان إضافي"
-          placeholder="شقة، طابق، علامة مميزة (اختياري)"
-          register={register("address.address2")}
-          error={errors.address?.address2}
+          register={register("address.street")}
+          error={errors.address?.street}
         />
         <TextInput
           label="المدينة"

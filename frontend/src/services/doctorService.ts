@@ -24,4 +24,8 @@ export const doctorService = {
     const response = await api.put("/doctors/profile", data);
     return response.data;
   },
+  getProfile: async () => {
+    const response = await api.get("/doctors/profile");
+    return response.data;
+  },
 };

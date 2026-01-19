@@ -1,7 +1,7 @@
 import nodemailer, { Transporter } from "nodemailer";
 import Mailgen from "mailgen";
 import dotenv from "dotenv";
-import i18n from "../config/i18n";
+import i18n from "../config/i18n.js";
 
 dotenv.config();
 

@@ -69,7 +69,7 @@ const DoctorAppointments = () => {
       <div className="container">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-primaryText mb-3">إدارة المواعيد</h1>
-          <p className="text-secondary text-lg">إدارة وحجز مواعيد المرضى</p>
+          <p className="cleartext-secondary text-lg">إدارة وحجز مواعيد المرضى</p>
         </div>
 
         <div className="flex border-b border-primaryBorder mb-8">

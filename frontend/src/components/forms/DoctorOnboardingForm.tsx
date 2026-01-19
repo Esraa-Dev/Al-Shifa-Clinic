@@ -78,12 +78,6 @@ export const DoctorOnboardingForm = () => {
 
   const handlePrevious = () => setStep(step - 1);
 
-  const handleStepClick = (stepNumber: number) => {
-    if (stepNumber < step) {
-      setStep(stepNumber);
-    }
-  };
-
   const onSubmit = (data: DoctorOnboardingData) => {
     mutate(data);
   };

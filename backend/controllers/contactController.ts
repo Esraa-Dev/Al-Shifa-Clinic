@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
-import { Contact, validateSendMessage } from "../models/ContactSchema";
-import { AsyncHandler } from "../utils/AsyncHandler";
-import { ApiResponse } from "../utils/ApiResponse";
-import { ApiError } from "../utils/ApiError";
+import { Contact, validateSendMessage } from "../models/ContactSchema.js";
+import { AsyncHandler } from "../utils/AsyncHandler.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { ApiError } from "../utils/ApiError.js";
 import {
   sendEmail,
   contactMessageContent,
   contactConfirmationContent,
-} from "../utils/email";
+} from "../utils/email.js";
 
 export const createContactMessage = AsyncHandler(
   async (req: Request, res: Response) => {

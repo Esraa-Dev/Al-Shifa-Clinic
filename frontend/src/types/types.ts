@@ -55,64 +55,39 @@ export interface InfoItemProps {
 }
 
 export interface PatientAddress {
-  address1_en: string;
-  address1_ar: string;
-  address2_en?: string;
-  address2_ar?: string;
-  city_en: string;
-  city_ar: string;
-  state_en: string;
-  state_ar: string;
-  country_en: string;
-  country_ar: string;
+  street: string;
+  city: string;
+  state: string;
+  country: string;
   pincode: string;
 }
 
 export interface EmergencyContact {
   name: string;
-  relationship:
-    | "spouse"
-    | "parent"
-    | "child"
-    | "sibling"
-    | "friend"
-    | "other"
-    | "";
+  relationship: string;
   phone: string;
 }
-
 export interface PatientProfile {
   _id: string;
-  id: string;
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
   image: string;
   dateOfBirth: string | null;
-  gender: "male" | "female" | "other" | "prefer-not-to-say" | "";
-  bloodGroup:
-    | "A+"
-    | "A-"
-    | "B+"
-    | "B-"
-    | "AB+"
-    | "AB-"
-    | "O+"
-    | "O-"
-    | "Unknown"
-    | "";
+  gender: string;
+  bloodGroup: string;
   address: PatientAddress;
   emergencyContact?: EmergencyContact;
-  medicalHistory_en: string;
-  medicalHistory_ar: string;
+  medicalHistory: string;
   allergies: string[];
   status: "active" | "inactive";
   createdAt: string;
   updatedAt: string;
   profileStatus?: string;
+  role?: string;
+  isEmailVerified?: boolean;
 }
-
 export interface PatientPersonalInfoProps {
   userData: PatientProfile;
 }
@@ -459,12 +434,12 @@ export interface EmptyStateProps {
   onAction?: () => void;
 }
 export interface DoctorListHeaderProps {
-    title: string;
-    subtitle: string;
-    searchPlaceholder: string;
-    onSearchChange: (value: string) => void;
-    onToggleFilters: () => void;
-    toggleFiltersLabel: string;
+  title: string;
+  subtitle: string;
+  searchPlaceholder: string;
+  onSearchChange: (value: string) => void;
+  onToggleFilters: () => void;
+  toggleFiltersLabel: string;
 }
 
 export interface DoctorListFiltersProps {
@@ -495,8 +470,8 @@ export interface DepartmentsResultsProps {
 }
 
 export interface DepartmentsHeaderProps {
-    title: string;
-    subtitle: string;
-    searchPlaceholder: string;
-    onSearchChange: (value: string) => void;
+  title: string;
+  subtitle: string;
+  searchPlaceholder: string;
+  onSearchChange: (value: string) => void;
 }

@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import { DecodedUser } from "../types/index.d";
-import User from "../models/UserSchema";
-import { ApiError } from "../utils/ApiError";
-import { AsyncHandler } from "../utils/AsyncHandler";
-import { UserRole } from "../constants";
+import User from "../models/UserSchema.js";
+import { ApiError } from "../utils/ApiError.js";
+import { AsyncHandler } from "../utils/AsyncHandler.js";
+import { UserRole } from "../constants.js";
 
 export const verifyToken = AsyncHandler(
   async (req: Request, _res: Response, next: NextFunction) => {

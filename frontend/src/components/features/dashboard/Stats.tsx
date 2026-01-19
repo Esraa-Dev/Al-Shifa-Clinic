@@ -1,4 +1,3 @@
-import React from 'react';
 import { Users, Calendar, TrendingUp, Clock } from 'lucide-react';
 
 const Stats = () => {

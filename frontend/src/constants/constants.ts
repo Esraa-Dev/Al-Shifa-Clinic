@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import type { ContactInfoItem, ContactMethod } from "../types/types";
 
-
 export const STEPS = [
   { number: 1, title: "personalInfoStep", icon: User },
   { number: 2, title: "professionalInfoStep", icon: Calendar },
@@ -27,9 +26,9 @@ export const APPOINTMENT_TYPES = [
 ];
 
 export const APPOINTMENTS_TABS = [
-  { id: "upcoming", labelKey: "appointments.upcoming" },
-  { id: "completed", labelKey: "appointments.completed" },
-  { id: "cancelled", labelKey: "appointments.cancelled" },
+  { id: "upcoming", labelKey: "appointments.upcoming", label: "Upcoming" },
+  { id: "completed", labelKey: "appointments.completed", label: "Completed" },
+  { id: "cancelled", labelKey: "appointments.cancelled", label: "Cancelled" },
 ] as const;
 
 export const CONTACT_METHODS_DATA: ContactMethod[] = [
@@ -136,4 +135,4 @@ export const DAYS = [
   { value: "friday", label: "الجمعة" },
   { value: "saturday", label: "السبت" },
   { value: "sunday", label: "الأحد" },
-]as const;;
+] as const;

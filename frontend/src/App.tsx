@@ -3,8 +3,6 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import DashboardLayout from "./layout/DashboardLayout";
 import ContactPage from "./pages/ContactPage";
-import Appointment from "./pages/Appointment";
-import DoctorPage from "./pages/DoctorPage";
 import MyProfile from "./pages/MyProfile";
 import About from "./pages/About";
 import RegisterPage from "./pages/RegisterPage";
@@ -45,7 +43,6 @@ const App = () => {
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/verify-email" element={<EmailVerificationPage />} />
               <Route path="/verify-reset-otp" element={<ResetOtpVerificationPage />} />
-              <Route path="/doctors" element={<DoctorPage />} />
               <Route path="/about" element={<About />} />
               <Route path="/departments" element={<DepartmentsPage />} />
               <Route path="/contact" element={<ContactPage />} />
@@ -58,7 +55,6 @@ const App = () => {
                 <Route path="/profile" element={<MyProfile />} />
                 <Route path="/appointments" element={<PatientAppointments />} />
                 <Route path="/booking/:id" element={<BookAppointment />} />
-                <Route path="/appointments/:docId" element={<Appointment />} />
               </Route>
             </Route>
 

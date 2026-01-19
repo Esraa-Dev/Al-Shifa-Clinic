@@ -1,4 +1,4 @@
-import { Calendar, Clock, Video, Phone } from 'lucide-react';
+import { Calendar, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
 import type { AppointmentCardProps } from '../../../types/types';

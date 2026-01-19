@@ -3,12 +3,12 @@ import {
   Patient,
   updateProfileImage,
   updateProfileSchema,
-} from "../models/PatientSchema";
-import { AsyncHandler } from "../utils/AsyncHandler";
-import { ApiResponse } from "../utils/ApiResponse";
-import { ApiError } from "../utils/ApiError";
+} from "../models/PatientSchema.js";
+import { AsyncHandler } from "../utils/AsyncHandler.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { ApiError } from "../utils/ApiError.js";
 import fs from "fs";
-import { cloudinaryUploadImage } from "../utils/cloudinary";
+import { cloudinaryUploadImage } from "../utils/cloudinary.js";
 export const getPatientProfile = AsyncHandler(
   async (req: Request, res: Response) => {
     const _id = req.user?._id;

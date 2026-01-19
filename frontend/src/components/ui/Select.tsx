@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 
 export const Select = ({
     label,
-    placeholder,
     register,
     error,
     children,

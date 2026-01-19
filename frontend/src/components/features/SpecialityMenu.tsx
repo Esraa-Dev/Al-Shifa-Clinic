@@ -2,18 +2,25 @@ import { useNavigate } from "react-router-dom";
 import { useGetDepartment } from "../../hooks/department/useGetDepartment";
 import type { Department } from "../../types/types";
 import Loading from "../ui/Loading";
+import { useTranslation } from "react-i18next";
 
 const SpecialityMenu = () => {
-  const { data: departments, isLoading, isError } = useGetDepartment();
-  const navigate = useNavigate()
+  const { t, i18n } = useTranslation();
+  const { data, isLoading, isError } = useGetDepartment(1, 10, "");
+  const navigate = useNavigate();
+  
   if (isLoading) {
     return <Loading />;
   }
+  
   if (isError) {
     return (
-      <div className="text-center py-8 text-red-500">فشل في تحميل التخصصات</div>
+      <div className="text-center py-8 text-red-500">{t('common:error')}</div>
     );
   }
+  
+  const departments = data?.departments || [];
+
   return (
     <section className="py-16 bg-white relative overflow-hidden">
       <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-32 translate-x-32"></div>
@@ -22,10 +29,10 @@ const SpecialityMenu = () => {
       <div className="container">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-primaryText mb-3">
-            التخصصات الطبية
+            {t('home:medicalSpecialities')}
           </h2>
           <p className="text-secondary text-lg mb-4">
-            اختر التخصص المناسب لرعايتك الصحية
+            {t('home:chooseSpeciality')}
           </p>
           <div className="w-20 h-1 bg-linear-to-r from-primary to-secondary rounded-full mx-auto"></div>
         </div>
@@ -42,20 +49,28 @@ const SpecialityMenu = () => {
               <div className="relative z-10">
                 <div className="space-y-2">
                   <div className="w-14 h-14 bg-linear-to-br from-primary to-secondary rounded-2xl flex-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <img
-                      src={"/src/assets/icons/headset.svg"}
-                      alt={item.name}
-                      className="w-8 h-8 object-contain"
-                    />
+                    {item.icon ? (
+                      <img
+                        src={item.icon}
+                        alt={i18n.language === 'ar' ? item.name_ar : item.name_en}
+                        className="w-8 h-8 object-contain brightness-0 invert"
+                      />
+                    ) : (
+                      <img
+                        src="/src/assets/icons/headset.svg"
+                        alt={i18n.language === 'ar' ? item.name_ar : item.name_en}
+                        className="w-8 h-8 object-contain"
+                      />
+                    )}
                   </div>
                   <h3 className="text-xl font-bold text-primaryText group-hover:text-primary transition-colors duration-300">
-                    {item.name}
+                    {i18n.language === 'ar' ? item.name_ar : item.name_en}
                   </h3>
                   <p className="text-secondary text-sm font-medium">
-                    {item.doctorsCount} طبيب متخصص
+                    {item.doctorCount || 0} {t('home:specializedDoctors')}
                   </p>
                   <p className="text-primaryText/70 text-sm mt-2 leading-relaxed">
-                    رعاية طبية متكاملة في تخصص {item.name} مع أفضل الأطباء
+                    {t('home:specialityDescription')} {i18n.language === 'ar' ? item.name_ar : item.name_en}
                   </p>
                 </div>
               </div>
