@@ -10,8 +10,6 @@ import { errorHandler } from "./middlewares/error.middleware.js";
 import { connectCloudinary } from "./config/cloudinary.js";
 import morgan from "morgan";
 import helmet from "helmet";
-// import { languageMiddleware, setLanguageInLocals } from "./middlewares/language.middleware.js";
-// import { languageMiddleware, setLanguageInLocals } from "./middlewares/language.middleware.js";
 import * as i18nextMiddleware from "i18next-http-middleware";
 import authRouter from "./routes/auth.js";
 import doctorRouter from "./routes/doctor.js";
@@ -19,6 +17,7 @@ import appointmentRouter from "./routes/appointment.js";
 import departmentRouter from "./routes/department.js";
 import patientRouter from "./routes/patient.js";
 import contactRoutes from "./routes/contact.js";
+import statsRoutes from "./routes/stats.js";
 import i18n from "./config/i18n.js";
 
 dotenv.config();
@@ -81,6 +80,7 @@ app.use("/api/v1/appointments", appointmentRouter);
 app.use("/api/v1/departments", departmentRouter);
 app.use("/api/v1/doctors", doctorRouter);
 app.use("/api/v1/contact", contactRoutes);
+app.use("/api/v1/stats", statsRoutes);
 
 app.use(errorHandler);
 

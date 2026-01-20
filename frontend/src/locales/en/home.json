@@ -1,0 +1,18 @@
+{
+  "hero": {
+    "title_part1": "Your Health",
+    "title_part2": "Our Priority",
+    "description": "We provide the best medical services with a specialized team to ensure your comfort and health at the highest level.",
+    "book_now": "Book Your Appointment Now",
+    "call_us": "Call Us",
+    "title": "Global Quality Medical Care",
+    "subtitle": "Book your appointment with the best specialized doctors in various medical specialties. Comprehensive healthcare when you need it.",
+    "register": "Create Account"
+  },
+   "stats": {
+    "doctors": "Specialized Doctors",
+    "specialties": "Medical Specialties",
+    "appointments": "Completed Appointments",
+    "satisfaction": "Customer Satisfaction"
+  }
+}

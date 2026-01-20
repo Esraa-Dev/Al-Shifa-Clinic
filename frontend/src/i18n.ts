@@ -2,8 +2,8 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 
-import enTranslation from "./locales/en/translation.json";
-import arTranslation from "./locales/ar/translation.json";
+import enHome from "./locales/en/home.json";
+import arHome from "./locales/ar/home.json";
 import enAbout from "./locales/en/about.json";
 import arAbout from "./locales/ar/about.json";
 import enContact from "./locales/en/contact.json";
@@ -29,7 +29,7 @@ i18n
   .init({
     resources: {
       en: {
-        translation: enTranslation,
+        home: enHome,
         about: enAbout,
         contact: enContact,
         auth: enAuth,
@@ -41,7 +41,7 @@ i18n
         departments: enDepartments,
       },
       ar: {
-        translation: arTranslation,
+        home: arHome,
         about: arAbout,
         contact: arContact,
         auth: arAuth,
@@ -54,7 +54,7 @@ i18n
       },
     },
     ns: [
-      "translation",
+      "home",
       "about",
       "contact",
       "auth",
@@ -66,7 +66,7 @@ i18n
       "doctor",
       "departments",
     ],
-    defaultNS: "translation",
+    defaultNS: "home",
     lng: localStorage.getItem("i18nextLng") || "ar",
     fallbackLng: "en",
     interpolation: {
