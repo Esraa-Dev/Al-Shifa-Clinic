@@ -14,11 +14,14 @@ export const appointmentService = {
 
   getBookedSlots: async (params: { doctorId: string; date: string }) => {
     const response = await api.get(
-      `/appointments/booked-slots/${params.doctorId}/slots/${params.date}`,
+      `/appointments/booked-slots/${params.doctorId}/${params.date}`,
     );
     return response.data.data;
   },
-
+  getBookedDates: async (doctorId: string) => {
+    const response = await api.get(`/appointments/booked-dates/${doctorId}`);
+    return response.data.data;
+  },
   getDoctorAppointments: async (filters?: { status?: string[] | string }) => {
     const params: any = {};
     if (filters?.status) {
@@ -53,6 +56,12 @@ export const appointmentService = {
     const response = await api.patch(`/appointments/${appointmentId}/status`, {
       status,
     });
+    return response.data;
+  },
+  checkPaymentStatus: async (appointmentId: string) => {
+    const response = await api.get(
+      `/appointments/${appointmentId}/payment-status`,
+    );
     return response.data;
   },
 };

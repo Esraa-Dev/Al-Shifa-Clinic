@@ -14,9 +14,9 @@ import {
 import type { ContactInfoItem, ContactMethod } from "../types/types";
 
 export const STEPS = [
-  { number: 1, title: "personalInfoStep", icon: User },
-  { number: 2, title: "professionalInfoStep", icon: Calendar },
-  { number: 3, title: "appointmentsStep", icon: Clock },
+  { number: 1, title: "book:steps.personalInfo", icon: User },
+  { number: 2, title: "book:steps.professionalInfo", icon: Calendar },
+  { number: 3, title: "book:steps.appointments", icon: Clock },
 ];
 
 export const APPOINTMENT_TYPES = [

@@ -12,7 +12,7 @@ import { ProtectedRoute } from "./routes/ProtectedRoute";
 import NoAccess from "./pages/NoAccess";
 import NotFoundPage from "./pages/NotFoundPage";
 import MainLayout from "./layout/MainLayout";
-import BookAppointment from "./pages/BookAppointment";
+import BookAppointmentPage from "./pages/BookAppointmentPage";
 import DoctorOnboarding from "./pages/DoctorOnboarding";
 import { AuthProvider } from "./context/AuthContext";
 import DoctorDashboard from "./pages/DoctorDashboard";
@@ -26,6 +26,7 @@ import PatientAppointments from "./pages/PatientAppointments";
 import IncomingCallModal from "./components/features/IncomingCallModal";
 import LanguageHandler from "./components/shared/LanguageHandler";
 import DepartmentsPage from "./pages/DepartmentsPage";
+import { PaymentSuccess } from "./components/features/book-appointment/PaymentSuccess";
 
 const App = () => {
   return (
@@ -54,7 +55,8 @@ const App = () => {
               <Route element={<MainLayout />}>
                 <Route path="/profile" element={<MyProfile />} />
                 <Route path="/appointments" element={<PatientAppointments />} />
-                <Route path="/booking/:id" element={<BookAppointment />} />
+                <Route path="/booking/:id" element={<BookAppointmentPage />} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
               </Route>
             </Route>
 

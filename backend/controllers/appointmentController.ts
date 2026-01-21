@@ -11,9 +11,11 @@ import { Doctor } from "../models/DoctorSchema.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import { generateToken04 } from "../utils/ZegoToken.js";
+import { getStripeInstance } from "../utils/stripe.js";
 
 export const getPatientAppointments = AsyncHandler(
   async (req: Request, res: Response) => {
+    const t = req.t;
     const patientId = req.user?._id;
     const { status } = req.query;
     const filter: any = { patientId: patientId };
@@ -33,22 +35,27 @@ export const getPatientAppointments = AsyncHandler(
     res
       .status(200)
       .json(
-        new ApiResponse("Appointments fetched successfully", appointments, 200)
+        new ApiResponse(
+          t("appointment:appointmentsFetched"),
+          appointments,
+          200,
+        ),
       );
-  }
+  },
 );
 
 export const bookAppointment = AsyncHandler(
   async (req: Request, res: Response) => {
-    const { error, value } = validateBookAppointment.validate(req.body, {
+    const t = req.t;
+    const { error, value } = validateBookAppointment(t).validate(req.body, {
       abortEarly: false,
     });
 
     if (error) {
       const messages = error.details.map((err) =>
-        err.message.replace(/["]/g, "")
+        err.message.replace(/["]/g, ""),
       );
-      throw new ApiError("Validation failed", 400, messages);
+      throw new ApiError(t("appointment:validationFailed"), 400, messages);
     }
 
     const patientId = req.user?._id;
@@ -56,26 +63,57 @@ export const bookAppointment = AsyncHandler(
     const { appointmentDate, startTime, endTime, type, fee, symptoms } = value;
 
     const appointmentDateTime = new Date(appointmentDate);
+    appointmentDateTime.setHours(0, 0, 0, 0);
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     if (appointmentDateTime < today) {
-      throw new ApiError("Cannot book appointments in the past", 400);
+      throw new ApiError(t("appointment:pastAppointment"), 400);
+    }
+
+    const isToday = appointmentDateTime.getTime() === today.getTime();
+    if (isToday) {
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+      const [startHour, startMinute] = startTime.split(":").map(Number);
+
+      if (
+        startHour < currentHour ||
+        (startHour === currentHour && startMinute < currentMinute)
+      ) {
+        throw new ApiError(t("appointment:pastAppointment"), 400);
+      }
     }
 
     const doctor = await Doctor.findById(doctorId);
-    if (!doctor) throw new ApiError("Doctor not found", 404);
+    if (!doctor) throw new ApiError(t("appointment:doctorNotFound"), 404);
 
     const existingAppointment = await Appointment.findOne({
       doctorId,
       appointmentDate: appointmentDateTime,
       status: { $in: ["Scheduled", "In Progress"] },
-      startTime,
+      startTime: { $lt: endTime },
+      endTime: { $gt: startTime },
     });
 
-    if (existingAppointment) {
-      throw new ApiError("Time slot already booked for this doctor", 400);
-    }
+    if (existingAppointment)
+      throw new ApiError(t("appointment:timeSlotBooked"), 400);
+
+    const stripeInstance = getStripeInstance();
+    const paymentIntent = await stripeInstance.paymentIntents.create({
+      amount: Math.round(fee * 100),
+      currency: "egp",
+      metadata: {
+        appointmentDate: appointmentDate,
+        startTime: startTime,
+        patientId: patientId?.toString() || "",
+        doctorId: doctorId,
+        type: type,
+      },
+    });
+
     const newAppointment = new Appointment({
       patientId,
       doctorId,
@@ -85,39 +123,74 @@ export const bookAppointment = AsyncHandler(
       type,
       fee,
       symptoms,
-      status: "Scheduled",
+      status: "Pending",
       paymentStatus: "pending",
+      stripePaymentId: paymentIntent.id,
+      stripeClientSecret: paymentIntent.client_secret,
+      roomId:
+        type !== "clinic"
+          ? `room_${Math.random().toString(36).substr(2, 9)}`
+          : undefined,
     });
-
-    if (type === "video" || type === "voice") {
-      newAppointment.roomId = `room_${newAppointment._id}`;
-    }
 
     await newAppointment.save();
 
-    const fullDetails = await Appointment.findById(newAppointment._id)
-      .populate("doctorId", "firstName lastName specialization image")
-      .populate("patientId", "firstName lastName email image");
+    res.status(201).json(
+      new ApiResponse(
+        t("appointment:appointmentBooked"),
+        {
+          appointmentId: newAppointment._id,
+          clientSecret: paymentIntent.client_secret,
+          requiresPayment: true,
+        },
+        201,
+      ),
+    );
+  },
+);
+
+export const getBookedDates = AsyncHandler(
+  async (req: Request, res: Response) => {
+    const t = req.t;
+    const { doctorId } = req.params;
+
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const bookedAppointments = await Appointment.find({
+      doctorId,
+      appointmentDate: { $gte: thirtyDaysAgo },
+      status: { $in: ["Scheduled", "In Progress"] },
+    }).select("appointmentDate -_id");
+
+    const bookedDates = [
+      ...new Set(
+        bookedAppointments.map(
+          (apt) => apt.appointmentDate.toISOString().split("T")[0],
+        ),
+      ),
+    ];
 
     res
-      .status(201)
+      .status(200)
       .json(
-        new ApiResponse("Appointment booked successfully", fullDetails, 201)
+        new ApiResponse(t("appointment:bookedDatesFetched"), bookedDates, 200),
       );
-  }
+  },
 );
 
 export const getBookedSlots = AsyncHandler(
   async (req: Request, res: Response) => {
-    const { value, error } = validateBookedSlots.validate(req.params, {
+    const t = req.t;
+    const { value, error } = validateBookedSlots(t).validate(req.params, {
       abortEarly: false,
     });
 
     if (error) {
       const messages = error.details.map((err) =>
-        err.message.replace(/["]/g, "")
+        err.message.replace(/["]/g, ""),
       );
-      throw new ApiError("Validation failed", 400, messages);
+      throw new ApiError(t("appointment:validationFailed"), 400, messages);
     }
 
     const { doctorId, date } = value;
@@ -135,12 +208,15 @@ export const getBookedSlots = AsyncHandler(
     const bookedSlots = bookedAppointments.map((apt) => apt.startTime);
     res
       .status(200)
-      .json(new ApiResponse("Booked slots fetched", bookedSlots, 200));
-  }
+      .json(
+        new ApiResponse(t("appointment:bookedSlotsFetched"), bookedSlots, 200),
+      );
+  },
 );
 
 export const getDoctorAppointments = AsyncHandler(
   async (req: Request, res: Response) => {
+    const t = req.t;
     const doctorId = req.user?._id;
     const { status } = req.query;
     const filter: any = { doctorId: doctorId };
@@ -165,28 +241,29 @@ export const getDoctorAppointments = AsyncHandler(
       .status(200)
       .json(
         new ApiResponse(
-          "Doctor appointments fetched successfully",
+          t("appointment:appointmentsFetched"),
           appointments,
-          200
-        )
+          200,
+        ),
       );
-  }
+  },
 );
 
 export const updateAppointmentStatus = AsyncHandler(
   async (req: Request, res: Response) => {
-    const { error, value } = validateUpdateAppointmentStatus.validate(
+    const t = req.t;
+    const { error, value } = validateUpdateAppointmentStatus(t).validate(
       req.body,
       {
         abortEarly: false,
-      }
+      },
     );
 
     if (error) {
       const messages = error.details.map((err) =>
-        err.message.replace(/["]/g, "")
+        err.message.replace(/["]/g, ""),
       );
-      throw new ApiError("Validation failed", 400, messages);
+      throw new ApiError(t("appointment:validationFailed"), 400, messages);
     }
 
     const { id } = req.params;
@@ -194,12 +271,12 @@ export const updateAppointmentStatus = AsyncHandler(
     const appointment = await Appointment.findById(id);
 
     if (!appointment) {
-      throw new ApiError("Appointment not found", 404);
+      throw new ApiError(t("appointment:appointmentNotFound"), 404);
     }
 
     const doctorId = req.user?._id;
     if (doctorId?.toString() !== appointment.doctorId.toString()) {
-      throw new ApiError("Unauthorized to update this appointment", 403);
+      throw new ApiError(t("appointment:unauthorized"), 403);
     }
 
     appointment.status = status;
@@ -213,24 +290,25 @@ export const updateAppointmentStatus = AsyncHandler(
       .status(200)
       .json(
         new ApiResponse(
-          "Appointment status updated successfully",
+          t("appointment:statusUpdated"),
           updatedAppointment,
-          200
-        )
+          200,
+        ),
       );
-  }
+  },
 );
 
 export const startConsultation = AsyncHandler(
   async (req: Request, res: Response) => {
-    const { error, value } = validateStartConsultation.validate(req.body, {
+    const t = req.t;
+    const { error, value } = validateStartConsultation(t).validate(req.body, {
       abortEarly: false,
     });
     if (error) {
       const messages = error.details.map((err) =>
-        err.message.replace(/["]/g, "")
+        err.message.replace(/["]/g, ""),
       );
-      throw new ApiError("Validation failed", 400, messages);
+      throw new ApiError(t("appointment:validationFailed"), 400, messages);
     }
 
     const { id } = req.params;
@@ -241,42 +319,43 @@ export const startConsultation = AsyncHandler(
       .populate("doctorId", "firstName lastName email image _id")
       .populate("patientId", "firstName lastName email image _id");
 
-    if (!appointment) throw new ApiError("Appointment not found", 404);
+    if (!appointment)
+      throw new ApiError(t("appointment:appointmentNotFound"), 404);
 
     if (appointment.type === "clinic") {
-      throw new ApiError(
-        "Clinic appointments do not support starting a call",
-        400
-      );
+      throw new ApiError(t("appointment:clinicCallError"), 400);
     }
 
     if (appointment.type !== type) {
-      throw new ApiError(`This appointment is not a ${type} consultation`, 400);
+      throw new ApiError(t("appointment:wrongConsultationType", { type }), 400);
     }
 
     const isDoctor = appointment.doctorId._id.toString() === userId?.toString();
     const isPatient =
       appointment.patientId._id.toString() === userId?.toString();
-    if (!isDoctor && !isPatient) throw new ApiError("Unauthorized", 403);
+    if (!isDoctor && !isPatient)
+      throw new ApiError(t("appointment:unauthorized"), 403);
 
     if (!["Scheduled", "In Progress"].includes(appointment.status)) {
       throw new ApiError(
-        `Cannot start consultation for ${appointment.status}`,
-        400
+        t("appointment:cannotStartConsultation", {
+          status: appointment.status,
+        }),
+        400,
       );
     }
 
     const appId = Number(process.env.ZEGO_APP_ID);
     const serverSecret = process.env.ZEGO_SERVER_SECRET as string;
     if (!appId || isNaN(appId) || !serverSecret)
-      throw new ApiError("Call service config error", 500);
+      throw new ApiError(t("appointment:callServiceError"), 500);
 
     const token = generateToken04(
       appId,
       userId.toString(),
       serverSecret,
       3600,
-      ""
+      "",
     );
 
     if (appointment.status === "Scheduled") appointment.status = "In Progress";
@@ -289,9 +368,7 @@ export const startConsultation = AsyncHandler(
 
     res.status(200).json(
       new ApiResponse(
-        `${
-          type === "video" ? "Video" : "Voice"
-        } consultation started successfully`,
+        t("appointment:consultationStarted"),
         {
           roomId: appointment.roomId,
           token,
@@ -299,8 +376,84 @@ export const startConsultation = AsyncHandler(
           doctorId: appointment.doctorId,
           type: appointment.type,
         },
-        200
-      )
+        200,
+      ),
     );
-  }
+  },
+);
+
+export const stripeWebhook = AsyncHandler(
+  async (req: Request, res: Response) => {
+    const stripe = getStripeInstance();
+    const sig = req.headers["stripe-signature"] as string;
+    const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+    if (!endpointSecret) {
+      throw new ApiError("Webhook configuration error", 500);
+    }
+
+    let event;
+    try {
+      event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+    } catch (err: any) {
+      throw new ApiError(`Webhook Error: ${err.message}`, 400);
+    }
+
+    const paymentIntent = event.data.object as any;
+    const stripePaymentId = paymentIntent.id;
+
+    if (event.type === "payment_intent.succeeded") {
+      const appointment = await Appointment.findOneAndUpdate(
+        { stripePaymentId },
+        { paymentStatus: "paid", status: "Scheduled" },
+        { new: true },
+      );
+
+      if (!appointment) {
+        console.error(`Appointment not found for ID: ${stripePaymentId}`);
+      }
+    }
+
+    if (event.type === "payment_intent.payment_failed") {
+      await Appointment.findOneAndUpdate(
+        { stripePaymentId },
+        { paymentStatus: "failed", status: "Cancelled" },
+      );
+    }
+
+    res
+      .status(200)
+      .json(
+        new ApiResponse("Webhook processed successfully", { received: true }),
+      );
+  },
+);
+
+export const checkPaymentStatus = AsyncHandler(
+  async (req: Request, res: Response) => {
+    const t = req.t;
+    const { appointmentId } = req.params;
+    const patientId = req.user?._id;
+
+    const appointment = await Appointment.findOne({
+      _id: appointmentId,
+      patientId: patientId,
+    });
+
+    if (!appointment) {
+      throw new ApiError(t("appointment:appointmentNotFound"), 404);
+    }
+
+    res.status(200).json(
+      new ApiResponse(
+        t("appointment:paymentStatusRetrieved"),
+        {
+          paymentStatus: appointment.paymentStatus,
+          appointmentStatus: appointment.status,
+          appointmentId: appointment._id,
+        },
+        200,
+      ),
+    );
+  },
 );

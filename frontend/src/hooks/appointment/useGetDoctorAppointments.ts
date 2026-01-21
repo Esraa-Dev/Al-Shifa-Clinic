@@ -1,10 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { appointmentService } from "../../services/appointmentService";
-
-interface DoctorAppointmentsParams {
-  status?: string | string[]; 
-  date?: string;
-}
+import type { DoctorAppointmentsParams } from "../../types/types";
 
 export const useGetDoctorAppointments = (params?: DoctorAppointmentsParams) => {
   return useQuery({

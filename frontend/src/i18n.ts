@@ -22,6 +22,10 @@ import enDoctorList from "./locales/en/doctorList.json";
 import arDoctorList from "./locales/ar/doctorList.json";
 import enDepartments from "./locales/en/departments.json";
 import arDepartments from "./locales/ar/departments.json";
+import enAppointment from "./locales/en/appointment.json";
+import arAppointment from "./locales/ar/appointment.json";
+import enBook from "./locales/en/book.json";
+import arBook from "./locales/ar/book.json";
 
 i18n
   .use(LanguageDetector)
@@ -39,6 +43,8 @@ i18n
         validation: enValidation,
         doctorList: enDoctorList,
         departments: enDepartments,
+        appointment: enAppointment,
+        book: enBook,
       },
       ar: {
         home: arHome,
@@ -51,6 +57,8 @@ i18n
         validation: arValidation,
         doctorList: arDoctorList,
         departments: arDepartments,
+        appointment: arAppointment,
+        book: arBook,
       },
     },
     ns: [
@@ -63,8 +71,8 @@ i18n
       "layout",
       "validation",
       "doctorList",
-      "doctor",
       "departments",
+      "appointment",
     ],
     defaultNS: "home",
     lng: localStorage.getItem("i18nextLng") || "ar",

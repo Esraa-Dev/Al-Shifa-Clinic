@@ -475,3 +475,44 @@ export interface DepartmentsHeaderProps {
   searchPlaceholder: string;
   onSearchChange: (value: string) => void;
 }
+
+export interface PersonalInfoStepProps {
+  selectedDate: Date | null;
+  setSelectedDate: (date: Date | null) => void;
+  selectedSlot: string;
+  setSelectedSlot: (slot: string) => void;
+  bookedSlots: string[];
+  isLoadingSlots: boolean;
+  generateSlots: () => string[];
+  onNext: () => void;
+  onBack: () => void;
+}
+
+export interface AppointmentInfoStepProps {
+  consultationType: "clinic" | "video" | "voice";
+  setConsultationType: (type: "clinic" | "video" | "voice") => void;
+  symptoms: string;
+  setSymptoms: (symptoms: string) => void;
+  onNext: () => void;
+  onBack: () => void;
+}
+
+export interface PaymentFormProps {
+    clientSecret: string;
+    appointmentId: string;
+}
+
+export interface ReviewStepProps {
+    selectedDate: Date | null;
+    selectedSlot: string;
+    consultationType: "clinic" | "video" | "voice";
+    doctorFee: number;
+    symptoms: string;
+    isBooking: boolean;
+    onBack: () => void;
+    onConfirm: () => void;
+}
+export interface DoctorAppointmentsParams {
+  status?: string | string[]; 
+  date?: string;
+}

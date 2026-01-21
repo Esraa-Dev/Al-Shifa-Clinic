@@ -75,7 +75,8 @@ export const ProfileHeader = ({
           </div>
 
           {errors.image && (
-            <div className="bg-white p-2 rounded-sm mb-2">            <p className="text-xs text-red-400 font-bold mt-1">{errors.image.message}</p>
+            <div className="bg-white p-2 rounded-sm mb-2">  
+                      <p className="text-xs text-red-400 font-bold mt-1">{errors.image.message}</p>
             </div>
 
           )}

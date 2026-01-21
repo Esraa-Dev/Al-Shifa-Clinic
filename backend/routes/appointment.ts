@@ -6,6 +6,9 @@ import {
   getPatientAppointments,
   updateAppointmentStatus,
   startConsultation,
+  getBookedDates,
+  stripeWebhook,
+  checkPaymentStatus,
 } from "../controllers/appointmentController.js";
 import { verifyToken, verifyPermission } from "../middlewares/verify.js";
 import { UserRole } from "../constants.js";
@@ -18,21 +21,31 @@ router.get(
   "/doctor",
   verifyToken,
   verifyPermission([UserRole.DOCTOR]),
-  getDoctorAppointments
+  getDoctorAppointments,
 );
 router.get(
   "/patient",
   verifyToken,
   verifyPermission([UserRole.PATIENT]),
-  getPatientAppointments
+  getPatientAppointments,
 );
 router.get("/booked-slots/:doctorId/:date", verifyToken, getBookedSlots);
+router.get("/booked-dates/:doctorId", getBookedDates);
+
+router.get("/:appointmentId/payment-status", verifyToken, checkPaymentStatus);
+
+router.post(
+  "/webhook",
+  express.raw({ type: "application/json" }),
+  stripeWebhook,
+);
+
 router.patch(
   "/:id/status",
   verifyToken,
   verifyPermission([UserRole.DOCTOR]),
   validateObjectId("id"),
-  updateAppointmentStatus
+  updateAppointmentStatus,
 );
 
 router.post(
@@ -40,7 +53,7 @@ router.post(
   verifyToken,
   verifyPermission([UserRole.DOCTOR]),
   validateObjectId("id"),
-  startConsultation
+  startConsultation,
 );
 
 export default router;

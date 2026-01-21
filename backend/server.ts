@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { errorHandler } from "./middlewares/error.middleware.js";
 import { connectCloudinary } from "./config/cloudinary.js";
+import i18n from "./config/i18n.js";
 import morgan from "morgan";
 import helmet from "helmet";
 import * as i18nextMiddleware from "i18next-http-middleware";
@@ -18,7 +19,8 @@ import departmentRouter from "./routes/department.js";
 import patientRouter from "./routes/patient.js";
 import contactRoutes from "./routes/contact.js";
 import statsRoutes from "./routes/stats.js";
-import i18n from "./config/i18n.js";
+import { stripeWebhook } from "./controllers/appointmentController.js";
+import bodyParser from "body-parser";
 
 dotenv.config();
 connectDb();
@@ -26,12 +28,45 @@ connectCloudinary();
 
 const app = express();
 const server = createServer(app);
+
+app.post(
+  "/api/v1/webhooks/stripe",
+  bodyParser.raw({ type: "application/json" }),
+  stripeWebhook,
+);
+
+app.use(morgan("dev"));
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(
+  cors({
+    origin: [process.env.FRONTEND_URL || "http://localhost:5173"],
+    credentials: true,
+  }),
+);
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use("/uploads", express.static("uploads"));
+app.use(i18nextMiddleware.handle(i18n));
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/patient", patientRouter);
+app.use("/api/v1/appointments", appointmentRouter);
+app.use("/api/v1/doctors", doctorRouter);
+app.use("/api/v1/departments", departmentRouter);
+app.use("/api/v1/contact", contactRoutes);
+app.use("/api/v1/stats", statsRoutes);
+app.use(errorHandler);
+
 const io = new Server(server, {
   cors: {
     origin: [process.env.FRONTEND_URL || "http://localhost:5173"],
     credentials: true,
   },
 });
+
 let onlineUsers = new Map();
 io.on("connection", (socket) => {
   socket.on("identify", (userId) => {
@@ -41,11 +76,13 @@ io.on("connection", (socket) => {
 
   socket.on("start-call", (data) => {
     const patientSocketId = onlineUsers.get(data.patientId);
-    io.to(patientSocketId).emit("incoming-call", {
-      roomId: data.roomId,
-      doctorName: data.doctorName,
-      type: data.type,
-    });
+    if (patientSocketId) {
+      io.to(patientSocketId).emit("incoming-call", {
+        roomId: data.roomId,
+        doctorName: data.doctorName,
+        type: data.type,
+      });
+    }
   });
 
   socket.on("disconnect", () => {
@@ -59,32 +96,7 @@ io.on("connection", (socket) => {
   });
 });
 
-app.use(express.json());
-app.use(morgan("dev"));
-app.use(
-  cors({
-    origin: [process.env.FRONTEND_URL || "http://localhost:5173"],
-    credentials: true,
-  })
-);
-
-app.use("/uploads", express.static("uploads"));
-app.use(cookieParser());
-app.use(helmet());
-app.use(i18nextMiddleware.handle(i18n));
-
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/patient", patientRouter);
-app.use("/api/v1/appointments", appointmentRouter);
-app.use("/api/v1/departments", departmentRouter);
-app.use("/api/v1/doctors", doctorRouter);
-app.use("/api/v1/contact", contactRoutes);
-app.use("/api/v1/stats", statsRoutes);
-
-app.use(errorHandler);
-
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(` Server running on port ${PORT}`);
 });

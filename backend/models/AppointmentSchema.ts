@@ -8,7 +8,7 @@ export interface IAppointment extends Document {
   appointmentDate: Date;
   startTime: string;
   endTime: string;
-  status: "Scheduled" | "In Progress" | "Completed" | "Cancelled";
+  status: "Pending" | "Scheduled" | "In Progress" | "Completed" | "Cancelled";
   type: "video" | "voice" | "clinic";
   fee: number;
   symptoms?: string;
@@ -16,6 +16,9 @@ export interface IAppointment extends Document {
   callStatus: "idle" | "ringing" | "connected" | "ended";
   callStartedAt?: Date;
   callEndedAt?: Date;
+  paymentStatus: "pending" | "paid" | "failed" | "refunded";
+  stripePaymentId?: string;
+  stripeClientSecret?: string;
 }
 
 const AppointmentSchema: Schema = new Schema(
@@ -44,8 +47,8 @@ const AppointmentSchema: Schema = new Schema(
     },
     status: {
       type: String,
-      enum: ["Scheduled", "In Progress", "Completed", "Cancelled"],
-      default: "Scheduled",
+      enum: ["Pending", "Scheduled", "In Progress", "Completed", "Cancelled"],
+      default: "Pending",
     },
     type: {
       type: String,
@@ -75,70 +78,103 @@ const AppointmentSchema: Schema = new Schema(
     callEndedAt: {
       type: Date,
     },
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "paid", "failed", "refunded"],
+      default: "pending",
+    },
+    stripePaymentId: {
+      type: String,
+    },
+    stripeClientSecret: {
+      type: String,
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
+export const validateBookAppointment = (t: any) =>
+  Joi.object({
+    appointmentDate: Joi.date()
+      .iso()
+      .required()
+      .messages({
+        "any.required": t("appointment:appointmentDateRequired"),
+        "date.format": t("appointment:dateFormat"),
+      }),
+    startTime: Joi.string()
+      .pattern(/^([01]\d|2[0-3]):([0-5]\d)$/)
+      .required()
+      .messages({
+        "any.required": t("appointment:startTimeRequired"),
+        "string.pattern.base": t("appointment:timeFormat"),
+      }),
+    endTime: Joi.string()
+      .pattern(/^([01]\d|2[0-3]):([0-5]\d)$/)
+      .required()
+      .messages({
+        "any.required": t("appointment:endTimeRequired"),
+        "string.pattern.base": t("appointment:timeFormat"),
+      }),
+    type: Joi.string()
+      .valid("clinic", "video", "voice")
+      .default("clinic")
+      .messages({
+        "any.only": t("appointment:typeRequired"),
+      }),
+    fee: Joi.number()
+      .positive()
+      .required()
+      .messages({
+        "any.required": t("appointment:feeRequired"),
+        "number.base": t("appointment:feeRequired"),
+        "number.positive": t("appointment:feePositive"),
+      }),
+    symptoms: Joi.string().optional(),
+  });
 
-export const validateBookAppointment = Joi.object({
-  appointmentDate: Joi.date().iso().required().min("now").messages({
-    "any.required": "Appointment date is required",
-    "date.format": "Date must be in ISO format",
-    "date.min": "Cannot book appointments in the past",
-  }),
-  startTime: Joi.string()
-    .pattern(/^([01]\d|2[0-3]):([0-5]\d)$/)
-    .required()
-    .messages({
-      "any.required": "Start time is required",
-      "string.pattern.base": "Start time must be in HH:MM format (24-hour)",
-    }),
-  endTime: Joi.string()
-    .pattern(/^([01]\d|2[0-3]):([0-5]\d)$/)
-    .required()
-    .messages({
-      "any.required": "End time is required",
-      "string.pattern.base": "End time must be in HH:MM format (24-hour)",
-    }),
-  type: Joi.string().valid("clinic", "video", "voice").default("clinic"),
-  fee: Joi.number().positive().required().messages({
-    "any.required": "Fee is required",
-    "number.base": "Fee must be a number",
-    "number.positive": "Fee must be greater than zero",
-  }),
-  symptoms: Joi.string().optional(),
-});
+export const validateBookedSlots = (t: any) =>
+  Joi.object({
+    doctorId: Joi.string()
+      .hex()
+      .length(24)
+      .required()
+      .messages({
+        "any.required": t("appointment:doctorIdRequired"),
+        "string.hex": t("appointment:doctorIdFormat"),
+        "string.length": t("appointment:doctorIdFormat"),
+      }),
+    date: Joi.date()
+      .iso()
+      .required()
+      .messages({
+        "any.required": t("appointment:dateRequired"),
+        "date.format": t("appointment:dateFormat"),
+      }),
+  });
 
-export const validateBookedSlots = Joi.object({
-  doctorId: Joi.string().hex().length(24).required().messages({
-    "any.required": "Doctor ID is required",
-    "string.hex": "Doctor ID must be a valid MongoDB ObjectId",
-    "string.length": "Doctor ID must be 24 characters",
-  }),
-  date: Joi.date().iso().required().messages({
-    "any.required": "Date is required",
-    "date.format": "Date must be in ISO format (YYYY-MM-DD)",
-  }),
-});
+export const validateUpdateAppointmentStatus = (t: any) =>
+  Joi.object({
+    status: Joi.string()
+      .valid("Scheduled", "Completed", "Cancelled", "In Progress")
+      .required()
+      .messages({
+        "any.required": t("appointment:statusRequired"),
+        "any.only": t("appointment:statusValid"),
+      }),
+  });
 
-export const validateUpdateAppointmentStatus = Joi.object({
-  status: Joi.string()
-    .valid("Scheduled", "Completed", "Cancelled", "In Progress")
-    .required()
-    .messages({
-      "any.required": "Status is required",
-      "any.only":
-        "Status must be one of: Scheduled, Completed, Cancelled, In Progress",
-    }),
-});
-
-export const validateStartConsultation = Joi.object({
-  type: Joi.string().valid("video", "voice").required().messages({
-    "any.only": "Consultation type must be video or voice",
-    "any.required": "Consultation type is required",
-  }),
-});
+export const validateStartConsultation = (t: any) =>
+  Joi.object({
+    type: Joi.string()
+      .valid("video", "voice")
+      .required()
+      .messages({
+        "any.required": t("appointment:typeRequired"),
+        "any.only": t("appointment:typeRequired"),
+      }),
+  });
 
 export const Appointment = mongoose.model<IAppointment>(
   "Appointment",
-  AppointmentSchema
+  AppointmentSchema,
 );
