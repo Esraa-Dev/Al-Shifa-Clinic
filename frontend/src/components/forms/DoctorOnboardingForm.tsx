@@ -8,7 +8,7 @@ import { Button } from "../ui/Button";
 import { TextInput } from "../ui/TextInput";
 import { Textarea } from "../ui/Textarea";
 import { Select } from "../ui/Select";
-import { DAYS, STEPS } from "../../constants/constants";
+import { DAYS, ONBOARDING_STEPS } from "../../constants/constants";
 import { useGetDepartment } from "../../hooks/department/useGetDepartment";
 import type { DoctorOnboardingData } from "../../types/types";
 import { useUpdateDoctorProfile } from "../../hooks/doctor/useUpdateDoctorProfile";
@@ -18,7 +18,7 @@ export const DoctorOnboardingForm = () => {
   const isRtl = i18n.dir() === "rtl";
   const { data: departmentsData } = useGetDepartment();
   const { mutate, isPending } = useUpdateDoctorProfile();
-  const [step, setStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(1);
 
   const {
     register,
@@ -58,8 +58,8 @@ export const DoctorOnboardingForm = () => {
   };
 
   const getFieldsToValidate = () => {
-    if (step === 1) return ["specialization_en", "specialization_ar", "qualification_en", "qualification_ar"];
-    if (step === 2) return ["department", "experience"];
+    if (currentStep === 1) return ["specialization_en", "specialization_ar", "qualification_en", "qualification_ar"];
+    if (currentStep === 2) return ["department", "experience"];
     return ["fee", "schedule"];
   };
 
@@ -68,15 +68,15 @@ export const DoctorOnboardingForm = () => {
     const isValid = await trigger(fields as any);
 
     if (isValid) {
-      if (step === STEPS.length) {
+      if (currentStep === ONBOARDING_STEPS.length) {
         handleSubmit(onSubmit)();
       } else {
-        setStep(step + 1);
+        setCurrentStep(currentStep + 1);
       }
     }
   };
 
-  const handlePrevious = () => setStep(step - 1);
+  const handlePrevious = () => setCurrentStep(currentStep - 1);
 
   const onSubmit = (data: DoctorOnboardingData) => {
     mutate(data);
@@ -108,25 +108,25 @@ export const DoctorOnboardingForm = () => {
         </div>
 
         <div className="mb-14 flex items-center justify-between px-10 md:px-10 relative">
-          {STEPS.map((ste, index) => (
-            <div key={ste.number} className="flex items-center flex-1 last:flex-none">
+          {ONBOARDING_STEPS.map((stepItem, index) => (
+            <div key={stepItem.number} className="flex items-center flex-1 last:flex-none">
 
               <div className="flex flex-col items-center relative z-10">
-                <div className={`w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center border-4 transition-all duration-300 ${step >= ste.number ? "bg-primary border-primary text-white" : "bg-white border-gray-300 text-gray-400"
+                <div className={`w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center border-4 transition-all duration-300 ${currentStep >= stepItem.number ? "bg-primary border-primary text-white" : "bg-white border-gray-300 text-gray-400"
                   }`}>
-                  <ste.icon className="w-5 h-5 md:w-6 md:h-6" />
+                  <stepItem.icon className="w-5 h-5 md:w-6 md:h-6" />
                 </div>
-                <span className={`absolute -bottom-7 text-sm font-medium w-max ${step >= ste.number ? "text-primary" : "text-gray-500"
+                <span className={`absolute -bottom-7 text-sm font-medium w-max ${currentStep >= stepItem.number ? "text-primary" : "text-gray-500"
                   }`}>
-                  {t(`onboarding:${ste.title}`)}
+                  {t(`onboarding:${stepItem.title}`)}
                 </span>
               </div>
 
-              {index < STEPS.length - 1 && (
+              {index < ONBOARDING_STEPS.length - 1 && (
                 <div className="flex-1 h-0.5 md:h-1 bg-gray-200 mx-1 md:mx-2 relative overflow-hidden">
                   <div
                     className={`absolute top-0 bottom-0 bg-primary transition-all duration-500 ${isRtl ? "right-0" : "left-0"}`}
-                    style={{ width: step > ste.number ? "100%" : "0%" }}
+                    style={{ width: currentStep > stepItem.number ? "100%" : "0%" }}
                   />
                 </div>
               )}
@@ -135,7 +135,7 @@ export const DoctorOnboardingForm = () => {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl shadow-xl p-6 md:p-8 space-y-8">
-          {step === 1 && (
+          {currentStep === 1 && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <TextInput
                 id="specialization_en"
@@ -168,7 +168,7 @@ export const DoctorOnboardingForm = () => {
             </div>
           )}
 
-          {step === 2 && (
+          {currentStep === 2 && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Select
                 id="department"
@@ -209,7 +209,7 @@ export const DoctorOnboardingForm = () => {
             </div>
           )}
 
-          {step === 3 && (
+          {currentStep === 3 && (
             <div className="space-y-6">
               <TextInput
                 id="fee"
@@ -284,7 +284,7 @@ export const DoctorOnboardingForm = () => {
             <Button
               type="button"
               onClick={handlePrevious}
-              disabled={step === 1 || isPending}
+              disabled={currentStep === 1 || isPending}
             >
               {t('onboarding:previous')}
             </Button>
@@ -294,7 +294,7 @@ export const DoctorOnboardingForm = () => {
               onClick={handleNext}
               disabled={isPending}
             >
-              {step < STEPS.length ? (
+              {currentStep < ONBOARDING_STEPS.length ? (
                 t('onboarding:next')
               ) : isPending ? (
                 <>

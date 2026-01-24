@@ -5,7 +5,7 @@ import { NavLinks } from "./NavLinks";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Button } from "../components/ui/Button";
-import LanguageSwitcher from "../components/features/LanguageSwitcher";
+import LanguageSwitcher from "../components/shared/LanguageSwitcher";
 import { Logo } from "../components/ui/Logo";
 import { useTranslation } from "react-i18next";
 

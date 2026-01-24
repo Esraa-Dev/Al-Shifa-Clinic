@@ -1,6 +1,6 @@
 import { Star, Calendar, MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import type { Doctor } from "../types/types";
+import type { Doctor } from "../../../types/types";
 import { useTranslation } from "react-i18next";
 
 const DoctorCard = ({ doctor }: { doctor: Doctor }) => {

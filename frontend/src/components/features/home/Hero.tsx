@@ -1,5 +1,5 @@
 import { Calendar, Phone } from "lucide-react";
-import { Button } from "./ui/Button";
+import { Button } from "../../ui/Button";
 import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 

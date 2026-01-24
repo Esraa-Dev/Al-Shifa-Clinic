@@ -23,7 +23,7 @@ import DoctorAppointments from "./pages/DoctorAppointments";
 import VideoCallPage from "./pages/VideoCallPage";
 import { SocketProvider } from "./context/SocketContext";
 import PatientAppointments from "./pages/PatientAppointments";
-import IncomingCallModal from "./components/features/IncomingCallModal";
+import IncomingCallModal from "./components/features/book-appointment/IncomingCallModal";
 import LanguageHandler from "./components/shared/LanguageHandler";
 import DepartmentsPage from "./pages/DepartmentsPage";
 import { PaymentSuccess } from "./components/features/book-appointment/PaymentSuccess";

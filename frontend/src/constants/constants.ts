@@ -10,6 +10,7 @@ import {
   Send,
   User,
   Calendar,
+  GraduationCap,
 } from "lucide-react";
 import type { ContactInfoItem, ContactMethod } from "../types/types";
 
@@ -19,6 +20,23 @@ export const STEPS = [
   { number: 3, title: "book:steps.appointments", icon: Clock },
 ];
 
+export const ONBOARDING_STEPS = [
+  {
+    number: 1,
+    title: "personalInfoStep",
+    icon: User,
+  },
+  {
+    number: 2,
+    title: "professionalInfoStep",
+    icon: GraduationCap,
+  },
+  {
+    number: 3,
+    title: "appointmentsStep",
+    icon: Calendar,
+  },
+];
 export const APPOINTMENT_TYPES = [
   { id: "clinic", labelKey: "appointmentTypes.clinic", icon: Building2 },
   { id: "video", labelKey: "appointmentTypes.video", icon: Video },

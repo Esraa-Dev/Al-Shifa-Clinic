@@ -1,58 +1,56 @@
 {
-  "bookAppointment": {
-    "title": "Book Appointment",
-    "withDoctor": "With Dr. {{doctorName}}",
-    "loadingDoctor": "Loading doctor information...",
-    "doctorNotFound": "Doctor not found",
-    "chooseDate": "Choose appointment date:",
-    "chooseTime": "Choose time",
-    "back": "Back",
-    "next": "Next",
-    "consultationDetails": "Consultation Details",
-    "consultationType": "Consultation Type:",
-    "describeSymptoms": "Describe Symptoms",
-    "symptomsPlaceholder": "Explain what you feel to help the doctor...",
-    "reviewBooking": "Review Booking Details",
-    "date": "Date",
-    "time": "Time",
-    "consultationTypeLabel": "Consultation Type",
-    "fees": "Fees",
-    "symptomsMentioned": "Symptoms mentioned:",
-    "editBack": "Back to Edit",
-    "confirmBooking": "Confirm Final Booking",
-    "bookingInProgress": "Processing booking...",
-    "currency": "SAR",
-    "reviewDescription": "Review your booking details before final confirmation",
-    "selectDateMessage": "Choose a suitable date from the calendar",
-    "selectTimeMessage": "Choose a suitable time for",
-    "noDateSelected": "Please select a date first",
-    "timeInPast": "This time has passed",
-    "consultationDescription": "Choose consultation type and describe your symptoms",
-    "symptomsDescription": "Description must be at least 10 characters",
-    "errorDate": "Please select a date",
-    "errorTime": "Please select a time",
-    "errorConsultationType": "Please select a consultation type",
-    "errorSymptoms": "Symptoms description must be at least 10 characters"
+  "doctorPrefix": "Dr.",
+  "patient": "Patient",
+  "doctor": "Doctor",
+  "specialization": "Specialization",
+  "fees": "Fees",
+  "currency": "EGP",
+  "details": "Details",
+  "symptoms": "Symptoms",
+  "description": "Description",
+  "qualification": "Qualification",
+  "patientComplaint": "Patient Complaint",
+  "noSymptomsDescription": "No symptoms description added",
+  "startCallNow": "Start Call Now",
+  "startExamination": "Start Examination",
+  "endAppointment": "End Appointment",
+  "status": {
+    "pending": "Pending",
+    "scheduled": "Scheduled",
+    "inprogress": "In Progress",
+    "completed": "Completed",
+    "cancelled": "Cancelled"
   },
-  "appointmentTypes": {
-    "clinic": "Clinic",
+  "type": {
     "video": "Video",
-    "voice": "Voice"
+    "voice": "Voice",
+    "clinic": "Clinic"
   },
-  "steps": {
-    "chooseDateTime": "Choose Date & Time",
-    "consultationDetails": "Consultation Details",
-    "reviewConfirm": "Review & Confirm"
+  "call": {
+    "starting": "Starting call...",
+    "failed": "Failed to start call",
+    "incoming": "Incoming Call",
+    "callingNow": "is calling you now...",
+    "answer": "Answer",
+    "decline": "Decline"
   },
-  "paymentSuccessful": "Payment Successful",
-  "appointmentConfirmed": "Your appointment has been confirmed successfully",
-  "viewMyAppointments": "View My Appointments",
-  "backToHome": "Back to Home",
-  "proceedToPayment": "Proceed to Payment",
-  "confirmPayment": "Confirm Payment",
-  "completePaymentToConfirm": "Complete payment to confirm your booking",
-  "payNow": "Pay Now",
-  "redirectingToAppointments": "Redirecting to appointments page...",
-  "paymentSystemNotReady": "Payment system is not ready",
-  "paymentError": "An error occurred during payment"
+  "appointment": {
+    "statusUpdated": "Appointment status updated successfully",
+    "updateFailed": "Failed to update appointment status"
+  },
+  "dashboard": {
+    "manageAppointments": "Manage Appointments",
+    "managePatientAppointments": "Manage and book patient appointments",
+    "myAppointments": "My Appointments",
+    "manageMedicalAppointments": "Manage and book your appointments",
+    "noAppointments": "No appointments",
+    "upcoming": "Upcoming",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "noUpcomingAppointments": "No upcoming appointments",
+    "noCompletedAppointments": "No completed appointments",
+    "noCancelledAppointments": "No cancelled appointments",
+    "bookNewAppointment": "Book New Appointment",
+    "loading": "Loading..."
+  }
 }

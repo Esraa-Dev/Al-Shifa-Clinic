@@ -516,3 +516,10 @@ export interface DoctorAppointmentsParams {
   status?: string | string[]; 
   date?: string;
 }
+
+export interface AppointmentCardProps {
+  appointment: Appointment;
+  isOnline?: boolean;
+  variant: "doctor" | "patient";
+  onActionComplete?: () => void;
+}

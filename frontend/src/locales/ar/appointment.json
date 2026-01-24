@@ -1,58 +1,56 @@
 {
-  "bookAppointment": {
-    "title": "حجز موعد",
-    "withDoctor": "مع الدكتور {{doctorName}}",
-    "loadingDoctor": "جاري تحميل بيانات الطبيب...",
-    "doctorNotFound": "الطبيب غير موجود",
-    "chooseDate": "اختر تاريخ الحجز:",
-    "chooseTime": "اختر الوقت",
-    "back": "رجوع",
-    "next": "التالي",
-    "consultationDetails": "تفاصيل الاستشارة",
-    "consultationType": "نوع الاستشارة:",
-    "describeSymptoms": "وصف الأعراض",
-    "symptomsPlaceholder": "اشرح ما تشعر به لمساعدة الطبيب...",
-    "reviewBooking": "مراجعة بيانات الحجز",
-    "date": "التاريخ",
-    "time": "الوقت",
-    "consultationTypeLabel": "نوع الاستشارة",
-    "fees": "الرسوم",
-    "symptomsMentioned": "الأعراض المذكورة:",
-    "editBack": "رجوع للتعديل",
-    "confirmBooking": "تأكيد الحجز النهائي",
-    "bookingInProgress": "جاري الحجز...",
-    "currency": "ريال",
-    "reviewDescription": "راجع بيانات الحجز قبل التأكيد النهائي",
-    "selectDateMessage": "اختر التاريخ المناسب من التقويم",
-    "selectTimeMessage": "اختر الوقت المناسب ليوم",
-    "noDateSelected": "الرجاء اختيار تاريخ أولاً",
-    "timeInPast": "هذا الوقت قد مر",
-    "consultationDescription": "أختر نوع الاستشارة وصف أعراضك",
-    "symptomsDescription": "يجب أن يكون الوصف 10 أحرف على الأقل",
-    "errorDate": "الرجاء اختيار التاريخ",
-    "errorTime": "الرجاء اختيار الوقت",
-    "errorConsultationType": "الرجاء اختيار نوع الاستشارة",
-    "errorSymptoms": "يجب أن يكون وصف الأعراض 10 أحرف على الأقل"
+  "doctorPrefix": "د.",
+  "patient": "المريض",
+  "doctor": "الطبيب",
+  "specialization": "التخصص",
+  "fees": "الرسوم",
+  "currency": "ج.م",
+  "details": "التفاصيل",
+  "symptoms": "الأعراض",
+  "description": "الوصف",
+  "qualification": "المؤهل",
+  "patientComplaint": "شكوى المريض",
+  "noSymptomsDescription": "لا يوجد وصف مضاف للأعراض",
+  "startCallNow": "بدء المكالمة الآن",
+  "startExamination": "بدء الكشف",
+  "endAppointment": "إنهاء الموعد",
+  "status": {
+    "pending": "قيد الانتظار",
+    "scheduled": "مجدول",
+    "inprogress": "جاري الآن",
+    "completed": "مكتمل",
+    "cancelled": "ملغي"
   },
-  "appointmentTypes": {
-    "clinic": "عيادة",
+  "type": {
     "video": "فيديو",
-    "voice": "صوتي"
+    "voice": "صوت",
+    "clinic": "عيادة"
   },
-  "steps": {
-    "chooseDateTime": "اختيار التاريخ والوقت",
-    "consultationDetails": "تفاصيل الاستشارة",
-    "reviewConfirm": "مراجعة وتأكيد"
+  "call": {
+    "starting": "جاري بدء المكالمة...",
+    "failed": "فشل بدء المكالمة",
+    "incoming": "مكالمة واردة",
+    "callingNow": "يتصل بك الآن...",
+    "answer": "رد",
+    "decline": "تجاهل"
   },
-  "paymentSuccessful": "تم الدفع بنجاح",
-  "appointmentConfirmed": "تم تأكيد موعدك بنجاح",
-  "viewMyAppointments": "عرض مواعيدي",
-  "backToHome": "العودة للرئيسية",
-  "proceedToPayment": "المتابعة للدفع",
-  "confirmPayment": "تأكيد الدفع",
-  "completePaymentToConfirm": "أكمل عملية الدفع لتأكيد الحجز",
-  "payNow": "ادفع الآن",
-  "redirectingToAppointments": "جاري التوجيه إلى صفحة المواعيد...",
-  "paymentSystemNotReady": "نظام الدفع غير جاهز",
-  "paymentError": "حدث خطأ أثناء الدفع"
+  "appointment": {
+    "statusUpdated": "تم تحديث حالة الموعد بنجاح",
+    "updateFailed": "فشل تحديث حالة الموعد"
+  },
+  "dashboard": {
+    "manageAppointments": "إدارة المواعيد",
+    "managePatientAppointments": "إدارة وحجز مواعيد المرضى",
+    "myAppointments": "مواعيدي",
+    "manageMedicalAppointments": "إدارة وحجز مواعيدك ",
+    "noAppointments": "لا توجد مواعيد",
+    "upcoming": "القادمة",
+    "completed": "المكتملة",
+    "cancelled": "الملغية",
+    "noUpcomingAppointments": "لا توجد مواعيد قادمة",
+    "noCompletedAppointments": "لا توجد مواعيد مكتملة",
+    "noCancelledAppointments": "لا توجد مواعيد ملغية",
+    "bookNewAppointment": "حجز موعد جديد",
+    "loading": "جاري التحميل..."
+  }
 }

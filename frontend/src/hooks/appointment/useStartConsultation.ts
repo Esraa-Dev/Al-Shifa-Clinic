@@ -3,18 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { appointmentService } from "../../services/appointmentService";
 import { toast } from "react-toastify";
 import { useSocket } from "../../context/SocketContext";
+import { useTranslation } from "react-i18next";
 
 export const useStartConsultation = () => {
   const queryClient = useQueryClient();
   const socket = useSocket();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return useMutation({
-    mutationFn: (variables: { id: string; type: string }) => 
+    mutationFn: (variables: { id: string; type: string }) =>
       appointmentService.startConsultation(variables),
 
     onSuccess: (response) => {
-      console.log(response)
       const { roomId, type, patientId, doctorId } = response.data;
 
       queryClient.invalidateQueries({ queryKey: ["doctorAppointments"] });
@@ -24,16 +25,18 @@ export const useStartConsultation = () => {
           patientId: patientId?._id || patientId,
           roomId: roomId,
           type: type,
-          doctorName: `د. ${doctorId?.lastName || ""}`,
+          doctorName: `${t("appointment:doctorPrefix")} ${doctorId?.lastName || ""}`,
         });
       }
 
       navigate(`/video-call/${roomId}?type=${type}&role=doctor`);
-      toast.success(response.message || "Starting call...");
+      toast.success(t("call.starting"));
     },
 
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to start call");
+      toast.error(
+        error.response?.data?.message || t("appointment:call.failed"),
+      );
     },
   });
 };

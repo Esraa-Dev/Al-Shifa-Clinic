@@ -1,21 +1,22 @@
 import { Calendar } from "lucide-react";
-import { DoctorAppointmentCard } from "../components/features/dashboard/DoctorAppointmentCard";
+import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useGetDoctorAppointments } from "../hooks/appointment/useGetDoctorAppointments";
-import type { Appointment } from "../types/types";
-import { useEffect, useState } from "react";
-import { APPOINTMENTS_TABS } from "../constants/constants";
 import { useSocket } from "../context/SocketContext";
+import type { Appointment } from "../types/types";
+import { AppointmentCard } from "../components/features/book-appointment/AppointmentCard";
+import { AppointmentSkeleton } from "../components/features/book-appointment/AppointmentSkeleton";
 
 const DoctorAppointments = () => {
   const [activeTab, setActiveTab] = useState<"upcoming" | "completed" | "cancelled">("upcoming");
   const { data: appointments = [], isLoading } = useGetDoctorAppointments();
   const socket = useSocket();
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!socket) return;
     socket.on("get-online-users", (users: string[]) => {
-      console.log(users)
       setOnlineUsers(users);
     });
 
@@ -23,6 +24,7 @@ const DoctorAppointments = () => {
       socket.off("get-online-users");
     };
   }, [socket]);
+
   const filteredAppointments = appointments.filter((appointment: Appointment) => {
     if (activeTab === "upcoming") {
       return appointment.status === "Scheduled" || appointment.status === "In Progress";
@@ -52,28 +54,31 @@ const DoctorAppointments = () => {
     return 0;
   };
 
-  if (isLoading) {
-    return (
-      <div className="py-12 bg-background min-h-screen">
-        <div className="container">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const tabs = [
+    { id: "upcoming", label: t("appointment:dashboard.upcoming") },
+    { id: "completed", label: t("appointment:dashboard.completed") },
+    { id: "cancelled", label: t("appointment:dashboard.cancelled") }
+  ];
+
+  const getEmptyStateMessage = () => {
+    switch (activeTab) {
+      case "upcoming": return t("appointment:dashboard.noUpcomingAppointments");
+      case "completed": return t("appointment:dashboard.noCompletedAppointments");
+      case "cancelled": return t("appointment:dashboard.noCancelledAppointments");
+      default: return t("appointment:dashboard.noAppointments");
+    }
+  };
 
   return (
     <section className="py-12 bg-background min-h-screen">
       <div className="container">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-primaryText mb-3">إدارة المواعيد</h1>
-          <p className="cleartext-secondary text-lg">إدارة وحجز مواعيد المرضى</p>
+          <h1 className="text-3xl font-bold text-primaryText mb-3">{t("appointment:dashboard.manageAppointments")}</h1>
+          <p className="text-secondary text-lg">{t("appointment:dashboard.managePatientAppointments")}</p>
         </div>
 
         <div className="flex border-b border-primaryBorder mb-8">
-          {APPOINTMENTS_TABS.map((tab) => (
+          {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as "upcoming" | "completed" | "cancelled")}
@@ -83,29 +88,32 @@ const DoctorAppointments = () => {
                 }`}
             >
               {tab.label}
-              <span className="mr-2 text-sm bg-primary/10 px-2 py-1 rounded-full">
-                {getTabCount(tab.id)}
+              <span className="text-sm bg-primary/10 px-2 py-1 rounded-full">
+                {isLoading ? 0 : getTabCount(tab.id)}
               </span>
             </button>
           ))}
         </div>
 
-        <div className="space-y-6">
-          {filteredAppointments.length === 0 ? (
-            <div className="text-center py-12">
-              <Calendar className="w-16 h-16 text-secondary mx-auto mb-4 opacity-50" />
-              <p className="text-primaryText text-lg">
-                {activeTab === "upcoming" && "لا توجد مواعيد قادمة"}
-                {activeTab === "completed" && "لا توجد مواعيد مكتملة"}
-                {activeTab === "cancelled" && "لا توجد مواعيد ملغية"}
-              </p>
-            </div>
-          ) : (
-            filteredAppointments.map((appointment: Appointment) => (
-              <DoctorAppointmentCard key={appointment._id} appointment={appointment} isOnline={onlineUsers.includes(appointment.patientId?._id)} />
-            ))
-          )}
-        </div>
+        {isLoading ? (
+          <AppointmentSkeleton />
+        ) : filteredAppointments.length === 0 ? (
+          <div className="text-center py-12">
+            <Calendar className="w-16 h-16 text-secondary mx-auto mb-4 opacity-50" />
+            <p className="text-primaryText text-lg">{getEmptyStateMessage()}</p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {filteredAppointments.map((appointment: Appointment) => (
+              <AppointmentCard
+                key={appointment._id}
+                appointment={appointment}
+                isOnline={onlineUsers.includes(appointment.patientId?._id)}
+                variant="doctor"
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

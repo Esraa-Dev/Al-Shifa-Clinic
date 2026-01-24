@@ -1,8 +1,8 @@
 import { Star, MapPin, Calendar } from "lucide-react";
-import { useGetTopDoctors } from "../../hooks/doctor/useGetTopDoctors";
-import type { Doctor } from "../../types/types";
 import { useTranslation } from "react-i18next";
-import { DoctorSkeleton } from "./doctor/DoctorSkeleton";
+import { useGetTopDoctors } from "../../../hooks/doctor/useGetTopDoctors";
+import type { Doctor } from "../../../types/types";
+import { DoctorSkeleton } from "../doctor/DoctorSkeleton";
 
 const TopDoctors = () => {
   const { t, i18n } = useTranslation(["doctors", "doctor"]);

@@ -1,9 +1,8 @@
-import { useNavigate } from "react-router-dom";
-import { useGetDepartment } from "../../hooks/department/useGetDepartment";
-import type { Department } from "../../types/types";
 import { useTranslation } from "react-i18next";
-import { SpecialityMenuSkeleton } from "./home/SpecialityMenuSkeleton";
-
+import { useNavigate } from "react-router-dom";
+import { useGetDepartment } from "../../../hooks/department/useGetDepartment";
+import type { Department } from "../../../types/types";
+import {SpecialityMenuSkeleton} from "./SpecialityMenuSkeleton";
 const SpecialityMenu = () => {
   const { t, i18n } = useTranslation("departments");
   const { data, isLoading, isError } = useGetDepartment(1, 10, "");

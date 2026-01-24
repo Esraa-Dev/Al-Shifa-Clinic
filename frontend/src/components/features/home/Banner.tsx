@@ -1,8 +1,8 @@
 import { UserPlus } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useGetHomeStats } from "../../hooks/stats/useGetHomeStats";
-import { StatsSkeleton } from "./home/StatsSkeleton";
+import { useGetHomeStats } from "../../../hooks/stats/useGetHomeStats";
+import { StatsSkeleton } from "./StatsSkeleton";
 
 
 const Banner = () => {

@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSocket } from "../../context/SocketContext";
+import { useSocket } from "../../../context/SocketContext";
+import { useTranslation } from "react-i18next";
 import { Phone, PhoneOff } from "lucide-react";
 
 const IncomingCallModal = () => {
   const socket = useSocket();
   const navigate = useNavigate();
   const [incomingCall, setIncomingCall] = useState<any>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!socket) return;
@@ -38,10 +40,10 @@ const IncomingCallModal = () => {
         <div className="w-24 h-24 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
           <Phone size={40} className="text-primary" />
         </div>
-        
-        <h2 className="text-2xl font-bold text-primaryText mb-2">مكالمة واردة</h2>
+
+        <h2 className="text-2xl font-bold text-primaryText mb-2">{t("appointment:call.incoming")}</h2>
         <p className="text-gray-600 mb-8 text-lg font-medium">
-          {incomingCall.doctorName} يتصل بك الآن...
+          {incomingCall.doctorName} {t("appointment:call.callingNow")}
         </p>
 
         <div className="flex gap-4 justify-center">
@@ -50,14 +52,14 @@ const IncomingCallModal = () => {
             className="flex-1 bg-primary hover:bg-primary/80 cursor-pointer text-white py-4 rounded-2xl flex items-center justify-center gap-2 transition-all font-bold"
           >
             <Phone size={20} />
-            رد
+            {t("appointment:call.answer")}
           </button>
           <button
             onClick={handleDecline}
             className="flex-1 bg-secondary hover:bg-secondary/80 cursor-pointer text-white py-4 rounded-2xl flex items-center justify-center gap-2 transition-all font-bold"
           >
             <PhoneOff size={20} />
-            تجاهل
+            {t("appointment:call.decline")}
           </button>
         </div>
       </div>
