@@ -19,8 +19,11 @@ import departmentRouter from "./routes/department.js";
 import patientRouter from "./routes/patient.js";
 import contactRoutes from "./routes/contact.js";
 import statsRoutes from "./routes/stats.js";
+import adminRoutes from "./routes/admin.js";
+
 import { stripeWebhook } from "./controllers/appointmentController.js";
 import bodyParser from "body-parser";
+import { runAdminSeed } from "./utils/adminSeed.js";
 
 dotenv.config();
 connectDb();
@@ -58,6 +61,7 @@ app.use("/api/v1/doctors", doctorRouter);
 app.use("/api/v1/departments", departmentRouter);
 app.use("/api/v1/contact", contactRoutes);
 app.use("/api/v1/stats", statsRoutes);
+app.use("/api/v1/admin", adminRoutes);
 app.use(errorHandler);
 
 const io = new Server(server, {
@@ -97,6 +101,11 @@ io.on("connection", (socket) => {
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
+server.listen(PORT, async () => {
   console.log(` Server running on port ${PORT}`);
+  try {
+    await runAdminSeed();
+  } catch (err) {
+    console.error("Seed error:", err);
+  }
 });
