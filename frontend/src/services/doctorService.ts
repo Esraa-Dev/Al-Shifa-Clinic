@@ -28,4 +28,8 @@ export const doctorService = {
     const response = await api.get("/doctors/profile");
     return response.data;
   },
+  getDoctorStats: async () => {
+    const response = await api.get("/doctors/stats");
+    return response.data.data;
+  },
 };

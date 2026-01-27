@@ -1,4 +1,4 @@
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import DashboardLayout from "./layout/DashboardLayout";
@@ -27,6 +27,7 @@ import IncomingCallModal from "./components/features/book-appointment/IncomingCa
 import LanguageHandler from "./components/shared/LanguageHandler";
 import DepartmentsPage from "./pages/DepartmentsPage";
 import { PaymentSuccess } from "./components/features/book-appointment/PaymentSuccess";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const App = () => {
   return (
@@ -61,18 +62,17 @@ const App = () => {
             </Route>
 
             <Route element={<ProtectedRoute allowedRoles={["doctor"]} />}>
-              <Route element={<DashboardLayout />}>
-                <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
-                <Route path="/doctor/appointments" element={<DoctorAppointments />} />
+              <Route path="/doctor" element={<DashboardLayout />}>
+                <Route path="dashboard" element={<DoctorDashboard />} />                <Route path="appointments" element={<DoctorAppointments />} />
               </Route>
             </Route>
-
             <Route element={<ProtectedRoute allowedRoles={["patient", "doctor"]} />}>
               <Route path="/video-call/:roomId" element={<VideoCallPage />} />
             </Route>
 
             <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
-              <Route element={<DashboardLayout />}>
+              <Route path="/admin" element={<DashboardLayout />}>
+                <Route path="dashboard" element={<AdminDashboard />} />
               </Route>
             </Route>
 

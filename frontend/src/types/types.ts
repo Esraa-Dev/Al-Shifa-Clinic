@@ -498,22 +498,22 @@ export interface AppointmentInfoStepProps {
 }
 
 export interface PaymentFormProps {
-    clientSecret: string;
-    appointmentId: string;
+  clientSecret: string;
+  appointmentId: string;
 }
 
 export interface ReviewStepProps {
-    selectedDate: Date | null;
-    selectedSlot: string;
-    consultationType: "clinic" | "video" | "voice";
-    doctorFee: number;
-    symptoms: string;
-    isBooking: boolean;
-    onBack: () => void;
-    onConfirm: () => void;
+  selectedDate: Date | null;
+  selectedSlot: string;
+  consultationType: "clinic" | "video" | "voice";
+  doctorFee: number;
+  symptoms: string;
+  isBooking: boolean;
+  onBack: () => void;
+  onConfirm: () => void;
 }
 export interface DoctorAppointmentsParams {
-  status?: string | string[]; 
+  status?: string | string[];
   date?: string;
 }
 
@@ -522,4 +522,36 @@ export interface AppointmentCardProps {
   isOnline?: boolean;
   variant: "doctor" | "patient";
   onActionComplete?: () => void;
+}
+
+export interface StatCardProps {
+  title: string;
+  value: string | number;
+  icon: React.ReactNode;
+  bgColor: string;
+  iconColor: string;
+}
+
+export interface DashboardTableColumn {
+  header: string;
+  key: string;
+}
+
+export interface DashboardTableProps<T = any> {
+  columns: DashboardTableColumn[];
+  data: T[];
+  title?: string;
+}
+export interface RecentAppointment {
+  patientName: string;
+  patientPhone: string;
+  date: string;
+  time: string;
+  mode: "video" | "clinic" | "voice";
+  status: string;
+  consultationFees: number;
+}
+
+export interface RecentAppointmentsProps {
+  appointments: RecentAppointment[];
 }

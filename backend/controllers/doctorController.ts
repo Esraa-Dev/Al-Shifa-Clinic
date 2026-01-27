@@ -5,6 +5,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import mongoose from "mongoose";
 import { getPaginationData } from "../utils/PaginationHelper.js";
+import { Appointment } from "../models/AppointmentSchema.js";
 
 export const getAllDoctors = AsyncHandler(
   async (req: Request, res: Response) => {
@@ -76,9 +77,9 @@ export const getAllDoctors = AsyncHandler(
     res
       .status(200)
       .json(
-        new ApiResponse(req.t("doctor:doctorsRetrieved"), responseData, 200)
+        new ApiResponse(req.t("doctor:doctorsRetrieved"), responseData, 200),
       );
-  }
+  },
 );
 
 export const getTopDoctors = AsyncHandler(
@@ -98,9 +99,9 @@ export const getTopDoctors = AsyncHandler(
     res
       .status(200)
       .json(
-        new ApiResponse(req.t("doctor:topDoctorsRetrieved"), topDoctors, 200)
+        new ApiResponse(req.t("doctor:topDoctorsRetrieved"), topDoctors, 200),
       );
-  }
+  },
 );
 
 export const getDoctorProfile = AsyncHandler(
@@ -113,7 +114,7 @@ export const getDoctorProfile = AsyncHandler(
     res
       .status(200)
       .json(new ApiResponse(req.t("doctor:doctorProfileFetched"), doctor, 200));
-  }
+  },
 );
 
 export const updateDoctorProfile = AsyncHandler(
@@ -132,7 +133,7 @@ export const updateDoctorProfile = AsyncHandler(
     const { error } = validateUpdateDoctorProfile(req.t).validate(req.body);
     if (error) {
       const messages = error.details.map((err) =>
-        err.message.replace(/["]/g, "")
+        err.message.replace(/["]/g, ""),
       );
       throw new ApiError(req.t("doctor:validationFailed"), 400, messages);
     }
@@ -145,7 +146,7 @@ export const updateDoctorProfile = AsyncHandler(
       },
       {
         new: true,
-      }
+      },
     );
 
     res
@@ -154,10 +155,10 @@ export const updateDoctorProfile = AsyncHandler(
         new ApiResponse(
           req.t("doctor:doctorProfileUpdated"),
           updatedDoctor,
-          200
-        )
+          200,
+        ),
       );
-  }
+  },
 );
 
 export const getDoctorById = AsyncHandler(
@@ -170,7 +171,7 @@ export const getDoctorById = AsyncHandler(
     res
       .status(200)
       .json(new ApiResponse(req.t("doctor:doctorFetched"), doctor, 200));
-  }
+  },
 );
 
 export const updateDoctorStatus = AsyncHandler(
@@ -185,7 +186,7 @@ export const updateDoctorStatus = AsyncHandler(
     const doctor = await Doctor.findByIdAndUpdate(
       id,
       { status },
-      { new: true }
+      { new: true },
     );
 
     if (!doctor) {
@@ -195,7 +196,7 @@ export const updateDoctorStatus = AsyncHandler(
     res
       .status(200)
       .json(new ApiResponse(req.t("doctor:doctorStatusUpdated"), doctor, 200));
-  }
+  },
 );
 
 export const toggleDoctorActiveStatus = AsyncHandler(
@@ -206,7 +207,7 @@ export const toggleDoctorActiveStatus = AsyncHandler(
     const doctor = await Doctor.findByIdAndUpdate(
       id,
       { isActive },
-      { new: true }
+      { new: true },
     );
 
     if (!doctor) {
@@ -218,7 +219,7 @@ export const toggleDoctorActiveStatus = AsyncHandler(
       : req.t("doctor:doctorDeactivated");
 
     res.status(200).json(new ApiResponse(message, doctor, 200));
-  }
+  },
 );
 
 export const updateProfileStatus = AsyncHandler(
@@ -233,7 +234,7 @@ export const updateProfileStatus = AsyncHandler(
     const doctor = await Doctor.findByIdAndUpdate(
       id,
       { profileStatus },
-      { new: true }
+      { new: true },
     );
 
     if (!doctor) {
@@ -243,5 +244,95 @@ export const updateProfileStatus = AsyncHandler(
     res
       .status(200)
       .json(new ApiResponse(req.t("doctor:profileStatusUpdated"), doctor, 200));
-  }
+  },
+);
+
+export const getDoctorStats = AsyncHandler(
+  async (req: Request, res: Response) => {
+    const doctorId = req.user?._id;
+    if (!doctorId) {
+      throw new ApiError("Unauthorized", 401);
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const statsSummary = await Appointment.aggregate([
+      { $match: { doctorId: new mongoose.Types.ObjectId(doctorId) } },
+      {
+        $facet: {
+          totals: [
+            {
+              $group: {
+                _id: null,
+                totalAppointments: { $sum: 1 },
+                totalRevenue: {
+                  $sum: {
+                    $cond: [{ $eq: ["$paymentStatus", "paid"] }, "$fee", 0],
+                  },
+                },
+                onlineConsultations: {
+                  $sum: {
+                    $cond: [{ $in: ["$type", ["video", "voice"]] }, 1, 0],
+                  },
+                },
+                clinicConsultations: {
+                  $sum: { $cond: [{ $eq: ["$type", "clinic"] }, 1, 0] },
+                },
+                cancelledAppointments: {
+                  $sum: { $cond: [{ $eq: ["$status", "Cancelled"] }, 1, 0] },
+                },
+              },
+            },
+          ],
+          recentAppointments: [
+            { $sort: { appointmentDate: -1, startTime: -1 } },
+            { $limit: 5 },
+            {
+              $lookup: {
+                from: "users",
+                localField: "patientId",
+                foreignField: "_id",
+                as: "patient",
+              },
+            },
+            { $unwind: "$patient" },
+            {
+              $project: {
+                patientName: {
+                  $concat: ["$patient.firstName", " ", "$patient.lastName"],
+                },
+                patientPhone: "$patient.phone",
+                date: "$appointmentDate",
+                time: "$startTime",
+                mode: "$type",
+                status: "$status",
+                consultationFees: "$fee",
+                _id: 0,
+              },
+            },
+          ],
+        },
+      },
+    ]);
+
+    const totals = statsSummary[0]?.totals[0] || {
+      totalAppointments: 0,
+      totalRevenue: 0,
+      onlineConsultations: 0,
+      clinicConsultations: 0,
+      cancelledAppointments: 0,
+    };
+
+    const recentAppointments = statsSummary[0]?.recentAppointments || [];
+
+    const stats = {
+      ...totals,
+      recentAppointments,
+    };
+
+    res
+      .status(200)
+      .json(new ApiResponse("Doctor stats fetched successfully", stats, 200));
+  },
 );

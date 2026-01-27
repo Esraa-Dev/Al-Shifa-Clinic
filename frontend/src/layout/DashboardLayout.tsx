@@ -11,7 +11,7 @@ const DashboardLayout = () => {
   };
 
   return (
-    <div className="flex" dir="rtl">
+    <div className="flex" dir="ltr">
       <DashboardSidebar sidebarOpen={sidebarOpen} />
       <div className="flex-1">
         <DashboardHeader toggleSidebar={toggleSidebar} />

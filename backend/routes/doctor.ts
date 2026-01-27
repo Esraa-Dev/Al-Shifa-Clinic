@@ -5,8 +5,8 @@ import {
   getDoctorProfile,
   getDoctorById,
   getTopDoctors,
+  getDoctorStats,
 } from "../controllers/doctorController.js";
-import { upload } from "../middlewares/multer.js";
 import { verifyPermission, verifyToken } from "../middlewares/verify.js";
 import { UserRole } from "../constants.js";
 
@@ -14,6 +14,12 @@ const router = express.Router();
 
 router.get("/", getAllDoctors);
 router.get("/top", getTopDoctors);
+router.get(
+  "/stats",
+  verifyToken,
+  verifyPermission([UserRole.DOCTOR]),
+  getDoctorStats
+);
 router.get(
   "/profile",
   verifyToken,
