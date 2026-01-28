@@ -1,4 +1,4 @@
-import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import DashboardLayout from "./layout/DashboardLayout";
@@ -28,6 +28,7 @@ import LanguageHandler from "./components/shared/LanguageHandler";
 import DepartmentsPage from "./pages/DepartmentsPage";
 import { PaymentSuccess } from "./components/features/book-appointment/PaymentSuccess";
 import AdminDashboard from "./pages/AdminDashboard";
+import ChangePassword from "./pages/ChangePassword";
 
 const App = () => {
   return (
@@ -63,7 +64,13 @@ const App = () => {
 
             <Route element={<ProtectedRoute allowedRoles={["doctor"]} />}>
               <Route path="/doctor" element={<DashboardLayout />}>
-                <Route path="dashboard" element={<DoctorDashboard />} />                <Route path="appointments" element={<DoctorAppointments />} />
+                <Route path="dashboard" element={<DoctorDashboard />} />
+                <Route path="appointments" element={<DoctorAppointments />} />
+                {/* <Route path="prescriptions" element={<DoctorPrescriptions />} />
+                <Route path="reviews" element={<DoctorReviews />} />
+                <Route path="profile-settings" element={<DoctorProfileSettings />} /> */}
+                <Route path="change-password" element={<ChangePassword />} />
+                {/* <Route path="Notification" element={<DoctorNotifications />} /> */}
               </Route>
             </Route>
             <Route element={<ProtectedRoute allowedRoles={["patient", "doctor"]} />}>

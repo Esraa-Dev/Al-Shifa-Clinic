@@ -6,6 +6,7 @@ import User, {
   verifyResetOtpValidation,
   resetPasswordValidation,
   resendOtpValidation,
+  changePasswordValidation,
 } from "../models/UserSchema.js";
 import bcrypt from "bcrypt";
 import { AsyncHandler } from "../utils/AsyncHandler.js";
@@ -431,4 +432,48 @@ export const resendOtp = AsyncHandler(async (req: Request, res: Response) => {
         200
       )
     );
+});
+
+
+export const changePassword = AsyncHandler(async (req: Request, res: Response) => {
+  const { error } = changePasswordValidation.validate(req.body, {
+    abortEarly: false,
+  });
+
+  if (error) {
+    const messages = error.details.map((err) =>
+      err.message.replace(/["]/g, "")
+    );
+    throw new ApiError("Validation failed", 400, messages);
+  }
+
+  const { currentPassword, newPassword } = req.body;
+  const userId = req.user?._id;
+
+  if (!userId) {
+    throw new ApiError("Unauthorized", 401);
+  }
+
+  const user = await User.findById(userId).select("+password");
+
+  if (!user) {
+    throw new ApiError("User not found", 404);
+  }
+
+  const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+
+  if (!isPasswordValid) {
+    throw new ApiError("Invalid current password", 400);
+  }
+
+  const isSamePassword = await bcrypt.compare(newPassword, user.password);
+  
+  if (isSamePassword) {
+    throw new ApiError("New password cannot be the same as current password", 400);
+  }
+
+  user.password = newPassword;
+  await user.save();
+
+  res.status(200).json(new ApiResponse("Password changed successfully", null, 200));
 });

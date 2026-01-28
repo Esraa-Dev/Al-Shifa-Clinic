@@ -12,14 +12,15 @@ export const TextInput = ({
   error,
   id,
   requiredInput = false,
+  isDashboard = false,
 }: TextInputProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const { i18n } = useTranslation();
-  const isRtl = i18n.dir() === "rtl";
+  const isRtl = isDashboard ? false : i18n.dir() === "rtl";
 
   return (
     <div className="mb-4" dir={isRtl ? "rtl" : "ltr"}>
-      <label htmlFor={id} className="block text-base! font-medium! text-primaryText mb-4 text-start">
+      <label htmlFor={id} className="block text-base! font-medium text-primaryText mb-4 text-left">
         {label}
         {requiredInput && <span className="text-red-500 mx-1">*</span>}
       </label>
@@ -39,22 +40,21 @@ export const TextInput = ({
             rounded-md focus:outline-none bg-background transition duration-200
             ${isRtl ? (Icon ? "pr-10 pl-4" : "px-4") : (Icon ? "pl-10 pr-4" : "px-4")}
             ${type === "password" ? (isRtl ? "pl-10" : "pr-10") : ""}
-            rtl:text-right
-            ltr:text-left`}
-          dir={isRtl ? "rtl" : "ltr"}
+            text-left`}
+          dir="ltr"
         />
         {type === "password" && (
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className={`absolute inset-y-0 ${isRtl ? 'left-3' : 'right-3'} flex items-center cursor-pointer`}
+            className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
           >
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         )}
       </div>
       {error?.message && (
-        <p className="text-red-500 text-sm mt-2 text-start">
+        <p className="text-red-500 text-sm mt-2 text-left">
           {error.message}
         </p>
       )}

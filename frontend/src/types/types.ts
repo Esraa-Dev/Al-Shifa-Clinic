@@ -10,6 +10,7 @@ export interface TextInputProps {
   error?: FieldError;
   id?: string;
   requiredInput?: boolean;
+  isDashboard?: boolean;
 }
 
 export interface AppFormProps {
