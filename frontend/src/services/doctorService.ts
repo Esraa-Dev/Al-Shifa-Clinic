@@ -32,4 +32,20 @@ export const doctorService = {
     const response = await api.get("/doctors/stats");
     return response.data.data;
   },
+  getDoctorProfile: async () => {
+    const response = await api.get("doctors/profile");
+    return response.data.data;
+  },
+  updateDoctorProfileInfo: async (data: any) => {
+    const response = await api.put("doctors/profile", data);
+    return response.data;
+  },
+  useUpdateDoctorImage: async (formData: FormData) => {
+    const response = await api.put("doctors/profile/image", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  },
 };

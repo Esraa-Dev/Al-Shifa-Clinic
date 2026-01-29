@@ -7,16 +7,15 @@ import { useNavigate } from "react-router-dom";
 
 export const useUpdateDoctorProfile = () => {
   const { t } = useTranslation();
-const navigate=useNavigate()
+  const navigate = useNavigate();
   return useMutation({
     mutationFn: (data: any) => doctorService.updateDoctorProfile(data),
     onSuccess: (data) => {
-      toast.success(data?.message || t('onboarding.profileUpdated'));
-      navigate("/doctor/dashboard",{replace:true})
+      toast.success(data?.message || t("onboarding.profileUpdated"));
+      navigate("/doctor/dashboard", { replace: true });
     },
     onError: (error: any) => {
-      const errorMessage = getApiErrorMessage(error) || t('onboarding.errorUpdating');
-      toast.error(errorMessage);
+      toast.error(getApiErrorMessage(error, t("common:defaultError")));
     },
   });
 };

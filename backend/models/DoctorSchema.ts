@@ -22,7 +22,7 @@ export interface IDoctor extends IUser {
   totalReviews?: number;
   profileStatus?: "incomplete" | "completed";
   status?: "pending" | "approved" | "rejected";
-  isActive: boolean; 
+  isActive: boolean;
 }
 
 const DoctorSchema: Schema = new Schema(
@@ -44,7 +44,15 @@ const DoctorSchema: Schema = new Schema(
       {
         day: {
           type: String,
-          enum: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+          enum: [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday",
+          ],
         },
         startTime: { type: String },
         endTime: { type: String },
@@ -64,7 +72,7 @@ const DoctorSchema: Schema = new Schema(
     },
     isActive: { type: Boolean, default: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const validateUpdateDoctorProfile = (t: any) => {
@@ -89,12 +97,12 @@ export const validateUpdateDoctorProfile = (t: any) => {
               "thursday",
               "friday",
               "saturday",
-              "sunday"
+              "sunday",
             )
             .required(),
           startTime: Joi.string().required(),
           endTime: Joi.string().required(),
-        })
+        }),
       )
       .min(1)
       .required()
@@ -102,15 +110,83 @@ export const validateUpdateDoctorProfile = (t: any) => {
         const days = value.map((item: any) => item.day);
         const uniqueDays = new Set(days);
         if (uniqueDays.size !== days.length) {
-          return helpers.error('any.duplicate');
+          return helpers.error("any.duplicate");
         }
         return value;
-      }, 'Duplicate days validation')
-      .message(t('validation:duplicateDays')),
+      }, "Duplicate days validation")
+      .message(t("validation:duplicateDays")),
   });
 };
+export const validateUpdateDoctorInfo = Joi.object({
+  specialization_en: Joi.string().allow(""),
+  specialization_ar: Joi.string().allow(""),
+  qualification_en: Joi.string().allow(""),
+  qualification_ar: Joi.string().allow(""),
+  experience: Joi.number().min(0).max(50),
+  fee: Joi.number().min(0),
+  description_en: Joi.string().allow(""),
+  description_ar: Joi.string().allow(""),
+  address: Joi.object({
+    address1_en: Joi.string().allow(""),
+    address1_ar: Joi.string().allow(""),
+    address2_en: Joi.string().allow(""),
+    address2_ar: Joi.string().allow(""),
+    city_en: Joi.string().allow(""),
+    city_ar: Joi.string().allow(""),
+    state_en: Joi.string().allow(""),
+    state_ar: Joi.string().allow(""),
+    country_en: Joi.string().allow(""),
+    country_ar: Joi.string().allow(""),
+    pincode: Joi.string().allow(""),
+  }).optional(),
+  dateOfBirth: Joi.date().iso(),
+  bloodGroup: Joi.string(),
+  schedule: Joi.array()
+    .items(
+      Joi.object({
+        day: Joi.string()
+          .valid(
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday",
+          )
+          .required(),
+        startTime: Joi.string()
+          .pattern(/^([01]\d|2[0-3]):([0-5]\d)$/)
+          .required(),
+        endTime: Joi.string()
+          .pattern(/^([01]\d|2[0-3]):([0-5]\d)$/)
+          .required(),
+      }),
+    )
+    .optional(),
+});
+
+export const validateDoctorImage = Joi.object({
+  file: Joi.object({
+    mimetype: Joi.string()
+      .valid("image/jpeg", "image/png", "image/jpg", "image/webp")
+      .messages({
+        "any.only": "Only JPEG, PNG, JPG or WebP images are allowed",
+      }),
+    size: Joi.number()
+      .max(5 * 1024 * 1024) 
+      .messages({
+        "number.max": "Profile image must be less than or equal to 5 MB",
+      }),
+  })
+    .unknown(true)
+    .required()
+    .messages({
+      "any.required": "Profile image is required",
+    }),
+});
 
 export const Doctor = User.discriminator<IDoctor>(
   UserRole.DOCTOR,
-  DoctorSchema
+  DoctorSchema,
 );

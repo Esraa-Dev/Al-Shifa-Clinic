@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
-import { Doctor, validateUpdateDoctorProfile } from "../models/DoctorSchema.js";
+import { Doctor, validateDoctorImage, validateUpdateDoctorInfo, validateUpdateDoctorProfile } from "../models/DoctorSchema.js";
 import { AsyncHandler } from "../utils/AsyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import mongoose from "mongoose";
 import { getPaginationData } from "../utils/PaginationHelper.js";
 import { Appointment } from "../models/AppointmentSchema.js";
+import { cloudinaryUploadImage } from "../utils/cloudinary.js";
+import fs from "fs";
 
 export const getAllDoctors = AsyncHandler(
   async (req: Request, res: Response) => {
@@ -415,3 +417,96 @@ export const getDoctorStats = AsyncHandler(
       .json(new ApiResponse("Doctor stats fetched successfully", stats, 200));
   },
 );
+
+
+export const getDoctorProfileInfo = AsyncHandler(async (req: Request, res: Response) => {
+  const id = req.user?._id;
+  const doctor = await Doctor.findById(id);
+  if (!doctor) {
+    throw new ApiError("Doctor not found", 404);
+  }
+  res.status(200).json(new ApiResponse("Doctor profile fetched", doctor, 200));
+});
+
+export const updateDoctorProfileInfo = AsyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?._id;
+
+  if (!userId) {
+    throw new ApiError("Unauthorized", 401);
+  }
+
+  const currentDoctor = await Doctor.findById(userId);
+  if (!currentDoctor) {
+    throw new ApiError("Doctor not found", 404);
+  }
+
+  const { error } = validateUpdateDoctorInfo.validate(req.body, { abortEarly: false });
+  if (error) {
+    const messages = error.details.map((err) =>
+      err.message.replace(/["]/g, "")
+    );
+    throw new ApiError("Validation failed", 400, messages);
+  }
+
+  if (req.body.schedule) {
+    const days = req.body.schedule.map((item: any) => item.day);
+    const uniqueDays = new Set(days);
+    if (uniqueDays.size !== days.length) {
+      throw new ApiError("Schedule contains duplicate days", 400);
+    }
+  }
+
+  const updatedDoctor = await Doctor.findByIdAndUpdate(
+    userId,
+    req.body,
+    { new: true }
+  );
+
+  res.status(200).json(new ApiResponse("Doctor profile updated", updatedDoctor, 200));
+});
+
+export const updateDoctorProfileImage = AsyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?._id;
+
+  if (!userId) {
+    throw new ApiError("Unauthorized", 401);
+  }
+
+  if (!req.file) {
+    throw new ApiError("Profile image is required", 400);
+  }
+
+  const { error } = validateDoctorImage.validate(
+    { file: req.file },
+    { abortEarly: false }
+  );
+
+  if (error) {
+    if (fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
+    
+    const messages = error.details.map((err) =>
+      err.message.replace(/["]/g, "")
+    );
+    throw new ApiError("Validation failed", 400, messages);
+  }
+
+  const result = await cloudinaryUploadImage(req.file.path);
+
+  if (fs.existsSync(req.file.path)) {
+    fs.unlinkSync(req.file.path);
+  }
+
+  const doctor = await Doctor.findByIdAndUpdate(
+    userId,
+    { $set: { image: result.secure_url } },
+    { new: true }
+  );
+
+  if (!doctor) {
+    throw new ApiError("Doctor not found", 404);
+  }
+
+  res.status(200).json(new ApiResponse("Profile image updated successfully", doctor, 200));
+});

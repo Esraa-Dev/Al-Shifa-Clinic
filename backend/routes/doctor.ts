@@ -6,9 +6,13 @@ import {
   getDoctorById,
   getTopDoctors,
   getDoctorStats,
+  getDoctorProfileInfo,
+  updateDoctorProfileInfo,
+  updateDoctorProfileImage,
 } from "../controllers/doctorController.js";
 import { verifyPermission, verifyToken } from "../middlewares/verify.js";
 import { UserRole } from "../constants.js";
+import { upload } from "../middlewares/multer.js";
 
 const router = express.Router();
 
@@ -18,19 +22,38 @@ router.get(
   "/stats",
   verifyToken,
   verifyPermission([UserRole.DOCTOR]),
-  getDoctorStats
+  getDoctorStats,
 );
 router.get(
   "/profile",
   verifyToken,
   verifyPermission([UserRole.DOCTOR]),
-  getDoctorProfile
+  getDoctorProfile,
 );
 router.put(
   "/profile",
   verifyToken,
   verifyPermission([UserRole.DOCTOR]),
-  updateDoctorProfile
+  updateDoctorProfile,
+);
+router.get(
+  "/profile",
+  verifyToken,
+  verifyPermission([UserRole.DOCTOR]),
+  getDoctorProfileInfo,
+);
+router.put(
+  "/profile",
+  verifyToken,
+  verifyPermission([UserRole.DOCTOR]),
+  updateDoctorProfileInfo,
+);
+router.put(
+  "/profile/image",
+  verifyToken,
+  verifyPermission([UserRole.DOCTOR]),
+  upload.single("image"),
+  updateDoctorProfileImage,
 );
 router.get("/:id", getDoctorById);
 
