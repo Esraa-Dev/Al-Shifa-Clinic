@@ -12,7 +12,7 @@ import {
   Calendar,
   GraduationCap,
 } from "lucide-react";
-import type { ContactInfoItem, ContactMethod } from "../types/types";
+import type { ContactInfoItem, ContactMethod, NavLink } from "../types/types";
 
 export const STEPS = [
   { number: 1, title: "book:steps.personalInfo", icon: User },
@@ -85,12 +85,6 @@ export const FAQ_KEYS = [
   { q: "contact.faq2.question", a: "contact.faq2.answer" },
   { q: "contact.faq3.question", a: "contact.faq3.answer" },
 ];
-
-export interface NavLink {
-  href: string;
-  labelKey: string;
-  translationKey: string;
-}
 
 export const NAV_LINKS: NavLink[] = [
   { href: "/", labelKey: "nav.home", translationKey: "home" },
