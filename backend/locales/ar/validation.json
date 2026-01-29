@@ -16,7 +16,7 @@
   "otpLength": "رمز التحقق يجب أن يكون 6 أرقام",
   "otpNumeric": "رمز التحقق يجب أن يحتوي على أرقام فقط",
   "typeInvalid": "النوع يجب أن يكون: إعادة تعيين أو تحقق",
-  
+
   "departmentRequired": "القسم مطلوب",
   "specializationEnRequired": "التخصص (الإنجليزية) مطلوب",
   "specializationArRequired": "التخصص (العربية) مطلوب",
@@ -34,5 +34,28 @@
   "dayRequired": "اليوم مطلوب",
   "dayInvalid": "اليوم غير صالح، يجب أن يكون أحد أيام الأسبوع",
   "startTimeRequired": "وقت البدء مطلوب",
-  "endTimeRequired": "وقت الانتهاء مطلوب"
+  "endTimeRequired": "وقت الانتهاء مطلوب",
+
+  "dateOfBirthInvalid": "تاريخ الميلاد غير صالح",
+  "genderRequired": "الجنس مطلوب",
+  "genderInvalid": "الجنس غير صالح",
+  "bloodGroupInvalid": "فصيلة الدم غير صالحة",
+  "streetInvalid": "الشارع غير صالح",
+  "cityInvalid": "المدينة غير صالحة",
+  "stateInvalid": "الولاية غير صالحة",
+  "countryInvalid": "البلد غير صالح",
+  "pincodeInvalid": "الرمز البريدي غير صالح",
+  "emergencyNameInvalid": "اسم جهة الاتصال في حالة الطوارئ غير صالح",
+  "emergencyRelationshipInvalid": "علاقة جهة الاتصال في حالة الطوارئ غير صالحة",
+  "emergencyPhoneInvalid": "هاتف جهة الاتصال في حالة الطوارئ غير صالح",
+  "medicalHistoryInvalid": "التاريخ الطبي غير صالح",
+  "allergyInvalid": "عنصر الحساسية غير صالح",
+  "profileImageRequired": "صورة الملف الشخصي مطلوبة",
+  "profileImageType": "يُسمح فقط بصور JPEG أو PNG أو JPG أو WebP",
+  "profileImageSize": "يجب أن تكون صورة الملف الشخصي أقل من أو تساوي 2 ميجابايت",
+  "profileRetrieved": "تم جلب الملف الشخصي بنجاح",
+  "profileUpdated": "تم تحديث الملف الشخصي بنجاح",
+  "validationFailed": "فشل التحقق",
+  "imageRequired": "صورة الملف الشخصي مطلوبة",
+  "imageUploaded": "تم رفع صورة الملف الشخصي بنجاح"
 }

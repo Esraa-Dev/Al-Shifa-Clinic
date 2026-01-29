@@ -16,7 +16,7 @@
   "otpLength": "OTP must be 6 digits",
   "otpNumeric": "OTP must contain only numbers",
   "typeInvalid": "Type must be either reset or verification",
-  
+
   "departmentRequired": "Department is required",
   "specializationEnRequired": "Specialization (English) is required",
   "specializationArRequired": "Specialization (Arabic) is required",
@@ -34,5 +34,28 @@
   "dayRequired": "Day is required",
   "dayInvalid": "Invalid day, must be a weekday",
   "startTimeRequired": "Start time is required",
-  "endTimeRequired": "End time is required"
+  "endTimeRequired": "End time is required",
+
+  "dateOfBirthInvalid": "Invalid date of birth",
+  "genderRequired": "Gender is required",
+  "genderInvalid": "Invalid gender",
+  "bloodGroupInvalid": "Invalid blood group",
+  "streetInvalid": "Invalid street",
+  "cityInvalid": "Invalid city",
+  "stateInvalid": "Invalid state",
+  "countryInvalid": "Invalid country",
+  "pincodeInvalid": "Invalid pincode",
+  "emergencyNameInvalid": "Invalid emergency contact name",
+  "emergencyRelationshipInvalid": "Invalid emergency relationship",
+  "emergencyPhoneInvalid": "Invalid emergency phone",
+  "medicalHistoryInvalid": "Invalid medical history",
+  "allergyInvalid": "Invalid allergy item",
+  "profileImageRequired": "Profile image is required",
+  "profileImageType": "Only JPEG, PNG, JPG or WebP images are allowed",
+  "profileImageSize": "Profile image must be less than or equal to 2 MB",
+  "profileRetrieved": "Profile retrieved successfully",
+  "profileUpdated": "Profile updated successfully",
+  "validationFailed": "Validation failed",
+  "imageRequired": "Profile image is required",
+  "imageUploaded": "Profile image uploaded successfully"
 }

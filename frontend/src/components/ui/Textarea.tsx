@@ -8,14 +8,18 @@ export const Textarea = ({
     error,
     id,
     className = "",
+    isDashboard = false,
     requiredInput
 }: TextareaProps) => {
     const { i18n } = useTranslation();
-    const isRtl = i18n.dir() === "rtl";
+    const isRtl = isDashboard ? false : i18n.dir() === "rtl";
 
     return (
-        <div className={`mb-4 ${className}`} dir={isRtl ? "rtl" : "ltr"}>
-            <label htmlFor={id} className="block text-base! font-medium! text-primaryText mb-4 text-start">
+        <div className={`mb-4 ${className}`} dir={isDashboard ? "ltr" : isRtl ? "rtl" : "ltr"}>
+            <label
+                htmlFor={id}
+                className={`block font-medium text-primaryText mb-4 ${isDashboard ? 'text-left' : isRtl ? 'text-right' : 'text-left'} text-base!`}
+            >
                 {label}
                 {requiredInput && <span className="text-red-500 mx-1">*</span>}
             </label>
@@ -31,12 +35,12 @@ export const Textarea = ({
                         ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500'
                         : 'border-primaryBorder focus:ring-primary/20 focus:border-primary'
                     }
-                    ${isRtl ? 'text-right' : 'text-left'}
+                    ${isDashboard ? 'text-left' : isRtl ? 'text-right' : 'text-left'}
                 `}
-                dir={isRtl ? "rtl" : "ltr"}
+                dir={isDashboard ? "ltr" : isRtl ? "rtl" : "ltr"}
             />
             {error && error.message && (
-                <p className="text-red-500 text-sm mt-1 text-start">
+                <p className={`text-red-500 text-sm mt-1 ${isDashboard ? 'text-left' : isRtl ? 'text-right' : 'text-left'}`}>
                     {error.message}
                 </p>
             )}

@@ -7,7 +7,7 @@ const InfoItem = ({ icon, label, value }: InfoItemProps) => {
       <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
         <Icon />
       </div>
-      <div className="text-right">
+      <div className="">
         <div className="text-sm text-secondary">{label}</div>
         <div className="font-medium text-primaryText">{value}</div>
       </div>

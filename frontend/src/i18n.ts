@@ -28,6 +28,8 @@ import enBook from "./locales/en/book.json";
 import arBook from "./locales/ar/book.json";
 import enAppointments from "./locales/en/appointment.json";
 import arAppointments from "./locales/ar/appointment.json";
+import enProfile from "./locales/en/profile.json"; 
+import arProfile from "./locales/ar/profile.json"; 
 
 i18n
   .use(LanguageDetector)
@@ -48,6 +50,7 @@ i18n
         appointment: enAppointment,
         book: enBook,
         appointments: enAppointments,
+        profile: enProfile, // Add this
       },
       ar: {
         home: arHome,
@@ -63,6 +66,7 @@ i18n
         appointment: arAppointment,
         book: arBook,
         appointments: arAppointments,
+        profile: arProfile, 
       },
     },
     ns: [
@@ -78,6 +82,7 @@ i18n
       "departments",
       "appointment",
       "appointments",
+      "profile", 
     ],
     defaultNS: "home",
     lng: localStorage.getItem("i18nextLng") || "ar",

@@ -4,9 +4,11 @@ import { getApiErrorMessage } from "../../utils/apiError";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import type { BookAppointmentParams } from "../../types/types";
+import { useTranslation } from "react-i18next";
 
 export const useBookAppointment = (onPaymentRequired: (data: any) => void) => {
   const navigate = useNavigate();
+    const { t } = useTranslation();
 
   return useMutation({
     mutationFn: ({ doctorId, data }: BookAppointmentParams) => {
@@ -21,8 +23,7 @@ export const useBookAppointment = (onPaymentRequired: (data: any) => void) => {
       }
     },
     onError: (error: any) => {
-      const errorMessage = getApiErrorMessage(error, "Failed to book appointment");
-      toast.error(errorMessage);
+      toast.error(getApiErrorMessage(error, t("common:defaultError")));
     },
   });
 };

@@ -34,8 +34,8 @@ export const ProfileHeader = ({
   };
 
   return (
-    <div className="bg-linear-to-br from-primary to-secondary rounded-xl border border-primaryBorder p-6 mb-4">
-      <div className="text-center mb-6">
+    <div className="bg-linear-to-br from-primary to-secondary rounded-xl border border-primaryBorder p-6 sticky top-5">
+      <div className="text-center">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="relative w-24 h-24 mx-auto mb-2">
             {image ? (
@@ -75,8 +75,8 @@ export const ProfileHeader = ({
           </div>
 
           {errors.image && (
-            <div className="bg-white p-2 rounded-sm mb-2">  
-                      <p className="text-xs text-red-400 font-bold mt-1">{errors.image.message}</p>
+            <div className="bg-white p-2 rounded-sm mb-2">
+              <p className="text-xs text-red-400 font-bold mt-1">{errors.image.message}</p>
             </div>
 
           )}

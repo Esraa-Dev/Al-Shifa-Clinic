@@ -244,6 +244,7 @@ export interface TextareaProps {
   requiredInput?: boolean;
   rows?: number;
   className?: string;
+  isDashboard?: boolean;
 }
 
 export interface DoctorFilters {

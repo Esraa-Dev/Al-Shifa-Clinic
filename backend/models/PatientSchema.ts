@@ -81,87 +81,88 @@ const PatientSchema: Schema = new Schema(
       default: "active",
     },
   },
-  { 
+  {
     timestamps: true,
-  }
+  },
 );
 
-export const getUpdateProfileImageValidation = (t: any) => {
+export const getUpdateProfileSchema = (t: any) => {
   return Joi.object({
     firstName: Joi.string().min(3).max(50),
     lastName: Joi.string().min(3).max(50),
     phone: Joi.string().pattern(/^\+?[0-9]{10,15}$/),
-    dateOfBirth: Joi.date().iso().max("now"),
-    gender: Joi.string().valid(...Object.values(Gender)),
-    bloodGroup: Joi.string().valid(...Object.values(BloodGroup)),
+    dateOfBirth: Joi.date().iso().max("now").messages({
+      "date.format": t("validation:dateOfBirthInvalid"),
+    }),
+    gender: Joi.string().valid(...Object.values(Gender)).messages({
+      "any.only": t("validation:genderInvalid"),
+    }),
+    bloodGroup: Joi.string().valid(...Object.values(BloodGroup)).messages({
+      "any.only": t("validation:bloodGroupInvalid"),
+    }),
     address: Joi.object({
-      street: Joi.string().allow("", null),
-      city: Joi.string().allow("", null),
-      state: Joi.string().allow("", null),
-      country: Joi.string().allow("", null),
-      pincode: Joi.string().allow("", null),
+      street: Joi.string().allow("", null).messages({
+        "string.base": t("validation:streetInvalid"),
+      }),
+      city: Joi.string().allow("", null).messages({
+        "string.base": t("validation:cityInvalid"),
+      }),
+      state: Joi.string().allow("", null).messages({
+        "string.base": t("validation:stateInvalid"),
+      }),
+      country: Joi.string().allow("", null).messages({
+        "string.base": t("validation:countryInvalid"),
+      }),
+      pincode: Joi.string().allow("", null).messages({
+        "string.base": t("validation:pincodeInvalid"),
+      }),
     }),
     emergencyContact: Joi.object({
-      name: Joi.string().allow("", null),
+      name: Joi.string().allow("", null).messages({
+        "string.base": t("validation:emergencyNameInvalid"),
+      }),
       relationship: Joi.string()
         .valid(...Object.values(EmergencyRelationship))
-        .allow("", null),
-      phone: Joi.string().allow("", null),
+        .allow("", null)
+        .messages({
+          "any.only": t("validation:emergencyRelationshipInvalid"),
+        }),
+      phone: Joi.string().allow("", null).messages({
+        "string.base": t("validation:emergencyPhoneInvalid"),
+      }),
     }).allow(null),
-    medicalHistory: Joi.string().max(2000).allow("", null),
-    allergies: Joi.array().items(Joi.string()).default([]),
+    medicalHistory: Joi.string().max(2000).allow("", null).messages({
+      "string.max": t("validation:medicalHistoryInvalid"),
+    }),
+    allergies: Joi.array().items(Joi.string()).default([]).messages({
+      "array.includes": t("validation:allergyInvalid"),
+    }),
   });
 };
 
-
-
-export const updateProfileSchema = Joi.object({
-  firstName: Joi.string().min(3).max(50),
-  lastName: Joi.string().min(3).max(50),
-  phone: Joi.string().pattern(/^\+?[0-9]{10,15}$/),
-  dateOfBirth: Joi.date().iso(),
-  gender: Joi.string().valid(...Object.values(Gender)),
-  bloodGroup: Joi.string().valid(...Object.values(BloodGroup)),
-  address: Joi.object({
-    address1: Joi.string().allow("", null),
-    address2: Joi.string().allow("", null),
-    city: Joi.string().allow("", null),
-    state: Joi.string().allow("", null),
-    country: Joi.string().allow("", null),
-    pincode: Joi.string().allow("", null),
-  }),
-  emergencyContact: Joi.object({
-    name: Joi.string().allow("", null),
-    relationship: Joi.string()
-      .valid(...Object.values(EmergencyRelationship))
-      .allow("", null),
-    phone: Joi.string().allow("", null),
-  }).allow(null),
-  medicalHistory: Joi.string().allow("", null),
-  allergies: Joi.array().items(Joi.string()).default([]),
-});
-
-export const updateProfileImage = Joi.object({
-  file: Joi.object({
-    mimetype: Joi.string()
-      .valid("image/jpeg", "image/png", "image/jpg", "image/webp")
+export const getUpdateProfileImageValidation = (t: any) => {
+  return Joi.object({
+    file: Joi.object({
+      mimetype: Joi.string()
+        .valid("image/jpeg", "image/png", "image/jpg", "image/webp")
+        .messages({
+          "any.only": t("validation:profileImageType"),
+        }),
+      size: Joi.number()
+        .max(2 * 1024 * 1024)
+        .messages({
+          "number.max": t("validation:profileImageSize"),
+        }),
+    })
+      .unknown(true)
+      .required()
       .messages({
-        "any.only": "Only JPEG, PNG, JPG or WebP images are allowed",
+        "any.required": t("validation:profileImageRequired"),
       }),
-    size: Joi.number()
-      .max(2 * 1024 * 1024)
-      .messages({
-        "number.max": "Profile image must be less than or equal to 2 MB",
-      }),
-  })
-    .unknown(true)
-    .required()
-    .messages({
-      "any.required": "Profile image is required",
-    }),
-});
+  });
+};
 
 export const Patient = User.discriminator<IPatient>(
   UserRole.PATIENT,
-  PatientSchema
+  PatientSchema,
 );

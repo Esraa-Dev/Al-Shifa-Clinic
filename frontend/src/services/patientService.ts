@@ -7,7 +7,7 @@ export const patientService = {
   },
    updateProfileInfo: async (data: any) => {
     const response = await api.put("patient/profile", data);
-    return response.data.data;
+    return response.data;
   },
 
   updateProfileImage: async (formData: FormData) => {

@@ -24,9 +24,7 @@ export const patientProfileSchema = z.object({
   emergencyContact: z
     .object({
       name: z.string().optional(),
-      relationship: z
-        .enum(["spouse", "parent", "child", "sibling", "friend", "other"])
-        .optional(),
+      relationship: z.string().optional(),
       phone: z.string().optional(),
     })
     .optional(),

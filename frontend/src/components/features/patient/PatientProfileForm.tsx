@@ -4,17 +4,40 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextInput } from "../../ui/TextInput";
 import { Button } from "../../ui/Button";
+import { Select } from "../../ui/Select";
+import { Textarea } from "../../ui/Textarea";
 import {
   patientProfileSchema,
   type PatientProfileFormData,
 } from "../../../validations/patientProfileSchema";
 import type { PatientProfileFormProps } from "../../../types/types";
 import { useUpdateProfile } from "../../../hooks/patient/useUpdateProfile";
+import { useTranslation } from "react-i18next";
+
+const relationshipMap: Record<string, string> = {
+  "أخ": "sibling",
+  "زوج / زوجة": "spouse",
+  "أب / أم": "parent",
+  "ابن / ابنة": "child",
+  "صديق": "friend",
+  "أخرى": "other"
+};
+
+const reverseRelationshipMap: Record<string, string> = {
+  "sibling": "أخ",
+  "spouse": "زوج / زوجة",
+  "parent": "أب / أم",
+  "child": "ابن / ابنة",
+  "friend": "صديق",
+  "other": "أخرى"
+};
 
 const PatientProfileForm = ({
   userData,
   setIsEditing,
 }: PatientProfileFormProps) => {
+  const { t } = useTranslation("profile");
+
   const {
     register,
     handleSubmit,
@@ -52,6 +75,11 @@ const PatientProfileForm = ({
   useEffect(() => {
     if (!userData) return;
 
+    const getReverseRelationship = (rel: string | undefined): string | undefined => {
+      if (!rel) return undefined;
+      return reverseRelationshipMap[rel] || rel;
+    };
+
     reset({
       firstName: userData.firstName ?? "",
       lastName: userData.lastName ?? "",
@@ -59,7 +87,6 @@ const PatientProfileForm = ({
       dateOfBirth: userData.dateOfBirth
         ? new Date(userData.dateOfBirth).toISOString().split("T")[0]
         : "",
-      // Cast string to enum types
       gender: userData.gender as "male" | "female" | "other" | "prefer-not-to-say" | undefined,
       bloodGroup: userData.bloodGroup as "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-" | "Unknown" | undefined,
       address: {
@@ -71,17 +98,15 @@ const PatientProfileForm = ({
       },
       emergencyContact: userData.emergencyContact
         ? {
-            name: userData.emergencyContact.name ?? "",
-            phone: userData.emergencyContact.phone ?? "",
-            // Cast string to enum type
-            relationship: userData.emergencyContact.relationship as 
-              "spouse" | "parent" | "child" | "sibling" | "friend" | "other" | undefined,
-          }
+          name: userData.emergencyContact.name ?? "",
+          phone: userData.emergencyContact.phone ?? "",
+          relationship: getReverseRelationship(userData.emergencyContact.relationship),
+        }
         : {
-            name: "",
-            phone: "",
-            relationship: undefined,
-          },
+          name: "",
+          phone: "",
+          relationship: undefined,
+        },
       medicalHistory: userData.medicalHistory ?? "",
       allergies: Array.isArray(userData.allergies)
         ? userData.allergies.join(", ")
@@ -90,14 +115,23 @@ const PatientProfileForm = ({
   }, [userData, reset]);
 
   const onSubmit = (data: PatientProfileFormData) => {
+    const getRelationship = (rel: string | undefined): string | undefined => {
+      if (!rel) return undefined;
+      return relationshipMap[rel] || rel;
+    };
+
     const payload = {
       ...data,
+      emergencyContact: data.emergencyContact ? {
+        ...data.emergencyContact,
+        relationship: getRelationship(data.emergencyContact.relationship),
+      } : undefined,
       allergies:
         typeof data.allergies === "string"
           ? data.allergies
-              .split(",")
-              .map((a) => a.trim())
-              .filter((a) => a !== "")
+            .split(",")
+            .map((a) => a.trim())
+            .filter((a) => a !== "")
           : data.allergies,
     };
 
@@ -113,184 +147,165 @@ const PatientProfileForm = ({
       onSubmit={handleSubmit(onSubmit)}
       className="space-y-8 bg-white p-8 rounded-xl"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
         <TextInput
-          label="الاسم الأول"
+          id="phone"
+          label={t("phone")}
+          Icon={Phone}
+          placeholder="01XXXXXXXXX"
+          register={register("phone")}
+          error={errors.phone}
+        />
+
+        <TextInput
+          id="dateOfBirth"
+          label={t("dateOfBirth")}
+          type="date"
+          placeholder={t("dateOfBirth")}
+          register={register("dateOfBirth")}
+          error={errors.dateOfBirth}
+        />
+        
+        <TextInput
+          id="firstName"
+          label={t("firstName")}
           Icon={User}
-          placeholder="أدخل الاسم الأول"
+          placeholder={t("firstName")}
           register={register("firstName")}
           error={errors.firstName}
         />
+        
         <TextInput
-          label="اسم الأخير"
+          id="lastName"
+          label={t("lastName")}
           Icon={User}
-          placeholder="أدخل اسم الأخير"
+          placeholder={t("lastName")}
           register={register("lastName")}
           error={errors.lastName}
         />
+        
+        <Select
+          id="gender"
+          label={t("gender")}
+          register={register("gender")}
+          error={errors.gender}
+        >
+          <option value="">{t("chooseGender")}</option>
+          <option value="male">{t("male")}</option>
+          <option value="female">{t("female")}</option>
+          <option value="other">{t("other")}</option>
+          <option value="prefer-not-to-say">{t("preferNotToSay")}</option>
+        </Select>
+
+        <Select
+          id="bloodGroup"
+          label={t("bloodGroup")}
+          register={register("bloodGroup")}
+          error={errors.bloodGroup}
+        >
+          <option value="">{t("chooseBloodGroup")}</option>
+          <option value="A+">A+</option>
+          <option value="A-">A-</option>
+          <option value="B+">B+</option>
+          <option value="B-">B-</option>
+          <option value="AB+">AB+</option>
+          <option value="AB-">AB-</option>
+          <option value="O+">O+</option>
+          <option value="O-">O-</option>
+          <option value="Unknown">{t("unknown")}</option>
+        </Select>
       </div>
 
-      <TextInput
-        label="رقم الهاتف"
-        Icon={Phone}
-        placeholder="مثال: 01XXXXXXXXX"
-        register={register("phone")}
-        error={errors.phone}
-      />
+      <h3 className="font-bold text-xl text-primaryText ">{t("address")} </h3>
 
-      <TextInput
-        label="تاريخ الميلاد"
-        type="date"
-        placeholder="اختر تاريخ الميلاد"
-        register={register("dateOfBirth")}
-        error={errors.dateOfBirth}
-      />
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block mb-2 text-sm font-medium text-primaryText">
-            النوع
-          </label>
-          <select
-            {...register("gender")}
-            className="w-full border border-primaryBorder rounded-lg px-4 py-3 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary text-gray-400 focus:text-primaryText"
-          >
-            <option value="">اختر النوع</option>
-            <option value="male">ذكر</option>
-            <option value="female">أنثى</option>
-            <option value="other">آخر</option>
-            <option value="prefer-not-to-say">أفضل عدم الذكر</option>
-          </select>
-          {errors.gender && (
-            <p className="text-red-500 text-sm mt-2">{errors.gender.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="block mb-2 text-sm font-medium text-primaryText">
-            فصيلة الدم
-          </label>
-          <select
-            {...register("bloodGroup")}
-            className="w-full border border-primaryBorder rounded-lg px-4 py-3 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary text-gray-400 focus:text-primaryText"
-          >
-            <option value="">اختر فصيلة الدم</option>
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="B-">B-</option>
-            <option value="AB+">AB+</option>
-            <option value="AB-">AB-</option>
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
-            <option value="Unknown">غير معروف</option>
-          </select>
-          {errors.bloodGroup && (
-            <p className="text-red-500 text-sm mt-2">
-              {errors.bloodGroup.message}
-            </p>
-          )}
-        </div>
-      </div>
-
-      <h3 className="font-semibold text-lg text-primaryText">العنوان</h3>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
         <TextInput
-          label="الشارع"
-          placeholder="اسم الشارع / رقم المنزل"
+          id="street"
+          label={t("street")}
+          placeholder={t("street")}
           register={register("address.street")}
           error={errors.address?.street}
         />
         <TextInput
-          label="المدينة"
-          placeholder="أدخل المدينة"
+          id="city"
+          label={t("city")}
+          placeholder={t("city")}
           register={register("address.city")}
           error={errors.address?.city}
         />
         <TextInput
-          label="المحافظة"
-          placeholder="أدخل المحافظة"
+          id="state"
+          label={t("state")}
+          placeholder={t("state")}
           register={register("address.state")}
           error={errors.address?.state}
         />
         <TextInput
-          label="الدولة"
-          placeholder="أدخل الدولة"
+          id="country"
+          label={t("country")}
+          placeholder={t("country")}
           register={register("address.country")}
           error={errors.address?.country}
         />
         <TextInput
-          label="الرمز البريدي"
-          placeholder="مثال: 12345"
+          id="pincode"
+          label={t("pincode")}
+          placeholder="12345"
           register={register("address.pincode")}
           error={errors.address?.pincode}
         />
       </div>
 
-      <h3 className="font-semibold text-lg text-primaryText">
-        جهة اتصال للطوارئ
+      <h3 className="font-bold text-xl text-primaryText ">
+        {t("emergencyContact")}
       </h3>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
         <TextInput
-          label="الاسم"
-          placeholder="اسم جهة الاتصال"
+          id="emergencyName"
+          label={t("contactName")}
+          placeholder={t("contactName")}
           register={register("emergencyContact.name")}
           error={errors.emergencyContact?.name}
         />
         <TextInput
-          label="رقم الهاتف"
-          placeholder="رقم هاتف جهة الاتصال"
+          id="emergencyPhone"
+          label={t("contactPhone")}
+          placeholder={t("contactPhone")}
           register={register("emergencyContact.phone")}
           error={errors.emergencyContact?.phone}
         />
-        <div>
-          <label className="block mb-2 text-sm font-medium text-primaryText">
-            صلة القرابة
-          </label>
-          <select
-            {...register("emergencyContact.relationship")}
-            className="w-full border border-primaryBorder rounded-lg px-4 py-3 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary text-gray-400 focus:text-primaryText"
-          >
-            <option value="">اختر صلة القرابة</option>
-            <option value="spouse">زوج / زوجة</option>
-            <option value="parent">أب / أم</option>
-            <option value="child">ابن / ابنة</option>
-            <option value="sibling">أخ / أخت</option>
-            <option value="friend">صديق</option>
-            <option value="other">أخرى</option>
-          </select>
-          {errors.emergencyContact?.relationship && (
-            <p className="text-red-500 text-sm mt-2">
-              {errors.emergencyContact.relationship.message}
-            </p>
-          )}
-        </div>
+
+        <Select
+          id="relationship"
+          label={t("relationship")}
+          register={register("emergencyContact.relationship")}
+          error={errors.emergencyContact?.relationship}
+        >
+          <option value="">{t("chooseRelationship")}</option>
+          <option value="زوج / زوجة">{t("spouse")}</option>
+          <option value="أب / أم">{t("parent")}</option>
+          <option value="ابن / ابنة">{t("child")}</option>
+          <option value="أخ">{t("sibling")}</option>
+          <option value="صديق">{t("friend")}</option>
+          <option value="أخرى">{t("otherRelationship")}</option>
+        </Select>
       </div>
 
-      <h3 className="font-semibold text-lg text-primaryText">معلومات طبية</h3>
+      <h3 className="font-bold text-xl text-primaryText ">{t("medicalInfo")} </h3>
 
-      <div>
-        <label className="block mb-2 text-sm font-medium text-primaryText">
-          التاريخ المرضي
-        </label>
-        <textarea
-          {...register("medicalHistory")}
-          rows={4}
-          placeholder="اكتب أي أمراض مزمنة أو عمليات سابقة (اختياري)"
-          className="w-full border border-primaryBorder rounded-lg px-4 py-3 text-sm bg-background placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-        />
-        {errors.medicalHistory && (
-          <p className="text-red-500 text-sm mt-2">
-            {errors.medicalHistory.message}
-          </p>
-        )}
-      </div>
+      <Textarea
+        id="medicalHistory"
+        label={t("medicalHistory")}
+        placeholder={t("chronicDiseases")}
+        register={register("medicalHistory")}
+        error={errors.medicalHistory}
+      />
 
       <TextInput
-        label="الحساسية"
-        placeholder="مثل: البنسلين، الغبار، أطعمة معينة"
+        id="allergies"
+        label={t("allergies")}
+        placeholder={t("allergiesPlaceholder")}
         register={register("allergies")}
         error={errors.allergies}
       />
@@ -301,7 +316,7 @@ const PatientProfileForm = ({
           onClick={() => setIsEditing(false)}
           className="bg-gray-100 text-gray-700 hover:bg-gray-200"
         >
-          إلغاء
+          {t("cancel")}
         </Button>
         <Button
           type="submit"
@@ -311,10 +326,10 @@ const PatientProfileForm = ({
           {isPending ? (
             <div className="flex items-center justify-center">
               <Loader2 className="h-4 w-4 animate-spin ml-2" />
-              جاري الحفظ
+              {t("saving")}
             </div>
           ) : (
-            "حفظ التعديلات"
+            t("saveChanges")
           )}
         </Button>
       </div>
