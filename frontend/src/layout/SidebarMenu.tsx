@@ -17,7 +17,7 @@ export const SidebarMenu = () => {
     { icon: Star, label: "Reviews", href: "/doctor/reviews" },
     { icon: UserCog, label: "Profile Settings", href: "/doctor/profile-settings" },
     { icon: KeyRound, label: "Change Password", href: "/doctor/change-password" },
-    { icon: Bell, label: "Notifications", href: "/doctor/Notification" },
+    { icon: Bell, label: "Notifications", href: "/doctor/notifications" },
   ];
 
   return (
@@ -30,8 +30,8 @@ export const SidebarMenu = () => {
             to={item.href}
             className={({ isActive }) => `
               flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200
-              ${isActive 
-                ? "bg-blue-50 text-secondary border border-blue-100 shadow-sm" 
+              ${isActive
+                ? "bg-blue-50 text-secondary border border-blue-100 shadow-sm"
                 : "text-gray-500 hover:bg-gray-50 hover:text-secondary"}
             `}
           >

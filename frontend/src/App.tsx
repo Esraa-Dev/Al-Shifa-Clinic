@@ -29,6 +29,10 @@ import DepartmentsPage from "./pages/DepartmentsPage";
 import { PaymentSuccess } from "./components/features/book-appointment/PaymentSuccess";
 import AdminDashboard from "./pages/AdminDashboard";
 import ChangePassword from "./pages/ChangePassword";
+import DoctorProfileSettings from "./pages/DoctorProfileSettings";
+import NotificationsPage from "./pages/NotificationsPage";
+import RatingsPage from "./pages/RatingsPage";
+import PrescriptionsPage from "./pages/PrescriptionsPage";
 
 const App = () => {
   return (
@@ -66,11 +70,11 @@ const App = () => {
               <Route path="/doctor" element={<DashboardLayout />}>
                 <Route path="dashboard" element={<DoctorDashboard />} />
                 <Route path="appointments" element={<DoctorAppointments />} />
-                {/* <Route path="prescriptions" element={<DoctorPrescriptions />} />
-                <Route path="reviews" element={<DoctorReviews />} />
-                <Route path="profile-settings" element={<DoctorProfileSettings />} /> */}
+                <Route path="prescriptions" element={<PrescriptionsPage />} />
+                <Route path="reviews" element={<RatingsPage />} />
+                <Route path="profile-settings" element={<DoctorProfileSettings />} />
                 <Route path="change-password" element={<ChangePassword />} />
-                {/* <Route path="Notification" element={<DoctorNotifications />} /> */}
+                <Route path="notifications" element={<NotificationsPage />} />
               </Route>
             </Route>
             <Route element={<ProtectedRoute allowedRoles={["patient", "doctor"]} />}>

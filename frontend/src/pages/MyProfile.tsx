@@ -1,12 +1,14 @@
 import { useGetProfile } from "../hooks/patient/useGetProfile";
 import { PatientPersonalInfo } from "../components/features/patient/PatientPersonalInfo";
-import { ProfileHeader } from "../components/features/patient/ProfileHeader";
-import { PatientProfileSkeleton } from "../components/features/patient/PatientProfileSkeleton";
+import { ProfileHeader } from "../components/shared/ProfileHeader";
+import { useUpdateProfileImage } from "../hooks/patient/useUpdateProfileImage";
+import { ProfileSkeleton } from "../components/features/patient/ProfileSkeleton";
 
 const MyProfile = () => {
   const { data: profile, isLoading, error } = useGetProfile();
+  const { mutate: updateImage, isPending: isUpdatingImage } = useUpdateProfileImage();
 
-  if (isLoading) return <PatientProfileSkeleton />;
+  if (isLoading) return <ProfileSkeleton />;
 
   if (error) {
     return (
@@ -25,6 +27,10 @@ const MyProfile = () => {
             lastName={profile.lastName}
             image={profile.image}
             createdAt={profile.createdAt}
+            title="" 
+            isUpdating={isUpdatingImage}
+            onImageUpload={updateImage}
+            isDoctor={false}
           />
         </div>
         <PatientPersonalInfo userData={profile} />

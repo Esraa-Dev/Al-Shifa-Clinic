@@ -16,11 +16,11 @@ export const PaymentSuccess = () => {
                     </div>
 
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                        {t("appointment:paymentSuccessful")}
+                        {t("book:paymentSuccessful")}
                     </h1>
 
                     <p className="text-gray-600 mb-6">
-                        {t("appointment:appointmentConfirmed")}
+                        {t("book:appointmentConfirmed")}
                     </p>
 
                     <div className="flex gap-4 flex-wrap">
@@ -29,7 +29,7 @@ export const PaymentSuccess = () => {
                             className="w-full gap-2"
                         >
                             <Calendar size={18} />
-                            {t("appointment:viewMyAppointments")}
+                            {t("book:viewMyAppointments")}
                         </Button>
 
                         <Button
@@ -37,7 +37,7 @@ export const PaymentSuccess = () => {
                             className="w-full gap-2 bg-secondary"
                         >
                             <Home size={18} />
-                            {t("appointment:backToHome")}
+                            {t("book:backToHome")}
                         </Button>
                     </div>
 

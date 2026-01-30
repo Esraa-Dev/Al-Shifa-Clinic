@@ -21,10 +21,10 @@ const AdminDashboard = () => {
                             <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-primaryBorder animate-pulse">
                                 <div className="flex items-center justify-between gap-4">
                                     <div>
-                                        <div className="h-4 bg-gray-200 rounded w-24 mb-4"></div>
-                                        <div className="h-8 bg-gray-200 rounded w-16"></div>
+                                        <div className="h-4 bg-gray-100 rounded w-24 mb-4"></div>
+                                        <div className="h-8 bg-gray-100 rounded w-16"></div>
                                     </div>
-                                    <div className="p-3 rounded-xl bg-gray-200">
+                                    <div className="p-3 rounded-xl bg-gray-100">
                                         <div className="w-6 h-6"></div>
                                     </div>
                                 </div>
@@ -44,16 +44,16 @@ const AdminDashboard = () => {
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                 {isLoading ? (
                     <div className="bg-white rounded-lg shadow-md p-4 animate-pulse">
-                        <div className="h-6 bg-gray-200 rounded w-48 mb-4"></div>
-                        <div className="h-64 bg-gray-200 rounded"></div>
+                        <div className="h-6 bg-gray-100 rounded w-48 mb-4"></div>
+                        <div className="h-64 bg-gray-100 rounded"></div>
                     </div>
                 ) : (
                     <AppointmentStatistics stats={stats?.appointmentStats || []} />
                 )}
                 {isLoading ? (
                     <div className="bg-white  rounded-lg shadow-md p-4 animate-pulse">
-                        <div className="h-6 bg-gray-200 rounded w-48 mb-4"></div>
-                        <div className="w-72 h-72 rounded-full mx-auto bg-gray-200"></div>
+                        <div className="h-6 bg-gray-100 rounded w-48 mb-4"></div>
+                        <div className="w-72 h-72 rounded-full mx-auto bg-gray-100"></div>
                     </div>
                 ) : (
                     <DepartmentsChart stats={stats?.departmentStats || []} />
@@ -63,17 +63,17 @@ const AdminDashboard = () => {
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                 {isLoading ? (
                     <div className="bg-white rounded-lg shadow-md p-4 animate-pulse">
-                        <div className="h-6 bg-gray-200 rounded w-48 mb-4"></div>
+                        <div className="h-6 bg-gray-100 rounded w-48 mb-4"></div>
                         <div className="space-y-4">
                             {[1, 2, 3, 4, 5].map((i) => (
                                 <div key={i} className="flex items-center justify-between p-2">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                                        <div className="w-10 h-10 bg-gray-100 rounded-full"></div>
                                         <div>
-                                            <div className="h-4 bg-gray-200 rounded w-32"></div>
+                                            <div className="h-4 bg-gray-100 rounded w-32"></div>
                                         </div>
                                     </div>
-                                    <div className="h-6 bg-gray-200 rounded w-16"></div>
+                                    <div className="h-6 bg-gray-100 rounded w-16"></div>
                                 </div>
                             ))}
                         </div>
@@ -83,13 +83,13 @@ const AdminDashboard = () => {
                 )}
                 {isLoading ? (
                     <div className="bg-white rounded-lg shadow-md p-4 animate-pulse">
-                        <div className="h-6 bg-gray-200 rounded w-48 mb-4"></div>
+                        <div className="h-6 bg-gray-100 rounded w-48 mb-4"></div>
                         <div className="grid grid-cols-2 gap-3 mb-6">
-                            <div className="bg-gray-200 rounded-lg p-4">
+                            <div className="bg-gray-100 rounded-lg p-4">
                                 <div className="h-8 bg-gray-300 rounded w-12 mx-auto mb-2"></div>
                                 <div className="h-4 bg-gray-300 rounded w-20 mx-auto"></div>
                             </div>
-                            <div className="bg-gray-200 rounded-lg p-4">
+                            <div className="bg-gray-100 rounded-lg p-4">
                                 <div className="h-8 bg-gray-300 rounded w-12 mx-auto mb-2"></div>
                                 <div className="h-4 bg-gray-300 rounded w-20 mx-auto"></div>
                             </div>
@@ -97,12 +97,12 @@ const AdminDashboard = () => {
                         <div className="space-y-3">
                             {[1, 2, 3, 4].map((i) => (
                                 <div key={i} className="flex items-center gap-3 p-2">
-                                    <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                                    <div className="w-10 h-10 bg-gray-100 rounded-full"></div>
                                     <div className="flex-1">
-                                        <div className="h-4 bg-gray-200 rounded w-32 mb-2"></div>
-                                        <div className="h-3 bg-gray-200 rounded w-24"></div>
+                                        <div className="h-4 bg-gray-100 rounded w-32 mb-2"></div>
+                                        <div className="h-3 bg-gray-100 rounded w-24"></div>
                                     </div>
-                                    <div className="h-6 bg-gray-200 rounded w-20"></div>
+                                    <div className="h-6 bg-gray-100 rounded w-20"></div>
                                 </div>
                             ))}
                         </div>

@@ -117,7 +117,9 @@ export const validateUpdateDoctorProfile = (t: any) => {
       .message(t("validation:duplicateDays")),
   });
 };
+
 export const validateUpdateDoctorInfo = Joi.object({
+  department: Joi.string().allow("").optional(),
   specialization_en: Joi.string().allow(""),
   specialization_ar: Joi.string().allow(""),
   qualification_en: Joi.string().allow(""),
@@ -126,21 +128,6 @@ export const validateUpdateDoctorInfo = Joi.object({
   fee: Joi.number().min(0),
   description_en: Joi.string().allow(""),
   description_ar: Joi.string().allow(""),
-  address: Joi.object({
-    address1_en: Joi.string().allow(""),
-    address1_ar: Joi.string().allow(""),
-    address2_en: Joi.string().allow(""),
-    address2_ar: Joi.string().allow(""),
-    city_en: Joi.string().allow(""),
-    city_ar: Joi.string().allow(""),
-    state_en: Joi.string().allow(""),
-    state_ar: Joi.string().allow(""),
-    country_en: Joi.string().allow(""),
-    country_ar: Joi.string().allow(""),
-    pincode: Joi.string().allow(""),
-  }).optional(),
-  dateOfBirth: Joi.date().iso(),
-  bloodGroup: Joi.string(),
   schedule: Joi.array()
     .items(
       Joi.object({
@@ -174,7 +161,7 @@ export const validateDoctorImage = Joi.object({
         "any.only": "Only JPEG, PNG, JPG or WebP images are allowed",
       }),
     size: Joi.number()
-      .max(5 * 1024 * 1024) 
+      .max(5 * 1024 * 1024)
       .messages({
         "number.max": "Profile image must be less than or equal to 5 MB",
       }),

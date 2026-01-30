@@ -1,4 +1,4 @@
-export const PatientProfileSkeleton = () => {
+export const ProfileSkeleton = () => {
     return (
         <div className="bg-background py-10 animate-pulse">
             <div className="container">

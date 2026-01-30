@@ -5,21 +5,21 @@ export const DoctorCardSkeleton = () => {
                 <div className="absolute top-10 left-10 opacity-20 select-none">
                     <div className="grid grid-cols-4 gap-3">
                         {[...Array(16)].map((_, i) => (
-                            <div key={i} className="w-1 h-1 bg-gray-300 rounded-full"></div>
+                            <div key={i} className="w-1 h-1 bg-gray-200 rounded-full"></div>
                         ))}
                     </div>
                 </div>
 
                 <div className="relative w-72 h-72 md:w-85 md:h-85 flex-center">
-                    <div className="absolute inset-0 bg-gray-200 rounded-full blur-3xl scale-150 opacity-40"></div>
+                    <div className="absolute inset-0 bg-gray-100 rounded-full blur-3xl scale-150 opacity-40"></div>
                     <div className="absolute -inset-5 border border-primaryBorder rounded-full"></div>
                     <div className="absolute -inset-10 border border-gray-300/5 rounded-full"></div>
                     <div className="absolute inset-0 bg-primaryBorder rounded-full scale-110"></div>
                     <div className="absolute inset-0 border-12 border-gray-300/20 rounded-full"></div>
                     <div className="absolute inset-0 rounded-full border-2 border-dashed border-gray-300/20 animate-[spin_20s_linear_infinite]"></div>
 
-                    <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-2xl z-10 bg-gray-300 animate-pulse">
-                        <div className="w-full h-full bg-gray-300"></div>
+                    <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-2xl z-10 bg-gray-200 animate-pulse">
+                        <div className="w-full h-full bg-gray-200"></div>
                     </div>
                 </div>
 
@@ -46,8 +46,8 @@ export const DoctorCardSkeleton = () => {
 
             <div className='flex justify-center items-center relative z-20 -mt-5'>
                 <div className="w-64 bg-white/90 backdrop-blur-sm rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.2)] border border-gray-300 p-4 text-center animate-pulse">
-                    <div className="h-6 bg-gray-300 rounded w-3/4 mx-auto mb-2"></div>
-                    <div className="h-4 bg-gray-300 rounded w-1/2 mx-auto"></div>
+                    <div className="h-6 bg-gray-200 rounded w-3/4 mx-auto mb-2"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
                 </div>
             </div>
         </div>

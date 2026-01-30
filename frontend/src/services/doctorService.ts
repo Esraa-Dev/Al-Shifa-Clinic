@@ -41,7 +41,7 @@ export const doctorService = {
     return response.data;
   },
   useUpdateDoctorImage: async (formData: FormData) => {
-    const response = await api.put("doctors/profile/image", formData, {
+    const response = await api.put("doctor/profile/image", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

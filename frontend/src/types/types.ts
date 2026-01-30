@@ -33,8 +33,12 @@ export interface MobileNavbarProps {
 export interface ProfileHeaderProps {
   firstName: string;
   lastName: string;
-  image: string;
+  image?: string;
   createdAt: string;
+  title?: string;
+  isUpdating: boolean;
+  onImageUpload: (formData: FormData) => void;
+  isDoctor?: boolean;
 }
 
 interface tabsProps {
@@ -68,6 +72,7 @@ export interface EmergencyContact {
   relationship: string;
   phone: string;
 }
+
 export interface PatientProfile {
   _id: string;
   firstName: string;
@@ -89,6 +94,7 @@ export interface PatientProfile {
   role?: string;
   isEmailVerified?: boolean;
 }
+
 export interface PatientPersonalInfoProps {
   userData: PatientProfile;
 }
@@ -132,9 +138,35 @@ export interface Doctor {
   isEmailVerified: boolean;
   verifyOtp?: string;
   verifyOtpExpireAt?: string | Date;
+  resetPasswordOtp?: string;
+  resetPasswordOtpExpireAt?: string | Date;
+  refreshToken?: string;
   isActive: boolean;
-  profileStatus: string;
-  department?: Department;
+  profileStatus?: "incomplete" | "completed";
+  department?: string | Department;
+  specialization_en?: string;
+  specialization_ar?: string;
+  qualification_en?: string;
+  qualification_ar?: string;
+  experience?: number;
+  fee?: number;
+  description_en?: string;
+  description_ar?: string;
+  schedule?: Array<{
+    day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
+    startTime: string;
+    endTime: string;
+  }>;
+  rating?: number;
+  totalReviews?: number;
+  status: "pending" | "approved" | "rejected";
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
+}
+// In your types.ts file, remove or update the DoctorProfileFormData interface
+// Keep only one consistent definition
+export type DoctorProfileFormData = {
+  department: string;
   specialization_en: string;
   specialization_ar: string;
   qualification_en: string;
@@ -143,36 +175,12 @@ export interface Doctor {
   fee: number;
   description_en?: string;
   description_ar?: string;
-  schedule: {
-    day: string;
+  schedule: Array<{
+    day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
     startTime: string;
     endTime: string;
-  }[];
-  rating: number;
-  totalReviews: number;
-  status: "pending" | "approved" | "rejected";
-  dateOfBirth?: string | Date;
-  bloodGroup?: string;
-  specialization?: string;
-  qualification?: string;
-  description?: string;
-  address?: {
-    address1_en?: string;
-    address1_ar?: string;
-    address2_en?: string;
-    address2_ar?: string;
-    city_en?: string;
-    city_ar?: string;
-    state_en?: string;
-    state_ar?: string;
-    country_en?: string;
-    country_ar?: string;
-    pincode?: string;
-  };
-
-  createdAt?: string | Date;
-  updatedAt?: string | Date;
-}
+  }>;
+};
 
 export interface BookedSlotsParams {
   doctorId: string;
@@ -192,49 +200,42 @@ export interface BookAppointmentParams {
   };
 }
 
+export interface UserBasicInfo {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  image?: string;
+  phone?: string;
+  email?: string;
+}
+
+export interface DoctorBasicInfo extends UserBasicInfo {
+  specialization_en: string;
+  specialization_ar: string;
+  fee: number;
+}
+
 export interface Appointment {
   _id: string;
-  id?: string;
-  patientId: {
-    _id: string;
-    firstName: string;
-    lastName: string;
-    email?: string;
-    phone: string;
-    image?: string;
-    dateOfBirth?: string | Date;
-    gender?: string;
-  };
-  doctorId: {
-    _id: string;
-    firstName: string;
-    lastName: string;
-    email?: string;
-    phone: string;
-    image?: string;
-    specialization_en: string;
-    specialization_ar: string;
-    fee: number;
-    specialization?: string;
-  };
+  patientId: string | UserBasicInfo;
+  doctorId: string | DoctorBasicInfo;
   appointmentDate: string;
   startTime: string;
   endTime: string;
   type: "clinic" | "video" | "voice";
-  status: "Scheduled" | "In Progress" | "Completed" | "Cancelled";
+  status: "Pending" | "Scheduled" | "In Progress" | "Completed" | "Cancelled";
   fee: number;
-  symptoms_en?: string;
-  symptoms_ar?: string;
   symptoms?: string;
   roomId?: string;
   callStatus?: "idle" | "ringing" | "connected" | "ended";
   callStartedAt?: Date;
   callEndedAt?: Date;
-  callDuration?: number;
+  paymentStatus?: "pending" | "paid" | "failed" | "refunded";
+  stripePaymentId?: string;
+  stripeClientSecret?: string;
   createdAt: string | Date;
   updatedAt: string | Date;
 }
-
 export interface TextareaProps {
   register: UseFormRegisterReturn;
   error?: FieldError;
@@ -275,14 +276,7 @@ export interface DoctorOnboardingData {
   description_en?: string;
   description_ar?: string;
   schedule: {
-    day:
-      | "monday"
-      | "tuesday"
-      | "wednesday"
-      | "thursday"
-      | "friday"
-      | "saturday"
-      | "sunday";
+    day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
     startTime: string;
     endTime: string;
   }[];
@@ -302,6 +296,9 @@ export interface SelectProps {
 
 export interface AppointmentCardProps {
   appointment: Appointment;
+  isOnline?: boolean;
+  variant: "doctor" | "patient";
+  onActionComplete?: () => void;
 }
 
 export interface User {
@@ -363,43 +360,21 @@ export interface PatientProfileFormData {
   phone: string;
   dateOfBirth?: string;
   gender?: "male" | "female" | "other" | "prefer-not-to-say";
-  bloodGroup?:
-    | "A+"
-    | "A-"
-    | "B+"
-    | "B-"
-    | "AB+"
-    | "AB-"
-    | "O+"
-    | "O-"
-    | "Unknown";
+  bloodGroup?: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-" | "Unknown";
   address?: {
-    address1_en?: string;
-    address1_ar?: string;
-    address2_en?: string;
-    address2_ar?: string;
-    city_en?: string;
-    city_ar?: string;
-    state_en?: string;
-    state_ar?: string;
-    country_en?: string;
-    country_ar?: string;
+    street?: string;
+    city?: string;
+    state?: string;
+    country?: string;
     pincode?: string;
   };
   emergencyContact?: {
     name?: string;
     phone?: string;
-    relationship?:
-      | "spouse"
-      | "parent"
-      | "child"
-      | "sibling"
-      | "friend"
-      | "other";
+    relationship?: "spouse" | "parent" | "child" | "sibling" | "friend" | "other";
   };
-  medicalHistory_en?: string;
-  medicalHistory_ar?: string;
-  allergies?: string | string[];
+  medicalHistory?: string;
+  allergies?: string[];
 }
 
 export interface ContactMethod {
@@ -423,11 +398,6 @@ export interface NavLink {
   translationKey: string;
 }
 
-export interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}
 export interface EmptyStateProps {
   icon: LucideIcon;
   titleKey: string;
@@ -435,6 +405,7 @@ export interface EmptyStateProps {
   actionLabelKey?: string;
   onAction?: () => void;
 }
+
 export interface DoctorListHeaderProps {
   title: string;
   subtitle: string;
@@ -514,18 +485,13 @@ export interface ReviewStepProps {
   onBack: () => void;
   onConfirm: () => void;
 }
-export interface DoctorAppointmentsParams {
+
+export interface AppointmentsParams {
   status?: string | string[];
   date?: string;
+  page?: number;
+  limit?: number;
 }
-
-export interface AppointmentCardProps {
-  appointment: Appointment;
-  isOnline?: boolean;
-  variant: "doctor" | "patient";
-  onActionComplete?: () => void;
-}
-
 export interface StatCardProps {
   title: string;
   value: string | number;
@@ -544,6 +510,7 @@ export interface DashboardTableProps<T = any> {
   data: T[];
   title?: string;
 }
+
 export interface RecentAppointment {
   patientName: string;
   patientPhone: string;
@@ -563,7 +530,7 @@ export interface DeptStat {
   count: number;
 }
 
-interface DoctorSceduleData {
+interface DoctorScheduleData {
   _id: string;
   firstName: string;
   lastName: string;
@@ -575,7 +542,7 @@ interface DoctorSceduleData {
 interface DoctorsStatusData {
   available: number;
   unavailable: number;
-  list: DoctorSceduleData[];
+  list: DoctorScheduleData[];
 }
 
 export interface DoctorsStatusCardProps {
@@ -597,6 +564,19 @@ export interface StatusStat {
 
 export interface ScheduleDay {
   day: string;
+  startTime: string;
+  endTime: string;
+}
+
+export interface DoctorProfileFormProps {
+  userData: Doctor;
+  setIsEditing: (editing: boolean) => void;
+}
+
+export type DayType = "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
+
+export interface ScheduleSlot {
+  day: DayType;
   startTime: string;
   endTime: string;
 }

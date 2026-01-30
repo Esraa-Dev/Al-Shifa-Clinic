@@ -30,12 +30,15 @@ const Hero = () => {
                 {t('home:hero.book_now')}
               </Link>
 
-              <Button
-                className="flex items-center gap-2 bg-secondary hover:bg-secondary/80 hover:border hover:border-white text-white"
-              >
-                <Phone className="w-5 h-5" />
-                {t('home:hero.call_us')}
-              </Button>
+              <a href="tel:+201234567890">
+                <Button
+                  className="flex items-center gap-2 bg-secondary hover:bg-secondary/80 hover:border hover:border-white text-white"
+                >
+                  <Phone className="w-5 h-5" />
+                  {t('home:hero.call_us')}
+                </Button>
+              </a>
+
             </div>
           </div>
         </div>
