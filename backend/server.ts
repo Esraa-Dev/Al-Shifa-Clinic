@@ -20,7 +20,6 @@ import patientRouter from "./routes/patient.js";
 import contactRoutes from "./routes/contact.js";
 import statsRoutes from "./routes/stats.js";
 import adminRoutes from "./routes/admin.js";
-import notificationRoutes from "./routes/notification.js";
 
 import { stripeWebhook } from "./controllers/appointmentController.js";
 import bodyParser from "body-parser";
@@ -63,7 +62,6 @@ app.use("/api/v1/departments", departmentRouter);
 app.use("/api/v1/contact", contactRoutes);
 app.use("/api/v1/stats", statsRoutes);
 app.use("/api/v1/admin", adminRoutes);
-app.use("/api/v1/notifications", notificationRoutes);
 
 app.use(errorHandler);
 

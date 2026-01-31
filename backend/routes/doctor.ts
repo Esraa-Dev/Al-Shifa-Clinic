@@ -11,6 +11,7 @@ import {
   updateDoctorProfileImage,
 } from "../controllers/doctorController.js";
 import { verifyPermission, verifyToken } from "../middlewares/verify.js";
+import { validateObjectId } from "../middlewares/validateObjectId.js";
 import { UserRole } from "../constants.js";
 import { upload } from "../middlewares/multer.js";
 
@@ -37,13 +38,13 @@ router.put(
   updateDoctorProfile,
 );
 router.get(
-  "/profile",
+  "/profile/info",
   verifyToken,
   verifyPermission([UserRole.DOCTOR]),
   getDoctorProfileInfo,
 );
 router.put(
-  "/profile",
+  "/profile/info",
   verifyToken,
   verifyPermission([UserRole.DOCTOR]),
   updateDoctorProfileInfo,
@@ -55,6 +56,6 @@ router.put(
   upload.single("image"),
   updateDoctorProfileImage,
 );
-router.get("/:id", getDoctorById);
+router.get("/:id", validateObjectId(), getDoctorById);
 
 export default router;

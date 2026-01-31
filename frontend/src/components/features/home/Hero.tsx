@@ -3,15 +3,19 @@ import { Button } from "../../ui/Button";
 import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 
+
 const Hero = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   return (
-    <div className="h-[calc(100vh-96px)] w-full bg-cover bg-center bg-no-repeat bg-[url('/src/assets/hero.jpg')]">
-      <div className="bg-black/50 w-full h-[calc(100vh-96px)] flex items-center">
+    <div className="relative h-[calc(100vh-96px)] w-full overflow-hidden">
+      <div
+        className={`absolute inset-0 bg-cover bg-center bg-no-repeat bg-[url('/src/assets/hero.jpg')] ${i18n.language === "en" ? "transform-[scaleX(-1)]" : ""}`}
+      />
+
+      <div className="relative bg-black/50 w-full h-[calc(100vh-96px)] flex items-center">
         <div className="container mx-auto px-6 lg:px-12">
           <div className="max-w-3xl text-white space-y-6">
-
             <h1 className="text-4xl md:text-7xl lg:text-8xl font-bold leading-tight tracking-tight text-primary">
               {t('home:hero.title_part1')}
               <span className="text-white me-2"> {t('home:hero.title_part2')}</span>
@@ -38,7 +42,6 @@ const Hero = () => {
                   {t('home:hero.call_us')}
                 </Button>
               </a>
-
             </div>
           </div>
         </div>
