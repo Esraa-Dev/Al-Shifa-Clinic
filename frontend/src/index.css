@@ -12,7 +12,7 @@ body,
 
 @layer components {
   .container {
-    @apply mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-[1280px];
+    @apply mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-7xl;
   }
   .flex-center {
     @apply flex justify-center items-center;
@@ -38,8 +38,6 @@ input[type="date"] {
   text-align: right;
 }
 
-
-/* Override react-datepicker styles for full width */
 .react-datepicker {
   width: 100% !important;
   font-family: inherit !important;
@@ -121,7 +119,6 @@ input[type="date"] {
   visibility: visible !important;
 }
 
-/* For inline calendar */
 .react-datepicker--inline {
   border: none !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
@@ -129,7 +126,6 @@ input[type="date"] {
   padding: 1.5rem !important;
 }
 
-/* Responsive adjustments */
 @media (max-width: 640px) {
   .react-datepicker__day {
     height: 2.5rem !important;

@@ -25,6 +25,7 @@
   "paymentFailed": "Payment failed",
   "paymentSuccess": "Payment successful!",
   "paymentNotReady": "Payment information not ready yet",
+  "completePaymentToConfirm": "Complete Payment to Confirm",
   "processing": "Processing payment...",
   "confirmPayment": "Confirm Payment",
   "bookAppointment": {
