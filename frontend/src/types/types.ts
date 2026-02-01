@@ -645,3 +645,36 @@ export interface Notification {
   isRead: boolean;
   createdAt: string | Date;
 }
+export interface RatingModalProps {
+  appointmentId: string;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export interface RatingFormData {
+  review: string;
+}
+
+export interface Rating {
+  _id: string;
+  rating: number;
+  review?: string;
+  createdAt: string | Date;
+
+  appointmentDate?: string | Date;
+  appointmentType?: "clinic" | "video" | "voice";
+
+  patient?: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    image?: string;
+  };
+
+  patientId?: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    image?: string;
+  };
+}
