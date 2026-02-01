@@ -6,6 +6,7 @@ import { Notification } from "../models/NotificationSchema.js";
 import { getPaginationData } from "../utils/PaginationHelper.js";
 
 export const getNotifications = AsyncHandler(async (req: Request, res: Response) => {
+  const t = req.t;
   const userId = req.user?._id;
   const { page = 1, limit = 20 } = req.query;
 
@@ -19,11 +20,16 @@ export const getNotifications = AsyncHandler(async (req: Request, res: Response)
     .limit(pagination.limit);
 
   res.status(200).json(
-    new ApiResponse("Notifications fetched", { notifications, pagination }, 200)
+    new ApiResponse(
+      t("notification:notificationsFetched"), 
+      { notifications, pagination }, 
+      200
+    )
   );
 });
 
 export const markAsRead = AsyncHandler(async (req: Request, res: Response) => {
+  const t = req.t;
   const { id } = req.params;
   const userId = req.user?._id;
 
@@ -34,13 +40,20 @@ export const markAsRead = AsyncHandler(async (req: Request, res: Response) => {
   );
 
   if (!notification) {
-    throw new ApiError("Notification not found", 404);
+    throw new ApiError(t("notification:notificationNotFound"), 404);
   }
 
-  res.status(200).json(new ApiResponse("Notification marked as read", notification, 200));
+  res.status(200).json(
+    new ApiResponse(
+      t("notification:markedAsRead"), 
+      notification, 
+      200
+    )
+  );
 });
 
 export const markAllAsRead = AsyncHandler(async (req: Request, res: Response) => {
+  const t = req.t;
   const userId = req.user?._id;
 
   await Notification.updateMany(
@@ -48,23 +61,37 @@ export const markAllAsRead = AsyncHandler(async (req: Request, res: Response) =>
     { isRead: true }
   );
 
-  res.status(200).json(new ApiResponse("All notifications marked as read", null, 200));
+  res.status(200).json(
+    new ApiResponse(
+      t("notification:allMarkedAsRead"), 
+      null, 
+      200
+    )
+  );
 });
 
 export const deleteNotification = AsyncHandler(async (req: Request, res: Response) => {
+  const t = req.t;
   const { id } = req.params;
   const userId = req.user?._id;
 
   const notification = await Notification.findOneAndDelete({ _id: id, userId });
 
   if (!notification) {
-    throw new ApiError("Notification not found", 404);
+    throw new ApiError(t("notification:notificationNotFound"), 404);
   }
 
-  res.status(200).json(new ApiResponse("Notification deleted", null, 200));
+  res.status(200).json(
+    new ApiResponse(
+      t("notification:notificationDeleted"), 
+      null, 
+      200
+    )
+  );
 });
 
 export const getUnreadCount = AsyncHandler(async (req: Request, res: Response) => {
+  const t = req.t;
   const userId = req.user?._id;
 
   const count = await Notification.countDocuments({
@@ -72,5 +99,11 @@ export const getUnreadCount = AsyncHandler(async (req: Request, res: Response) =
     isRead: false
   });
 
-  res.status(200).json(new ApiResponse("Unread count fetched", { count }, 200));
+  res.status(200).json(
+    new ApiResponse(
+      t("notification:unreadCountFetched"), 
+      { count }, 
+      200
+    )
+  );
 });

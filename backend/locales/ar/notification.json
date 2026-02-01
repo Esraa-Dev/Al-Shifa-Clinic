@@ -1,0 +1,8 @@
+{
+  "notificationsFetched": "تم جلب الإشعارات بنجاح",
+  "markedAsRead": "تم وضع علامة مقروء على الإشعار",
+  "allMarkedAsRead": "تم وضع علامة مقروء على جميع الإشعارات",
+  "notificationDeleted": "تم حذف الإشعار بنجاح",
+  "notificationNotFound": "لم يتم العثور على الإشعار",
+  "unreadCountFetched": "تم جلب عدد الرسائل غير المقروءة بنجاح"
+}

@@ -20,6 +20,7 @@ import patientRouter from "./routes/patient.js";
 import contactRoutes from "./routes/contact.js";
 import statsRoutes from "./routes/stats.js";
 import adminRoutes from "./routes/admin.js";
+import notificationRoutes from "./routes/notification.js";
 
 import { stripeWebhook } from "./controllers/appointmentController.js";
 import bodyParser from "body-parser";
@@ -62,6 +63,7 @@ app.use("/api/v1/departments", departmentRouter);
 app.use("/api/v1/contact", contactRoutes);
 app.use("/api/v1/stats", statsRoutes);
 app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/notifications", notificationRoutes);
 
 app.use(errorHandler);
 
@@ -73,10 +75,24 @@ const io = new Server(server, {
 });
 
 let onlineUsers = new Map();
+
 io.on("connection", (socket) => {
   socket.on("identify", (userId) => {
     onlineUsers.set(userId, socket.id);
+    socket.join(`user:${userId}`);
     io.emit("get-online-users", Array.from(onlineUsers.keys()));
+  });
+
+  socket.on("subscribe-notifications", (userId) => {
+    socket.join(`user:${userId}`);
+  });
+
+  socket.on("unsubscribe-notifications", (userId) => {
+    socket.leave(`user:${userId}`);
+  });
+
+  socket.on("notification-read", ({ notificationId, userId }) => {
+    io.to(`user:${userId}`).emit("notification-read", { notificationId });
   });
 
   socket.on("start-call", (data) => {
@@ -100,6 +116,10 @@ io.on("connection", (socket) => {
     io.emit("get-online-users", Array.from(onlineUsers.keys()));
   });
 });
+
+export const sendNotification = (userId: string, notification: any) => {
+  io.to(`user:${userId}`).emit("new-notification", notification);
+};
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, async () => {
