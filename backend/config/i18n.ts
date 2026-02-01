@@ -8,7 +8,7 @@ i18next
   .init({
     debug: true,
     fallbackLng: "en",
-    ns: ["common", "auth", "validation","email","user","doctor","department","appointment","contact","stats","notification"],
+    ns: ["common", "auth", "validation","email","user","doctor","department","appointment","contact","stats","notification","rating"],
     supportedLngs: ["ar", "en"],
     load: "languageOnly",
     nonExplicitSupportedLngs: true,

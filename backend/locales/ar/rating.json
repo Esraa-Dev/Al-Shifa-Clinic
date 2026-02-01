@@ -1,0 +1,12 @@
+{
+  "validationFailed": "فشل التحقق من صحة التقييم",
+  "appointmentNotFound": "لم يتم العثور على الموعد",
+  "unauthorized": "غير مصرح",
+  "appointmentNotCompleted": "يمكن التقييم للمواعيد المكتملة فقط",
+  "appointmentAlreadyRated": "تم تقييم الموعد بالفعل",
+  "ratingAlreadyExists": "موجود بالفعل تقييم لهذا الموعد",
+  "ratingSubmitted": "تم إرسال التقييم بنجاح",
+  "ratingsFetched": "تم جلب التقييمات بنجاح",
+  "ratingNotFound": "لم يتم العثور على التقييم",
+  "ratingDeleted": "تم حذف التقييم بنجاح"
+}

@@ -1,0 +1,12 @@
+{
+  "validationFailed": "Rating validation failed",
+  "appointmentNotFound": "Appointment not found",
+  "unauthorized": "Unauthorized",
+  "appointmentNotCompleted": "Can only rate completed appointments",
+  "appointmentAlreadyRated": "Appointment already rated",
+  "ratingAlreadyExists": "Rating already exists for this appointment",
+  "ratingSubmitted": "Rating submitted successfully",
+  "ratingsFetched": "Ratings fetched successfully",
+  "ratingNotFound": "Rating not found",
+  "ratingDeleted": "Rating deleted successfully"
+}
