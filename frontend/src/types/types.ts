@@ -153,7 +153,14 @@ export interface Doctor {
   description_en?: string;
   description_ar?: string;
   schedule?: Array<{
-    day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
+    day:
+      | "monday"
+      | "tuesday"
+      | "wednesday"
+      | "thursday"
+      | "friday"
+      | "saturday"
+      | "sunday";
     startTime: string;
     endTime: string;
   }>;
@@ -176,7 +183,14 @@ export type DoctorProfileFormData = {
   description_en?: string;
   description_ar?: string;
   schedule: Array<{
-    day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
+    day:
+      | "monday"
+      | "tuesday"
+      | "wednesday"
+      | "thursday"
+      | "friday"
+      | "saturday"
+      | "sunday";
     startTime: string;
     endTime: string;
   }>;
@@ -204,15 +218,19 @@ export interface UserBasicInfo {
   _id: string;
   firstName: string;
   lastName: string;
+  email: string;
   image?: string;
   phone?: string;
-  email?: string;
 }
 
-export interface DoctorBasicInfo extends UserBasicInfo {
+export interface DoctorBasicInfo {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
   specialization_en: string;
   specialization_ar: string;
-  fee: number;
+  image?: string;
 }
 
 export interface Appointment {
@@ -230,12 +248,22 @@ export interface Appointment {
   callStatus?: "idle" | "ringing" | "connected" | "ended";
   callStartedAt?: Date;
   callEndedAt?: Date;
-  paymentStatus?: "pending" | "paid" | "failed" | "refunded";
+  paymentStatus: "pending" | "paid" | "failed" | "refunded";
   stripePaymentId?: string;
   stripeClientSecret?: string;
+  hasPrescription?: boolean;
+  isRated?: boolean;
   createdAt: string | Date;
   updatedAt: string | Date;
 }
+
+export interface AppointmentCardProps {
+  appointment: Appointment;
+  isOnline?: boolean;
+  variant: "patient" | "doctor";
+  onActionComplete?: () => void;
+}
+
 export interface TextareaProps {
   register: UseFormRegisterReturn;
   error?: FieldError;
@@ -276,7 +304,14 @@ export interface DoctorOnboardingData {
   description_en?: string;
   description_ar?: string;
   schedule: {
-    day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
+    day:
+      | "monday"
+      | "tuesday"
+      | "wednesday"
+      | "thursday"
+      | "friday"
+      | "saturday"
+      | "sunday";
     startTime: string;
     endTime: string;
   }[];
@@ -360,7 +395,16 @@ export interface PatientProfileFormData {
   phone: string;
   dateOfBirth?: string;
   gender?: "male" | "female" | "other" | "prefer-not-to-say";
-  bloodGroup?: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-" | "Unknown";
+  bloodGroup?:
+    | "A+"
+    | "A-"
+    | "B+"
+    | "B-"
+    | "AB+"
+    | "AB-"
+    | "O+"
+    | "O-"
+    | "Unknown";
   address?: {
     street?: string;
     city?: string;
@@ -371,7 +415,13 @@ export interface PatientProfileFormData {
   emergencyContact?: {
     name?: string;
     phone?: string;
-    relationship?: "spouse" | "parent" | "child" | "sibling" | "friend" | "other";
+    relationship?:
+      | "spouse"
+      | "parent"
+      | "child"
+      | "sibling"
+      | "friend"
+      | "other";
   };
   medicalHistory?: string;
   allergies?: string[];
@@ -573,10 +623,25 @@ export interface DoctorProfileFormProps {
   setIsEditing: (editing: boolean) => void;
 }
 
-export type DayType = "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
+export type DayType =
+  | "monday"
+  | "tuesday"
+  | "wednesday"
+  | "thursday"
+  | "friday"
+  | "saturday"
+  | "sunday";
 
 export interface ScheduleSlot {
   day: DayType;
   startTime: string;
   endTime: string;
+}
+
+export interface Notification {
+  _id: string;
+  title: string;
+  message: string;
+  isRead: boolean;
+  createdAt: string | Date;
 }
