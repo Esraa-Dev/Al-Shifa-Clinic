@@ -32,6 +32,8 @@ import enProfile from "./locales/en/profile.json";
 import arProfile from "./locales/ar/profile.json";
 import enNotification from "./locales/en/notifications.json";
 import arNotification from "./locales/ar/notifications.json";
+import enRating from "./locales/en/rating.json";
+import arRating from "./locales/ar/rating.json";
 
 i18n
   .use(LanguageDetector)
@@ -54,7 +56,7 @@ i18n
         appointments: enAppointments,
         profile: enProfile,
         notification: enNotification,
-   
+        rating: enRating,
       },
       ar: {
         home: arHome,
@@ -72,7 +74,7 @@ i18n
         appointments: arAppointments,
         profile: arProfile,
         notification: arNotification,
- 
+        rating: arRating,
       },
     },
     ns: [
@@ -90,7 +92,8 @@ i18n
       "appointments",
       "profile",
       "notification",
-
+      "rating",
+      "prescription",
     ],
     defaultNS: "home",
     lng: localStorage.getItem("i18nextLng") || "ar",

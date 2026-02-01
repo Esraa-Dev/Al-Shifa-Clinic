@@ -1,0 +1,12 @@
+{
+  "validationFailed": "Prescription validation failed",
+  "appointmentNotCompleted": "Cannot create prescription for incomplete appointments",
+  "prescriptionAlreadyExists": "A prescription already exists for this appointment",
+  "prescriptionCreated": "Prescription created successfully",
+  "prescriptionsFetched": "Prescriptions fetched successfully",
+  "prescriptionFetched": "Prescription fetched successfully",
+  "prescriptionNotFound": "Prescription not found",
+  "unauthorizedAccess": "You are not authorized to access this prescription",
+  "prescriptionUpdated": "Prescription updated successfully",
+  "prescriptionDeleted": "Prescription deleted successfully"
+}
