@@ -2,15 +2,12 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useGetDepartment } from "../../../hooks/department/useGetDepartment";
 import type { Department } from "../../../types/types";
-import {SpecialityMenuSkeleton} from "./SpecialityMenuSkeleton";
+import { SpecialityMenuSkeleton } from "./SpecialityMenuSkeleton";
+
 const SpecialityMenu = () => {
   const { t, i18n } = useTranslation("departments");
   const { data, isLoading, isError } = useGetDepartment(1, 10, "");
   const navigate = useNavigate();
-  
-  if (isLoading) {
-    return <SpecialityMenuSkeleton />;
-  }
   
   if (isError) {
     return (
@@ -36,48 +33,52 @@ const SpecialityMenu = () => {
           <div className="w-20 h-1 bg-linear-to-r from-primary to-secondary rounded-full mx-auto"></div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-          {departments.map((item: Department) => (
-            <div
-              key={item._id}
-              className="group relative bg-background border border-primaryBorder rounded-2xl p-6 hover:border-primary hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer"
-              onClick={() => navigate(`/doctor-list?department=${item._id}`)}
-            >
-              <div className="absolute -top-6 -left-6 w-12 h-12 bg-primary/10 rounded-full group-hover:bg-primary/20 transition-all duration-500"></div>
-              <div className="absolute -bottom-8 -right-8 w-16 h-16 bg-secondary/10 rounded-full group-hover:bg-secondary/20 transition-all duration-500"></div>
-              <div className="relative z-10">
-                <div className="space-y-2">
-                  <div className="w-14 h-14 bg-linear-to-br from-primary to-secondary rounded-2xl flex-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                    {item.icon ? (
-                      <img
-                        src={item.icon}
-                        alt={i18n.language === 'ar' ? item.name_ar : item.name_en}
-                        className="w-8 h-8 object-contain brightness-0 invert"
-                      />
-                    ) : (
-                      <img
-                        src="/src/assets/icons/headset.svg"
-                        alt={i18n.language === 'ar' ? item.name_ar : item.name_en}
-                        className="w-8 h-8 object-contain"
-                      />
-                    )}
+        {isLoading ? (
+          <SpecialityMenuSkeleton />
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+            {departments.map((item: Department) => (
+              <div
+                key={item._id}
+                className="group relative bg-background border border-primaryBorder rounded-2xl p-6 hover:border-primary hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer"
+                onClick={() => navigate(`/doctor-list?department=${item._id}`)}
+              >
+                <div className="absolute -top-6 -left-6 w-12 h-12 bg-primary/10 rounded-full group-hover:bg-primary/20 transition-all duration-500"></div>
+                <div className="absolute -bottom-8 -right-8 w-16 h-16 bg-secondary/10 rounded-full group-hover:bg-secondary/20 transition-all duration-500"></div>
+                <div className="relative z-10">
+                  <div className="space-y-2">
+                    <div className="w-14 h-14 bg-linear-to-br from-primary to-secondary rounded-2xl flex-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                      {item.icon ? (
+                        <img
+                          src={item.icon}
+                          alt={i18n.language === 'ar' ? item.name_ar : item.name_en}
+                          className="w-8 h-8 object-contain brightness-0 invert"
+                        />
+                      ) : (
+                        <img
+                          src="/src/assets/icons/headset.svg"
+                          alt={i18n.language === 'ar' ? item.name_ar : item.name_en}
+                          className="w-8 h-8 object-contain"
+                        />
+                      )}
+                    </div>
+                    <h3 className="text-xl font-bold text-primaryText group-hover:text-primary transition-colors duration-300">
+                      {i18n.language === 'ar' ? item.name_ar : item.name_en}
+                    </h3>
+                    <p className="text-secondary text-sm font-medium">
+                      {item.doctorCount || 0} {t('departments:doctors')}
+                    </p>
+                    <p className="text-primaryText/70 text-sm mt-2 leading-relaxed">
+                      {i18n.language === 'ar' 
+                        ? (item.description_ar || t('departments:noDescription'))
+                        : (item.description_en || t('departments:noDescription'))}
+                    </p>
                   </div>
-                  <h3 className="text-xl font-bold text-primaryText group-hover:text-primary transition-colors duration-300">
-                    {i18n.language === 'ar' ? item.name_ar : item.name_en}
-                  </h3>
-                  <p className="text-secondary text-sm font-medium">
-                    {item.doctorCount || 0} {t('departments:doctors')}
-                  </p>
-                  <p className="text-primaryText/70 text-sm mt-2 leading-relaxed">
-                    {i18n.language === 'ar' 
-                      ? (item.description_ar || t('departments:noDescription'))
-                      : (item.description_en || t('departments:noDescription'))}
-                  </p>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

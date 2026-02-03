@@ -3,9 +3,7 @@ import { useStripe, useElements } from "@stripe/react-stripe-js";
 import { useTranslation } from "react-i18next";
 import type { PaymentFormProps } from "../../types/types";
 
-
-
-export const usePayment = ({ clientSecret, appointmentId }: PaymentFormProps) => {
+export const usePayment = ({ clientSecret, paymentIntentId }: PaymentFormProps) => {
   const stripe = useStripe();
   const elements = useElements();
   const { t } = useTranslation("appointment");
@@ -33,7 +31,7 @@ export const usePayment = ({ clientSecret, appointmentId }: PaymentFormProps) =>
         elements,
         clientSecret,
         confirmParams: {
-          return_url: `${window.location.origin}/payment-success?appointmentId=${appointmentId}`,
+          return_url: `${window.location.origin}/payment-success?paymentIntentId=${paymentIntentId}`,
         },
         redirect: "always",
       });

@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import { appointmentService } from "../../services/appointmentService";
 import { toast } from "react-toastify";
 import { useSocket } from "../../context/SocketContext";
@@ -8,7 +7,6 @@ import { useTranslation } from "react-i18next";
 export const useStartConsultation = () => {
   const queryClient = useQueryClient();
   const socket = useSocket();
-  const navigate = useNavigate();
   const { t } = useTranslation();
 
   return useMutation({
@@ -29,8 +27,8 @@ export const useStartConsultation = () => {
         });
       }
 
-      navigate(`/video-call/${roomId}?type=${type}&role=doctor`);
-      toast.success(t("call.starting"));
+      window.open(`/video-call/${roomId}?type=${type}&role=doctor`, "_blank");
+      toast.success(t("appointment:call.starting"));
     },
 
     onError: (error: any) => {

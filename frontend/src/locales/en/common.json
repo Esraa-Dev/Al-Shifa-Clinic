@@ -31,5 +31,10 @@
     "backHome": "Back to Home"
   },
   "currency": "EGP",
-  "clearSearch": "Clear search"
+  "clearSearch": "Clear search",
+  "view": "View",
+  "edit": "Edit",
+  "delete": "Delete",
+  "close": "Close",
+  "actions": "Actions"
 }

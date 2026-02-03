@@ -19,8 +19,8 @@ import { PersonalInfoStep } from "./PersonalInfoStep";
 import { AppointmentInfoStep } from "./AppointmentInfoStep";
 import { ReviewStep } from "./ReviewStep";
 import { DoctorCardSkeleton } from "./DoctorCardSkeleton";
-import { useCheckPaymentStatus } from "../../../hooks/appointment/useCheckPaymentStatus";
 import { CheckCircle } from "lucide-react";
+import { useCheckPaymentIntentStatus } from "../../../hooks/appointment/useCheckPaymentIntentStatus";
 
 registerLocale("ar", ar);
 
@@ -36,8 +36,7 @@ const BookAppointment = () => {
     const [consultationType, setConsultationType] = useState<"clinic" | "video" | "voice">("clinic");
     const [symptoms, setSymptoms] = useState("");
     const [clientSecret, setClientSecret] = useState("");
-    const [appointmentId, setAppointmentId] = useState("");
-    const [paymentCompleted] = useState(false);
+    const [paymentIntentId, setPaymentIntentId] = useState("");
 
     const { data: doctor, isLoading: isLoadingDoctor } = useGetDoctorById(id || "");
     const { data: bookedSlots = [], isLoading: isLoadingSlots } = useGetBookedSlots({
@@ -45,19 +44,27 @@ const BookAppointment = () => {
         date: selectedDate ? format(selectedDate, "yyyy-MM-dd") : ""
     });
 
-    const { refetch: checkPayment } = useCheckPaymentStatus(appointmentId);
+    const { data: paymentIntentStatus, refetch: checkPaymentIntent } = useCheckPaymentIntentStatus(paymentIntentId);
 
     const { mutate, isPending: isBooking } = useBookAppointment((data) => {
         setClientSecret(data.clientSecret);
-        setAppointmentId(data.appointmentId);
+        setPaymentIntentId(data.paymentIntentId);
         setCurrentStep(4);
     });
 
     useEffect(() => {
-        if (appointmentId && currentStep === 4) {
-            checkPayment();
+        if (paymentIntentId && currentStep === 4) {
+            checkPaymentIntent();
         }
-    }, [appointmentId, currentStep, checkPayment]);
+    }, [paymentIntentId, currentStep, checkPaymentIntent]);
+
+    useEffect(() => {
+        if (paymentIntentStatus?.data?.paymentStatus === 'succeeded' && paymentIntentStatus?.data?.appointment) {
+            setTimeout(() => {
+                navigate("/patient/appointments");
+            }, 3000);
+        }
+    }, [paymentIntentStatus, navigate]);
 
     const generateSlots = () => {
         let slots = [];
@@ -81,7 +88,7 @@ const BookAppointment = () => {
         mutate({ doctorId: id, data: payload });
     };
 
-    if (paymentCompleted && currentStep === 4) {
+    if (paymentIntentStatus?.data?.paymentStatus === 'succeeded') {
         return (
             <div className="min-h-screen bg-gray-50 pt-8 pb-20">
                 <div className="container max-w-6xl mx-auto px-4">
@@ -189,7 +196,7 @@ const BookAppointment = () => {
                                         onConfirm={handleBookAppointment}
                                     />
                                 )}
-                                {currentStep === 4 && clientSecret && appointmentId && (
+                                {currentStep === 4 && clientSecret && paymentIntentId && (
                                     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden p-8">
                                         <Elements stripe={stripePromise} options={{
                                             clientSecret,
@@ -199,7 +206,7 @@ const BookAppointment = () => {
                                         }}>
                                             <PaymentForm
                                                 clientSecret={clientSecret}
-                                                appointmentId={appointmentId}
+                                                paymentIntentId={paymentIntentId}
                                             />
                                         </Elements>
                                     </div>

@@ -31,5 +31,10 @@
     "backHome": "العودة للصفحة الرئيسية"
   },
   "currency": "ج.م",
-  "clearSearch": "مسح البحث"
+  "clearSearch": "مسح البحث",
+  "view": "عرض",
+  "edit": "تعديل",
+  "delete": "حذف",
+  "close": "إغلاق",
+  "actions": "الإجراءات"
 }

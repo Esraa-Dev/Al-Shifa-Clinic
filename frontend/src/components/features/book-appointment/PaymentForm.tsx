@@ -5,11 +5,11 @@ import { usePayment } from "../../../hooks/appointment/usePayment";
 import { Button } from "../../ui/Button";
 import type { PaymentFormProps } from "../../../types/types";
 
-export const PaymentForm = ({ clientSecret, appointmentId }: PaymentFormProps) => {
+export const PaymentForm = ({ clientSecret, paymentIntentId }: PaymentFormProps) => {
     const { t } = useTranslation();
     const { handlePayment, isLoading, errorMessage, stripe } = usePayment({
         clientSecret,
-        appointmentId,
+        paymentIntentId,
     });
 
     const onSubmit = async (e: React.FormEvent) => {

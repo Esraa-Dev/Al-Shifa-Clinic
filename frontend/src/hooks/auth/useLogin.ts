@@ -29,18 +29,25 @@ export const useLogin = () => {
       
       setAuthState(true);
       
-      if (user.role === "doctor") {
-        if (user.profileStatus === "incomplete") {
-          navigate("/doctor/onboarding", { replace: true });
-        } else {
-          navigate("/doctor/dashboard", { replace: true });
-        }
-      } else if (user.role === "patient") {
-        navigate("/", { replace: true });
-      } else if (user.role === "admin") {
-        navigate("/admin/dashboard", { replace: true });
-      } else {
-        navigate("/", { replace: true });
+      switch (user.role) {
+        case "doctor":
+          if (user.profileStatus === "incomplete") {
+            navigate("/doctor/onboarding", { replace: true });
+          } else {
+            navigate("/doctor/dashboard", { replace: true });
+          }
+          break;
+          
+        case "patient":
+          navigate("/", { replace: true });
+          break;
+          
+        case "admin":
+          navigate("/admin/dashboard", { replace: true });
+          break;
+          
+        default:
+          navigate("/", { replace: true });
       }
     },
     onError: (error: any) => {

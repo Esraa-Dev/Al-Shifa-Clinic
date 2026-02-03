@@ -52,5 +52,16 @@
     "noCancelledAppointments": "لا توجد مواعيد ملغية",
     "bookNewAppointment": "حجز موعد جديد",
     "loading": "جاري التحميل..."
-  }
+  },
+  "payment": {
+    "pending": "قيد الانتظار",
+    "paid": "مدفوع",
+    "failed": "فشل",
+    "refunded": "تم الاسترداد"
+  },
+  "hasPrescription": "لديه روشتة",
+  "rated": "تم التقييم",
+  "addPrescription": "إضافة روشتة",
+  "viewPrescription": "عرض الروشتة",
+  "rateAppointment": "تقييم الموعد"
 }

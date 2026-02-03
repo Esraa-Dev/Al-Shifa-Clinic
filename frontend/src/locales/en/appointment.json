@@ -52,5 +52,16 @@
     "noCancelledAppointments": "No cancelled appointments",
     "bookNewAppointment": "Book New Appointment",
     "loading": "Loading..."
-  }
+  },
+  "payment": {
+    "pending": "Pending",
+    "paid": "Paid",
+    "failed": "Failed",
+    "refunded": "Refunded"
+  },
+  "hasPrescription": "Has Prescription",
+  "rated": "Rated",
+  "addPrescription": "Add Prescription",
+  "viewPrescription": "View Prescription",
+  "rateAppointment": "Rate Appointment"
 }

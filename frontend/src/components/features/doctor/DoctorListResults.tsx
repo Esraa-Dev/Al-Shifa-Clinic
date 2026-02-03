@@ -4,7 +4,7 @@ import { EmptyState } from "../../ui/EmptyState";
 import { DoctorSkeleton } from "./DoctorSkeleton";
 import { useTranslation } from "react-i18next";
 import type { Doctor, DoctorListResultsProps } from "../../../types/types";
-import DoctorCard from "./DoctorCard";
+import {DoctorCard} from "./DoctorCard";
 
 const DoctorListResults = ({
     isLoading,

@@ -33,7 +33,7 @@ const DoctorListPage = () => {
   }, [selectedDepartment]);
 
   const { data: departmentData, isLoading: isDepartmentLoading } = useGetDepartment();
-  const { data: doctorsData = {}, isLoading: isDoctorLoading } = useGetDoctors({ ...filters, page, limit: 9 })
+  const { data: doctorsData = {}, isLoading: isDoctorLoading } = useGetDoctors({ ...filters, page, limit: 8 })
   const pagination = doctorsData?.pagination || { currentPage: 1, totalPages: 1 };
 
   const clearFilters = () => {
