@@ -19,6 +19,8 @@ export interface IAppointment extends Document {
   paymentStatus: "pending" | "paid" | "failed" | "refunded";
   stripePaymentId?: string;
   stripeClientSecret?: string;
+  hasPrescription?: boolean;
+  isRated?: boolean;
 }
 
 const AppointmentSchema: Schema = new Schema(
@@ -89,9 +91,18 @@ const AppointmentSchema: Schema = new Schema(
     stripeClientSecret: {
       type: String,
     },
+    isRated: {
+      type: Boolean,
+      default: false,
+    },
+    hasPrescription: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true },
 );
+
 export const validateBookAppointment = (t: any) =>
   Joi.object({
     appointmentDate: Joi.date()

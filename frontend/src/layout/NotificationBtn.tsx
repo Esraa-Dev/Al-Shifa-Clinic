@@ -8,7 +8,7 @@ import { formatDistanceToNow } from "date-fns";
 import { useMarkNotificationAsRead } from "../hooks/notifications/useMarkNotificationAsRead";
 import { useUnreadCount } from "../hooks/notifications/useUnreadCount";
 import { useNotifications } from "../hooks/notifications/useNotifications";
-import type { Notification } from "../types/types"
+import type { Notification } from "../types/types";
 import { useMarkAllAsRead } from "../hooks/notifications/useMarkAllAsRead";
 
 const NotificationBtn = () => {
@@ -16,19 +16,20 @@ const NotificationBtn = () => {
   const { data: unreadData, refetch: refetchUnread } = useUnreadCount();
   const { data: notificationsData, refetch: refetchNotifications } = useNotifications({ page: 1, limit: 5 });
   const { mutate: markAsRead } = useMarkNotificationAsRead();
-  const { mutate: markAllAsRead } = useMarkAllAsRead()
-  const { user } = useAuth();
+  const { mutate: markAllAsRead } = useMarkAllAsRead();
+  const { user, isAuthenticated } = useAuth();
   const socket = useSocket();
-  const { t } = useTranslation();
+  const { t,i18n } = useTranslation();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const unreadCount = unreadData?.data?.count || 0;
   const notifications = notificationsData?.data?.notifications || [];
 
- 
+  const shouldShowNotifications = isAuthenticated && user && 
+    (user.role === "patient" || user.role === "doctor" || user.role === "admin");
 
   useEffect(() => {
-    if (!socket || !user) return;
+    if (!socket || !user || !shouldShowNotifications) return;
 
     socket.emit("subscribe-notifications", user._id);
 
@@ -37,9 +38,9 @@ const NotificationBtn = () => {
       refetchNotifications();
 
       const sound = new Audio('/notification.mp3');
-  sound.play().catch(e => {
-    console.log("التحميل التلقائي محظور حتى يلمس المستخدم الصفحة:", e);
-  });
+      sound.play().catch(e => {
+        console.log("Autoplay blocked:", e);
+      });
     };
 
     socket.on("new-notification", handleNewNotification);
@@ -48,7 +49,7 @@ const NotificationBtn = () => {
       socket.off("new-notification", handleNewNotification);
       socket.emit("unsubscribe-notifications", user._id);
     };
-  }, [socket, user, refetchUnread, refetchNotifications]);
+  }, [socket, user, refetchUnread, refetchNotifications, shouldShowNotifications]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -61,16 +62,26 @@ const NotificationBtn = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  if (!shouldShowNotifications) {
+    return null;
+  }
+
+  const getNotificationsLink = () => {
+    if (user?.role === "doctor") return "/doctor/notifications";
+    if (user?.role === "admin") return "/admin/notifications";
+    return "/notifications";
+  };
+
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className={`relative`} ref={dropdownRef}>
       <button
-        onClick={()=>setIsDropdownOpen(!isDropdownOpen)}
-        className="relative border cursor-pointer border-gray-200 transition-all rounded-full p-2 hover:bg-gray-100 flex items-center justify-center group"
+        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        className="relative border cursor-pointer border-gray-200 bg-white transition-all rounded-full p-2 hover:bg-gray-100 flex items-center justify-center group"
         aria-label={t("notification:title")}
       >
         <Bell size={20} className="text-gray-600" />
         {unreadCount > 0 && (
-          <span className="absolute -top-3 -right-1 w-6 h-6 bg-primary text-white text-xs rounded-full flex items-center justify-center border-2 border-white">
+          <span className={`absolute -top-3 ${i18n.language === "en" ?"-right-1":"-left-1"}  w-6 h-6 bg-primary text-white text-xs rounded-full flex items-center justify-center border-2 border-white`}>
             {unreadCount > 99 ? "99+" : unreadCount}
           </span>
         )}
@@ -82,7 +93,7 @@ const NotificationBtn = () => {
 
       {isDropdownOpen && (
         <div
-          className="absolute right-0 mt-2 w-96 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden z-50 animate-in fade-in duration-200"
+          className={`absolute ${i18n.language === "en" ?"right-0":"left-0"} mt-2 w-96 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden z-50 animate-in fade-in duration-200`}
         >
           <div className="p-4 border-b border-primaryBorder">
             <div className="flex justify-between items-center">
@@ -113,12 +124,13 @@ const NotificationBtn = () => {
                   <div
                     key={notification._id}
                     className={`p-4 hover:bg-gray-50 cursor-pointer transition-colors ${!notification.isRead ? "bg-blue-50" : ""
-                      }`} onClick={() => {
-                        if (!notification.isRead) {
-                          markAsRead(notification._id);
-                        }
-                        setIsDropdownOpen(false);
-                      }}
+                      }`}
+                    onClick={() => {
+                      if (!notification.isRead) {
+                        markAsRead(notification._id);
+                      }
+                      setIsDropdownOpen(false);
+                    }}
                   >
                     <div className="flex gap-3">
                       <div className="w-10 h-10 rounded-full flex items-center justify-center bg-secondary/10 text-secondary">
@@ -132,7 +144,10 @@ const NotificationBtn = () => {
                           <div className="flex gap-1">
                             {!notification.isRead && (
                               <button
-                                onClick={() => markAsRead(notification._id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  markAsRead(notification._id);
+                                }}
                                 className="text-xs flex gap-1 cursor-pointer text-primary p-1 rounded hover:bg-secondary/20"
                                 title={t("notification:markAsRead")}
                               >
@@ -165,7 +180,7 @@ const NotificationBtn = () => {
 
           <div className="p-2 border-t border-primaryBorder bg-gray-50">
             <Link
-              to="/doctor/notifications"
+              to={getNotificationsLink()}
               className="block text-center text-primary hover:text-primary-dark font-medium py-2"
               onClick={() => setIsDropdownOpen(false)}
             >

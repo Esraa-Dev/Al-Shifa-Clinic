@@ -8,16 +8,151 @@ import {
 } from "../models/AppointmentSchema.js";
 import { AsyncHandler } from "../utils/AsyncHandler.js";
 import { Doctor } from "../models/DoctorSchema.js";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import { Patient } from "../models/PatientSchema.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import { generateToken04 } from "../utils/ZegoToken.js";
 import { getStripeInstance } from "../utils/stripe.js";
+import { getPaginationData } from "../utils/PaginationHelper.js";
+import { Notification } from "../models/NotificationSchema.js";
 
 export const getPatientAppointments = AsyncHandler(
   async (req: Request, res: Response) => {
     const t = req.t;
     const patientId = req.user?._id;
-    const { status } = req.query;
+    const { status, page = 1, limit = 10 } = req.query;
     const filter: any = { patientId: patientId };
 
     if (status) {
@@ -25,22 +160,29 @@ export const getPatientAppointments = AsyncHandler(
       filter.status = { $in: statusArray };
     }
 
+    const totalItems = await Appointment.countDocuments(filter);
+    const pagination = getPaginationData(page, limit, totalItems);
+
     const appointments = await Appointment.find(filter)
       .populate({
         path: "doctorId",
-        select: "firstName lastName specialization image",
+        select:
+          "firstName lastName specialization_en specialization_ar image fee",
       })
-      .sort({ appointmentDate: -1, startTime: -1 });
+      .sort({ appointmentDate: -1, startTime: -1 })
+      .skip((pagination.currentPage - 1) * pagination.limit)
+      .limit(pagination.limit);
 
-    res
-      .status(200)
-      .json(
-        new ApiResponse(
-          t("appointment:appointmentsFetched"),
+    res.status(200).json(
+      new ApiResponse(
+        t("appointment:appointmentsFetched"),
+        {
           appointments,
-          200,
-        ),
-      );
+          pagination,
+        },
+        200,
+      ),
+    );
   },
 );
 
@@ -61,9 +203,7 @@ export const bookAppointment = AsyncHandler(
     const patientId = req.user?._id;
     const { doctorId } = req.params;
     const { appointmentDate, startTime, endTime, type, fee, symptoms } = value;
-
     const appointmentDateTime = new Date(appointmentDate);
-    appointmentDateTime.setHours(0, 0, 0, 0);
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -72,7 +212,7 @@ export const bookAppointment = AsyncHandler(
       throw new ApiError(t("appointment:pastAppointment"), 400);
     }
 
-    const isToday = appointmentDateTime.getTime() === today.getTime();
+    const isToday = appointmentDateTime.toDateString() === today.toDateString();
     if (isToday) {
       const now = new Date();
       const currentHour = now.getHours();
@@ -90,57 +230,43 @@ export const bookAppointment = AsyncHandler(
     const doctor = await Doctor.findById(doctorId);
     if (!doctor) throw new ApiError(t("appointment:doctorNotFound"), 404);
 
+    const patient = await Patient.findById(patientId);
+    if (!patient) throw new ApiError(t("appointment:patientNotFound"), 404);
+
     const existingAppointment = await Appointment.findOne({
       doctorId,
       appointmentDate: appointmentDateTime,
-      status: { $in: ["Scheduled", "In Progress"] },
+      paymentStatus: "paid",
       startTime: { $lt: endTime },
       endTime: { $gt: startTime },
     });
 
-    if (existingAppointment)
+    if (existingAppointment) {
       throw new ApiError(t("appointment:timeSlotBooked"), 400);
+    }
 
     const stripeInstance = getStripeInstance();
     const paymentIntent = await stripeInstance.paymentIntents.create({
       amount: Math.round(fee * 100),
       currency: "egp",
       metadata: {
-        appointmentDate: appointmentDate,
+        appointmentDate: appointmentDateTime.toISOString(),
         startTime: startTime,
+        endTime: endTime,
         patientId: patientId?.toString() || "",
         doctorId: doctorId,
         type: type,
+        symptoms: symptoms || "",
+        fee: fee.toString(),
       },
     });
 
-    const newAppointment = new Appointment({
-      patientId,
-      doctorId,
-      appointmentDate: appointmentDateTime,
-      startTime,
-      endTime,
-      type,
-      fee,
-      symptoms,
-      status: "Pending",
-      paymentStatus: "pending",
-      stripePaymentId: paymentIntent.id,
-      stripeClientSecret: paymentIntent.client_secret,
-      roomId:
-        type !== "clinic"
-          ? `room_${Math.random().toString(36).substr(2, 9)}`
-          : undefined,
-    });
-
-    await newAppointment.save();
-
     res.status(201).json(
       new ApiResponse(
-        t("appointment:appointmentBooked"),
+        t("appointment:paymentRequired"),
         {
-          appointmentId: newAppointment._id,
           clientSecret: paymentIntent.client_secret,
+          paymentIntentId: paymentIntent.id,
           requiresPayment: true,
         },
         201,
@@ -153,6 +279,9 @@ export const getBookedDates = AsyncHandler(
   async (req: Request, res: Response) => {
     const t = req.t;
     const { doctorId } = req.params;
+
+    const doctor = await Doctor.findById(doctorId);
+    if (!doctor) throw new ApiError(t("appointment:doctorNotFound"), 404);
 
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -194,14 +323,23 @@ export const getBookedSlots = AsyncHandler(
     }
 
     const { doctorId, date } = value;
-    const startOfDay = new Date(date);
+
+    const selectedDate = new Date(date);
+    const startOfDay = new Date(selectedDate);
     startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date(date);
+
+    const endOfDay = new Date(selectedDate);
     endOfDay.setHours(23, 59, 59, 999);
+
+    const doctor = await Doctor.findById(doctorId);
+    if (!doctor) throw new ApiError(t("appointment:doctorNotFound"), 404);
 
     const bookedAppointments = await Appointment.find({
       doctorId: doctorId,
-      appointmentDate: { $gte: startOfDay, $lte: endOfDay },
+      appointmentDate: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
       status: { $in: ["Scheduled", "In Progress"] },
     }).select("startTime -_id");
 
@@ -218,13 +356,16 @@ export const getDoctorAppointments = AsyncHandler(
   async (req: Request, res: Response) => {
     const t = req.t;
     const doctorId = req.user?._id;
-    const { status } = req.query;
+    const { status, page = 1, limit = 10 } = req.query;
     const filter: any = { doctorId: doctorId };
 
     if (status) {
       const statusArr = Array.isArray(status) ? status : [status];
       filter.status = { $in: statusArr };
     }
+
+    const totalItems = await Appointment.countDocuments(filter);
+    const pagination = getPaginationData(page, limit, totalItems);
 
     const appointments = await Appointment.find(filter)
       .populate({
@@ -233,19 +374,23 @@ export const getDoctorAppointments = AsyncHandler(
       })
       .populate({
         path: "doctorId",
-        select: "firstName lastName specialization fee image",
+        select:
+          "firstName lastName specialization_en specialization_ar fee image",
       })
-      .sort({ appointmentDate: 1, startTime: 1 });
+      .sort({ appointmentDate: 1, startTime: 1 })
+      .skip((pagination.currentPage - 1) * pagination.limit)
+      .limit(pagination.limit);
 
-    res
-      .status(200)
-      .json(
-        new ApiResponse(
-          t("appointment:appointmentsFetched"),
+    res.status(200).json(
+      new ApiResponse(
+        t("appointment:appointmentsFetched"),
+        {
           appointments,
-          200,
-        ),
-      );
+          pagination,
+        },
+        200,
+      ),
+    );
   },
 );
 
@@ -268,10 +413,30 @@ export const updateAppointmentStatus = AsyncHandler(
 
     const { id } = req.params;
     const { status } = value;
+
     const appointment = await Appointment.findById(id);
 
     if (!appointment) {
       throw new ApiError(t("appointment:appointmentNotFound"), 404);
+    }
+
+    const appointmentDateOnly = new Date(appointment.appointmentDate);
+    appointmentDateOnly.setHours(0, 0, 0, 0);
+
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setHours(23, 59, 59, 999);
+
+    if (appointmentDateOnly < yesterday) {
+      throw new ApiError(t("appointment:cannotModifyPastAppointment"), 400);
+    }
+
+    if (appointment.status === "Completed" && status === "Completed") {
+      throw new ApiError(t("appointment:appointmentAlreadyCompleted"), 400);
+    }
+
+    if (appointment.status === "Cancelled" && status === "Cancelled") {
+      throw new ApiError(t("appointment:appointmentAlreadyCancelled"), 400);
     }
 
     const doctorId = req.user?._id;
@@ -280,7 +445,39 @@ export const updateAppointmentStatus = AsyncHandler(
     }
 
     appointment.status = status;
+
+    if (status === "Cancelled") {
+      appointment.paymentStatus = "refunded";
+    }
+
     await appointment.save();
+
+    let notificationMessage = "";
+    if (status === "Completed") {
+      notificationMessage = t("appointment:appointmentCompleted");
+      await Notification.create({
+        userId: appointment.patientId,
+        title: "Appointment Completed",
+        message:
+          "Your appointment has been completed. Please rate your experience.",
+        type: "appointment",
+        relatedId: appointment._id,
+      });
+
+      await Notification.create({
+        userId: appointment.doctorId,
+        title: "Appointment Completed",
+        message: "Appointment completed. You can now add prescription.",
+        type: "appointment",
+        relatedId: appointment._id,
+      });
+    } else if (status === "Scheduled") {
+      notificationMessage = t("appointment:appointmentScheduled");
+    } else if (status === "Cancelled") {
+      notificationMessage = t("appointment:appointmentCancelled");
+    } else if (status === "In Progress") {
+      notificationMessage = t("appointment:appointmentInProgress");
+    }
 
     const updatedAppointment = await Appointment.findById(id)
       .populate("patientId", "firstName lastName email phone image")
@@ -290,7 +487,7 @@ export const updateAppointmentStatus = AsyncHandler(
       .status(200)
       .json(
         new ApiResponse(
-          t("appointment:statusUpdated"),
+          notificationMessage || t("appointment:statusUpdated"),
           updatedAppointment,
           200,
         ),
@@ -375,6 +572,7 @@ export const startConsultation = AsyncHandler(
           patientId: appointment.patientId,
           doctorId: appointment.doctorId,
           type: appointment.type,
+          appointmentStatus: appointment.status,
         },
         200,
       ),
@@ -389,43 +587,141 @@ export const stripeWebhook = AsyncHandler(
     const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
     if (!endpointSecret) {
-      throw new ApiError("Webhook configuration error", 500);
+      return res.status(500).json({ error: "Webhook secret not configured" });
     }
 
     let event;
     try {
       event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
     } catch (err: any) {
-      throw new ApiError(`Webhook Error: ${err.message}`, 400);
+      return res.status(400).json({ error: `Webhook Error: ${err.message}` });
     }
 
-    const paymentIntent = event.data.object as any;
-    const stripePaymentId = paymentIntent.id;
+    try {
+      if (event.type === "payment_intent.succeeded") {
+        const paymentIntent = event.data.object;
+        const paymentIntentId = paymentIntent.id;
 
-    if (event.type === "payment_intent.succeeded") {
-      const appointment = await Appointment.findOneAndUpdate(
-        { stripePaymentId },
-        { paymentStatus: "paid", status: "Scheduled" },
-        { new: true },
-      );
+        let metadata = paymentIntent.metadata;
 
-      if (!appointment) {
-        console.error(`Appointment not found for ID: ${stripePaymentId}`);
+        if (!metadata || !metadata.appointmentDate) {
+          const fullPaymentIntent =
+            await stripe.paymentIntents.retrieve(paymentIntentId);
+          metadata = fullPaymentIntent.metadata;
+        }
+
+        if (!metadata || !metadata.appointmentDate) {
+          return res.status(200).json({ received: true });
+        }
+
+        const {
+          appointmentDate,
+          startTime,
+          endTime,
+          patientId,
+          doctorId,
+          type,
+          symptoms,
+          fee,
+        } = metadata;
+
+        let appointmentDateTime;
+        if (/^\d+$/.test(appointmentDate)) {
+          appointmentDateTime = new Date(parseInt(appointmentDate) * 1000);
+        } else {
+          appointmentDateTime = new Date(appointmentDate);
+        }
+
+        const existingAppointment = await Appointment.findOne({
+          doctorId,
+          appointmentDate: appointmentDateTime,
+          paymentStatus: "paid",
+          startTime: { $lt: endTime },
+          endTime: { $gt: startTime },
+        });
+
+        if (existingAppointment) {
+          await stripe.refunds.create({
+            payment_intent: paymentIntentId,
+          });
+          return res.status(200).json({ received: true });
+        }
+
+        const newAppointment = new Appointment({
+          patientId,
+          doctorId,
+          appointmentDate: appointmentDateTime,
+          startTime,
+          endTime,
+          type,
+          fee: parseFloat(fee),
+          symptoms,
+          status: "Scheduled",
+          paymentStatus: "paid",
+          stripePaymentId: paymentIntentId,
+          paymentCompletedAt: new Date(),
+          roomId:
+            type !== "clinic"
+              ? `room_${Math.random().toString(36).substr(2, 9)}`
+              : undefined,
+        });
+
+        await newAppointment.save();
+
+        await Notification.create({
+          userId: doctorId,
+          title: "New Appointment Booked",
+          message: "A patient has booked an appointment with you",
+          type: "appointment",
+          relatedId: newAppointment._id,
+        });
+
+        await Notification.create({
+          userId: patientId,
+          title: "Appointment Confirmed",
+          message: "Your appointment has been confirmed",
+          type: "appointment",
+          relatedId: newAppointment._id,
+        });
       }
+
+      if (event.type === "payment_intent.payment_failed") {
+        return res.status(200).json({ received: true });
+      }
+
+      return res.status(200).json({ received: true });
+    } catch (error: any) {
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  },
+);
+
+export const checkPaymentIntentStatus = AsyncHandler(
+  async (req: Request, res: Response) => {
+    const t = req.t;
+    const { paymentIntentId } = req.params;
+
+    const stripeInstance = getStripeInstance();
+    const paymentIntent =
+      await stripeInstance.paymentIntents.retrieve(paymentIntentId);
+
+    let appointment = null;
+    if (paymentIntent.status === "succeeded") {
+      appointment = await Appointment.findOne({
+        stripePaymentId: paymentIntentId,
+      });
     }
 
-    if (event.type === "payment_intent.payment_failed") {
-      await Appointment.findOneAndUpdate(
-        { stripePaymentId },
-        { paymentStatus: "failed", status: "Cancelled" },
-      );
-    }
-
-    res
-      .status(200)
-      .json(
-        new ApiResponse("Webhook processed successfully", { received: true }),
-      );
+    res.status(200).json(
+      new ApiResponse(
+        t("appointment:paymentStatusRetrieved"),
+        {
+          paymentStatus: paymentIntent.status,
+          appointment: appointment,
+        },
+        200,
+      ),
+    );
   },
 );
 
@@ -444,13 +740,25 @@ export const checkPaymentStatus = AsyncHandler(
       throw new ApiError(t("appointment:appointmentNotFound"), 404);
     }
 
+    let paymentMessage = "";
+    if (appointment.paymentStatus === "paid") {
+      paymentMessage = t("appointment:paymentPaid");
+    } else if (appointment.paymentStatus === "pending") {
+      paymentMessage = t("appointment:paymentPending");
+    } else if (appointment.paymentStatus === "failed") {
+      paymentMessage = t("appointment:paymentFailed");
+    } else if (appointment.paymentStatus === "refunded") {
+      paymentMessage = t("appointment:paymentCancelled");
+    }
+
     res.status(200).json(
       new ApiResponse(
-        t("appointment:paymentStatusRetrieved"),
+        paymentMessage || t("appointment:paymentStatusRetrieved"),
         {
           paymentStatus: appointment.paymentStatus,
           appointmentStatus: appointment.status,
           appointmentId: appointment._id,
+          amount: appointment.fee,
         },
         200,
       ),

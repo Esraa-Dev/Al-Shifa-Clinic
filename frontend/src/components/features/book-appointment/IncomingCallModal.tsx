@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useSocket } from "../../../context/SocketContext";
 import { useTranslation } from "react-i18next";
 import { Phone, PhoneOff } from "lucide-react";
 
 const IncomingCallModal = () => {
   const socket = useSocket();
-  const navigate = useNavigate();
   const [incomingCall, setIncomingCall] = useState<any>(null);
   const { t } = useTranslation();
 
@@ -26,8 +24,8 @@ const IncomingCallModal = () => {
   if (!incomingCall) return null;
 
   const handleAccept = () => {
-    navigate(`/video-call/${incomingCall.roomId}?type=${incomingCall.type}&role=patient&doctorName=${incomingCall.doctorName}`);
-    setIncomingCall(null);
+    const url = `/video-call/${incomingCall.roomId}?type=${incomingCall.type}&role=patient&doctorName=${incomingCall.doctorName}`;
+    window.open(url, "_blank"); setIncomingCall(null);
   };
 
   const handleDecline = () => {

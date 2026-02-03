@@ -7,8 +7,8 @@ import {
   updateAppointmentStatus,
   startConsultation,
   getBookedDates,
-  stripeWebhook,
   checkPaymentStatus,
+  checkPaymentIntentStatus,
 } from "../controllers/appointmentController.js";
 import { verifyToken, verifyPermission } from "../middlewares/verify.js";
 import { UserRole } from "../constants.js";
@@ -34,18 +34,17 @@ router.get("/booked-dates/:doctorId", getBookedDates);
 
 router.get("/:appointmentId/payment-status", verifyToken, checkPaymentStatus);
 
-router.post(
-  "/webhook",
-  express.raw({ type: "application/json" }),
-  stripeWebhook,
-);
-
 router.patch(
   "/:id/status",
   verifyToken,
   verifyPermission([UserRole.DOCTOR]),
   validateObjectId("id"),
   updateAppointmentStatus,
+);
+router.get(
+  "/payment-intent/:paymentIntentId/status",
+  verifyToken,
+  checkPaymentIntentStatus,
 );
 
 router.post(

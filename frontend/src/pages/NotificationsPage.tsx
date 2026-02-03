@@ -13,6 +13,7 @@ import { useMarkAllAsRead } from "../hooks/notifications/useMarkAllAsRead";
 import { NotificationSkeleton } from "../components/features/dashboard/NotificationSkeleton";
 import { useNotifications } from "../hooks/notifications/useNotifications";
 import type { Notification } from "../types/types"
+import { useAuth } from "../context/AuthContext";
 const NotificationsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading, refetch } = useNotifications({
@@ -22,6 +23,7 @@ const NotificationsPage = () => {
   const { mutate: markAsRead } = useMarkNotificationAsRead();
   const { mutate: markAllAsRead } = useMarkAllAsRead();
   const { t } = useTranslation();
+  const { user } = useAuth();
 
   const notifications = data?.data?.notifications || [];
   const pagination = data?.data?.pagination || { totalPages: 1 };
@@ -32,7 +34,7 @@ const NotificationsPage = () => {
 
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 ${user?.role === "patient" ? "container py-8":""}`} >
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold text-primaryText">

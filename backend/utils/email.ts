@@ -17,23 +17,25 @@ const createMailGenerator = (language: string = 'en') => {
   const isArabic = language === 'ar';
   
   return new Mailgen({
-    theme: "default",
+    theme: "salted",
     product: {
       name: t('product.name'),
-      link: process.env.FRONTEND_URL ?? "http://localhost:5173",
+      link: process.env.FRONTEND_URL ?? "https://alshifaclinic.com",
       copyright: t('product.copyright', { year: new Date().getFullYear() }),
+      logo: "/frontend/public/logo.svg",
+      logoHeight: "50px"
     },
     textDirection: isArabic ? "rtl" : "ltr",
   });
 };
 
 const transporter: Transporter = nodemailer.createTransport({
-  host: "sandbox.smtp.mailtrap.io",
-  port: 587,
-  secure: false,
+  host: process.env.SMTP_HOST,
+  port: parseInt(process.env.SMTP_PORT || "587"),
+  secure: process.env.SMTP_SECURE === 'true',
   auth: {
-    user: "2f2bbd62eee820",
-    pass: "76172c50e8a8a0",
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASSWORD,
   },
 });
 
@@ -42,7 +44,7 @@ async function sendEmail(options: SendEmailOptions): Promise<void> {
   
   try {
     const info = await transporter.sendMail({
-      from: "esraamohammad107@gmail.com",
+      from: `"Al Shifa Clinic" <${process.env.FROM_EMAIL}>`,
       to: options.email,
       subject: options.subject,
       text: mailGenerator.generatePlaintext(options.mailgenContent),
@@ -66,6 +68,14 @@ const emailVerificationContent = async (
       greeting: t('verification.greeting'),
       signature: t('verification.signature'),
       intro: t('verification.intro', { username, otp }),
+      action: {
+        instructions: t('verification.instructions'),
+        button: {
+          color: '#22c55e',
+          text: t('verification.verifyButton'),
+          link: `${process.env.FRONTEND_URL}/verify-email?otp=${otp}`
+        }
+      },
       outro: t('verification.outro'),
     },
   };
@@ -84,6 +94,14 @@ const forgotPasswordContent = async (
       greeting: t('resetPassword.greeting'),
       signature: t('resetPassword.signature'),
       intro: t('resetPassword.intro', { username, otp }),
+      action: {
+        instructions: t('resetPassword.instructions'),
+        button: {
+          color: '#3b82f6',
+          text: t('resetPassword.resetButton'),
+          link: `${process.env.FRONTEND_URL}/reset-password?otp=${otp}`
+        }
+      },
       outro: t('resetPassword.outro'),
     },
   };
@@ -110,7 +128,7 @@ const contactMessageContent = async (
         button: {
           color: '#007bff',
           text: t('contact.viewMessage'),
-          link: `${process.env.ADMIN_DASHBOARD_URL || process.env.FRONTEND_URL}/admin/contacts`
+          link: `${process.env.ADMIN_DASHBOARD_URL}/admin/contacts`
         }
       },
       table: {
@@ -140,9 +158,89 @@ const contactConfirmationContent = async (
       signature: t('contactConfirmation.signature'),
       intro: t('contactConfirmation.intro'),
       outro: t('contactConfirmation.outro', { 
-        phone: process.env.SUPPORT_PHONE || '+1234567890',
-        email: process.env.SUPPORT_EMAIL || 'support@example.com'
+        phone: process.env.SUPPORT_PHONE,
+        email: process.env.SUPPORT_EMAIL
       })
+    }
+  };
+};
+
+const appointmentConfirmationContent = async (
+  patientName: string,
+  doctorName: string,
+  date: string,
+  time: string,
+  type: string,
+  location: string,
+  fee: string,
+  language: string = 'en'
+): Promise<Mailgen.Content> => {
+  const t = i18n.getFixedT(language, 'email');
+  
+  return {
+    body: {
+      name: patientName,
+      greeting: t('appointmentConfirmation.greeting'),
+      signature: t('appointmentConfirmation.signature'),
+      intro: t('appointmentConfirmation.intro'),
+      action: {
+        instructions: t('appointmentConfirmation.details'),
+        button: {
+          color: '#10b981',
+          text: t('appointmentConfirmation.viewAppointment'),
+          link: `${process.env.FRONTEND_URL}/appointments`
+        }
+      },
+      table: {
+        data: [
+          { key: t('appointmentConfirmation.doctor'), value: doctorName },
+          { key: t('appointmentConfirmation.date'), value: date },
+          { key: t('appointmentConfirmation.time'), value: time },
+          { key: t('appointmentConfirmation.type'), value: type },
+          { key: t('appointmentConfirmation.location'), value: location },
+          { key: t('appointmentConfirmation.fee'), value: fee }
+        ]
+      },
+      outro: t('appointmentConfirmation.outro')
+    }
+  };
+};
+
+const appointmentReminderContent = async (
+  patientName: string,
+  doctorName: string,
+  date: string,
+  time: string,
+  type: string,
+  location: string,
+  language: string = 'en'
+): Promise<Mailgen.Content> => {
+  const t = i18n.getFixedT(language, 'email');
+  
+  return {
+    body: {
+      name: patientName,
+      greeting: t('appointmentReminder.greeting'),
+      signature: t('appointmentReminder.signature'),
+      intro: t('appointmentReminder.intro'),
+      action: {
+        instructions: t('appointmentReminder.details'),
+        button: {
+          color: '#f59e0b',
+          text: t('appointmentReminder.confirmAttendance'),
+          link: `${process.env.FRONTEND_URL}/appointments`
+        }
+      },
+      table: {
+        data: [
+          { key: t('appointmentReminder.doctor'), value: doctorName },
+          { key: t('appointmentReminder.date'), value: date },
+          { key: t('appointmentReminder.time'), value: time },
+          { key: t('appointmentReminder.type'), value: type },
+          { key: t('appointmentReminder.location'), value: location }
+        ]
+      },
+      outro: t('appointmentReminder.outro')
     }
   };
 };
@@ -152,5 +250,7 @@ export {
   emailVerificationContent, 
   forgotPasswordContent,
   contactMessageContent,
-  contactConfirmationContent 
+  contactConfirmationContent,
+  appointmentConfirmationContent,
+  appointmentReminderContent
 };

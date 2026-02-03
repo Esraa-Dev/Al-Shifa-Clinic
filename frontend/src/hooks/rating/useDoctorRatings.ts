@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { ratingService } from "../services/ratingService";
+import { ratingService } from "../../services/ratingService";
 
 interface UseDoctorRatingsParams {
   page?: number;
