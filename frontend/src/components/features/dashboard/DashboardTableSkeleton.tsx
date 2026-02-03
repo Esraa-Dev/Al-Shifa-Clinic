@@ -1,8 +1,6 @@
 export const DashboardTableSkeleton = () => {
     return (
         <div className="bg-white rounded-lg shadow-md p-4 animate-pulse">
-            <div className="h-6 bg-gray-100 rounded w-48 mb-4"></div>
-            
             <div className="overflow-hidden rounded-xl border border-gray-200">
                 <div className="overflow-x-auto">
                     <table className="w-full min-w-full divide-y divide-gray-200">

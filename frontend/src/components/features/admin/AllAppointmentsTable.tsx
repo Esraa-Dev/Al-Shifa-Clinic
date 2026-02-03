@@ -1,4 +1,4 @@
-import type { Appointment } from "../../../types/types";
+import type { Appointment, UserBasicInfo, DoctorBasicInfo } from "../../../types/types";
 import { DashboardTable } from "../dashboard/DashboardTable";
 
 type ExtendedAppointment = Appointment & {
@@ -6,6 +6,16 @@ type ExtendedAppointment = Appointment & {
 };
 
 export const AllAppointmentsTable = ({ appointments }: { appointments: ExtendedAppointment[] }) => {
+    const getPatientName = (patientId: string | UserBasicInfo): string => {
+        if (typeof patientId === 'string') return 'Patient';
+        return `${patientId.firstName || ''} ${patientId.lastName || ''}`.trim() || 'Patient';
+    };
+
+    const getDoctorName = (doctorId: string | DoctorBasicInfo): string => {
+        if (typeof doctorId === 'string') return 'Doctor';
+        return `${doctorId.firstName || 'Dr.'} ${doctorId.lastName || ''}`.trim() || 'Doctor';
+    };
+
     const columns = [
         { header: "Patient", key: "patient" },
         { header: "Doctor", key: "doctor" },
@@ -18,8 +28,8 @@ export const AllAppointmentsTable = ({ appointments }: { appointments: ExtendedA
     ];
 
     const data = appointments.map(appointment => ({
-        patient: `${appointment.patientId?.firstName || 'N/A'} ${appointment.patientId?.lastName || ''}`,
-        doctor: `${appointment.doctorId?.firstName || 'Dr.'} ${appointment.doctorId?.lastName || ''}`,
+        patient: getPatientName(appointment.patientId),
+        doctor: getDoctorName(appointment.doctorId),
         date: new Date(appointment.appointmentDate).toLocaleDateString(),
         time: `${appointment.startTime} - ${appointment.endTime}`,
         type: appointment.type ? appointment.type.charAt(0).toUpperCase() + appointment.type.slice(1) : 'N/A',

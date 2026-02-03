@@ -64,4 +64,10 @@ export const appointmentService = {
     );
     return response.data;
   },
+  checkPaymentIntentStatus: async (paymentIntentId: string) => {
+    const response = await api.get(
+      `/appointments/payment-intent/${paymentIntentId}/status`,
+    );
+    return response.data;
+  },
 };

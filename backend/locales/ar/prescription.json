@@ -1,12 +1,12 @@
 {
-  "validationFailed": "فشل التحقق من صحة الوصفة الطبية",
+  "validationFailed": "فشل التحقق من صحة الروشتة الطبية",
   "appointmentNotCompleted": "لا يمكن إنشاء وصفة طبية لمواعيد غير مكتملة",
   "prescriptionAlreadyExists": "موجود بالفعل وصفة طبية لهذا الموعد",
-  "prescriptionCreated": "تم إنشاء الوصفة الطبية بنجاح",
+  "prescriptionCreated": "تم إنشاء الروشتة الطبية بنجاح",
   "prescriptionsFetched": "تم جلب الوصفات الطبية بنجاح",
-  "prescriptionFetched": "تم جلب الوصفة الطبية بنجاح",
-  "prescriptionNotFound": "لم يتم العثور على الوصفة الطبية",
-  "unauthorizedAccess": "غير مصرح لك بالوصول إلى هذه الوصفة الطبية",
-  "prescriptionUpdated": "تم تحديث الوصفة الطبية بنجاح",
-  "prescriptionDeleted": "تم حذف الوصفة الطبية بنجاح"
+  "prescriptionFetched": "تم جلب الروشتة الطبية بنجاح",
+  "prescriptionNotFound": "لم يتم العثور على الروشتة الطبية",
+  "unauthorizedAccess": "غير مصرح لك بالوصول إلى هذه الروشتة الطبية",
+  "prescriptionUpdated": "تم تحديث الروشتة الطبية بنجاح",
+  "prescriptionDeleted": "تم حذف الروشتة الطبية بنجاح"
 }

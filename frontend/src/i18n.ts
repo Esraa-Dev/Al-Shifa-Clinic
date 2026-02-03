@@ -34,6 +34,8 @@ import enNotification from "./locales/en/notifications.json";
 import arNotification from "./locales/ar/notifications.json";
 import enRating from "./locales/en/rating.json";
 import arRating from "./locales/ar/rating.json";
+import enPrescription from "./locales/en/prescription.json";
+import arPrescription from "./locales/ar/prescription.json";
 
 i18n
   .use(LanguageDetector)
@@ -57,6 +59,7 @@ i18n
         profile: enProfile,
         notification: enNotification,
         rating: enRating,
+        prescription: enPrescription,
       },
       ar: {
         home: arHome,
@@ -75,6 +78,7 @@ i18n
         profile: arProfile,
         notification: arNotification,
         rating: arRating,
+        prescription: arPrescription,
       },
     },
     ns: [

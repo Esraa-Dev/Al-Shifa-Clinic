@@ -170,8 +170,7 @@ export interface Doctor {
   createdAt?: string | Date;
   updatedAt?: string | Date;
 }
-// In your types.ts file, remove or update the DoctorProfileFormData interface
-// Keep only one consistent definition
+
 export type DoctorProfileFormData = {
   department: string;
   specialization_en: string;
@@ -520,10 +519,10 @@ export interface AppointmentInfoStepProps {
   onBack: () => void;
 }
 
-export interface PaymentFormProps {
+export type PaymentFormProps = {
   clientSecret: string;
-  appointmentId: string;
-}
+  paymentIntentId: string;
+};
 
 export interface ReviewStepProps {
   selectedDate: Date | null;
@@ -649,6 +648,7 @@ export interface RatingModalProps {
   appointmentId: string;
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void; 
 }
 
 export interface RatingFormData {
@@ -677,4 +677,79 @@ export interface Rating {
     lastName: string;
     image?: string;
   };
+}
+export interface Medicine {
+  name: string;
+  dosage: string;
+  frequency: string;
+  duration: string;
+  instructions?: string;
+}
+
+export interface PrescriptionFormData {
+  _id?: string;
+  diagnosis: string;
+  medicines: Medicine[];
+  notes?: string;
+  followUpDate?: string;
+}
+
+export interface CreatePrescriptionData {
+  appointmentId: string;
+  diagnosis: string;
+  medicines: Medicine[];
+  notes?: string;
+  followUpDate?: string;
+}
+
+
+export interface Prescription {
+  _id: string;
+  doctorId: UserBasicInfo | string;
+  patientId: UserBasicInfo | string;
+  appointmentId: Appointment | string;
+  diagnosis: string;
+  medicines: Medicine[];
+  notes?: string;
+  followUpDate?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PrescriptionResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: {
+    prescriptions: Prescription[];
+    pagination: {
+      currentPage: number;
+      limit: number;
+      totalPages: number;
+      totalItems: number;
+    };
+  };
+}
+
+export interface PrescriptionModalProps {
+  appointmentId: string;
+  patientName: string;
+  patientId?: string;
+  isOpen: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+  existingPrescription?: Prescription | null;
+}
+export interface TableColumn<T> {
+  header: string;
+  key: keyof T;
+}
+
+export interface PrescriptionTableRow {
+  patient: string;
+  date: string;
+  diagnosis: string;
+  medications: number;
+  followUpDate: string;
+  actions: React.ReactNode;
 }
