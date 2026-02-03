@@ -6,10 +6,10 @@ import {
   Star,
   UserCog,
   KeyRound,
-  Bell
+  Bell,
 } from "lucide-react";
 
-export const SidebarMenu = () => {
+export const SidebarMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
   const menuItems = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/doctor/dashboard" },
     { icon: Calendar, label: "Appointments", href: "/doctor/appointments" },
@@ -21,22 +21,35 @@ export const SidebarMenu = () => {
   ];
 
   return (
-    <nav className="flex flex-col mt-6 px-4 space-y-1">
+    <nav className="flex flex-col px-4 space-y-1">
       {menuItems.map((item, index) => {
         const Icon = item.icon;
+
         return (
           <NavLink
             key={index}
             to={item.href}
+            title={item.label}
             className={({ isActive }) => `
               flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200
-              ${isActive
-                ? "bg-blue-50 text-secondary border border-blue-100 shadow-sm"
-                : "text-gray-500 hover:bg-gray-50 hover:text-secondary"}
+              justify-start
+              ${isCollapsed ? "lg:justify-center lg:px-0" : ""}
+              ${
+                isActive
+                  ? "bg-blue-50 text-secondary border border-blue-100 shadow-sm"
+                  : "text-gray-500 hover:bg-gray-50 hover:text-secondary"
+              }
             `}
           >
             <Icon size={20} className="shrink-0" />
-            <span className="truncate">{item.label}</span>
+            <span
+              className={`
+                truncate
+                lg:${isCollapsed ? "hidden" : "block"}
+              `}
+            >
+              {item.label}
+            </span>
           </NavLink>
         );
       })}
