@@ -21,11 +21,11 @@ const LanguageSwitcher = () => {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2.5 bg-white border border-primaryBorder rounded-lg shadow-sm hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+        className="flex items-center gap-2 px-2 xl:px-4 py-1 xl:py-2.5 bg-white border border-primaryBorder rounded-lg shadow-sm hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         aria-haspopup="true"
       >
-        <Globe className="w-3 h-3 text-gray-600" />
-        <span className="flex items-center gap-2">
+        <Globe size={20} className="text-gray-600"  />
+        <span className="hidden xl:flex items-center gap-2">
           <span className="font-medium text-gray-700 text-sm">{currentLang.name}</span>
         </span>
         <ChevronDown className={`w-3 h-3 text-gray-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
