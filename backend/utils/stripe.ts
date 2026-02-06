@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import { ApiError } from "./ApiError";
+import { ApiError } from "./ApiError.js";
 
 let stripeInstance: Stripe | null = null;
 

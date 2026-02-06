@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useGetDepartment } from "../../../hooks/department/useGetDepartment";
 import type { Department } from "../../../types/types";
 import { SpecialityMenuSkeleton } from "./SpecialityMenuSkeleton";
@@ -7,14 +7,12 @@ import { SpecialityMenuSkeleton } from "./SpecialityMenuSkeleton";
 const SpecialityMenu = () => {
   const { t, i18n } = useTranslation("departments");
   const { data, isLoading, isError } = useGetDepartment(1, 10, "");
-  const navigate = useNavigate();
-  
   if (isError) {
     return (
       <div className="text-center py-8 text-red-500">{t('departments:failedToLoad')}</div>
     );
   }
-  
+
   const departments = data?.departments || [];
 
   return (
@@ -38,10 +36,11 @@ const SpecialityMenu = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {departments.map((item: Department) => (
-              <div
+              <Link
                 key={item._id}
+                onClick={() => window.scrollTo(0, 0)}
                 className="group relative bg-background border border-primaryBorder rounded-2xl p-6 hover:border-primary hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer"
-                onClick={() => navigate(`/doctor-list?department=${item._id}`)}
+                to={`/doctor-list?department=${item._id}`}
               >
                 <div className="absolute -top-6 -left-6 w-12 h-12 bg-primary/10 rounded-full group-hover:bg-primary/20 transition-all duration-500"></div>
                 <div className="absolute -bottom-8 -right-8 w-16 h-16 bg-secondary/10 rounded-full group-hover:bg-secondary/20 transition-all duration-500"></div>
@@ -69,13 +68,13 @@ const SpecialityMenu = () => {
                       {item.doctorCount || 0} {t('departments:doctors')}
                     </p>
                     <p className="text-primaryText/70 text-sm mt-2 leading-relaxed">
-                      {i18n.language === 'ar' 
+                      {i18n.language === 'ar'
                         ? (item.description_ar || t('departments:noDescription'))
                         : (item.description_en || t('departments:noDescription'))}
                     </p>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}

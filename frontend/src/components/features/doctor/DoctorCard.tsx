@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 export const DoctorCard = ({
   doctor
-}: { doctor: Doctor}) => {
+}: { doctor: Doctor }) => {
   const { i18n } = useTranslation();
 
   const specialization = i18n.language === 'ar'
@@ -22,11 +22,11 @@ export const DoctorCard = ({
 
   return (
     <div className="bg-white rounded-xl border border-primaryBorder overflow-hidden hover:shadow-lg transition-shadow">
-      <div className="w-full h-48 overflow-hidden relative">
+      <div className="w-full overflow-hidden relative">
         <img
           src={doctor.image || "/default-doctor.jpg"}
           alt={`${doctor.firstName} ${doctor.lastName}`}
-          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+          className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute top-3 left-3 flex items-center justify-center gap-1 bg-white/95 px-2 py-1 rounded-full">
           <Star className="w-3 h-3 text-yellow-500 fill-current" />
@@ -53,15 +53,15 @@ export const DoctorCard = ({
           </div>
         )}
 
-          <div className="flex items-center gap-1 mb-3 text-sm text-secondary">
-            <Calendar className="w-4 h-4" />
-            <span>{doctor.experience || 0} {i18n.language === 'ar' ? 'سنة خبرة' : 'years experience'}</span>
-          </div>
+        <div className="flex items-center gap-1 mb-3 text-sm text-secondary">
+          <Calendar className="w-4 h-4" />
+          <span>{doctor.experience || 0} {i18n.language === 'ar' ? 'سنة خبرة' : 'years experience'}</span>
+        </div>
 
-          <div className="flex items-start gap-2 mb-4 text-sm text-primaryText">
-            <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
-            <span className="line-clamp-2">{location}</span>
-          </div>
+        <div className="flex items-start gap-2 mb-4 text-sm text-primaryText">
+          <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
+          <span className="line-clamp-2">{location}</span>
+        </div>
 
         <div className="flex items-center justify-between pt-3 border-t border-primaryBorder">
           <div>
@@ -72,7 +72,8 @@ export const DoctorCard = ({
           </div>
 
           <Link
-            to={`book/doctor/${doctor._id}`}
+            to={`/booking/${doctor._id}`}
+            onClick={() => window.scrollTo(0, 0)}
             className="px-4 py-2 bg-primary text-white rounded-lg text-sm hover:bg-secondary transition-colors cursor-pointer"
           >
             {i18n.language === 'ar' ? 'احجز الآن' : 'Book Now'}
