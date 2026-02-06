@@ -21,8 +21,8 @@ const DepartmentsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background py-8 px-4">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-background py-8">
+      <div className="max-w-7xl container mx-auto">
         <DepartmentsHeader
           title={t("departments:title")}
           subtitle={t("departments:subtitle")}

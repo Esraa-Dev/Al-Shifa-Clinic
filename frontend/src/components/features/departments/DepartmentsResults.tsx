@@ -1,15 +1,13 @@
 import { Link } from "react-router-dom";
-import { FaUserMd } from "react-icons/fa";
 import { Search } from "lucide-react";
 import { EmptyState } from "../../ui/EmptyState";
 import { useTranslation } from "react-i18next";
 import type { Department, DepartmentsResultsProps } from "../../../types/types";
 import { DepartmentSkeleton } from "./DepartmentSkeleton";
-
-
-const DepartmentsResults = ({ 
-  isLoading, 
-  departments 
+import { Stethoscope } from 'lucide-react';
+const DepartmentsResults = ({
+  isLoading,
+  departments
 }: DepartmentsResultsProps) => {
   const { t, i18n } = useTranslation("departments");
 
@@ -52,7 +50,7 @@ const DepartmentsResults = ({
                 </div>
               ) : (
                 <div className="w-12 h-12 rounded-full bg-primary text-primaryText p-3">
-                  <FaUserMd className="w-full h-full" />
+                  <Stethoscope className="w-full h-full" />
                 </div>
               )}
               <h3 className="text-xl font-bold text-gray-900">
