@@ -1,62 +1,69 @@
 {
   "product": {
-    "name": "عيادة الشفاء",
-    "copyright": "حقوق النشر © {{year}} عيادة الشفاء. جميع الحقوق محفوظة."
+    "name": "Al Shifa Clinic",
+    "copyright": "Copyright © {{year}} Al Shifa Clinic. All rights reserved."
   },
   "verification": {
-    "greeting": "مرحباً {{username}}،",
-    "signature": "مع أطيب التحيات،<br>فريق عيادة الشفاء",
-    "intro": "رمز التحقق الخاص بك هو: {{otp}}",
-    "outro": "سينتهي صلاحية هذا الرمز خلال 5 دقائق."
+    "greeting": "Hello {{username}},",
+    "signature": "Best regards,<br>Al Shifa Clinic Team",
+    "intro": "Your verification code is: {{otp}}",
+    "outro": "This code will expire in 2 minutes.",
+    "instructions": "Please copy this code and use it in the verification form.",
+    "verifyButton": "Verify Now"
   },
   "resetPassword": {
-    "greeting": "مرحباً {{username}}،",
-    "signature": "مع أطيب التحيات،<br>فريق عيادة الشفاء",
-    "intro": "رمز إعادة تعيين كلمة المرور الخاص بك هو: {{otp}}",
-    "outro": "سينتهي صلاحية هذا الرمز خلال 5 دقائق."
+    "greeting": "Hello {{username}},",
+    "signature": "Best regards,<br>Al Shifa Clinic Team",
+    "intro": "Your password reset code is: {{otp}}",
+    "outro": "This code will expire in 2 minutes.",
+    "instructions": "Please copy this code and use it in the password reset form.",
+    "resetButton": "Reset Password",
+    "button": "Reset Password"
   },
   "contact": {
-    "greeting": "عزيزي المدير،",
-    "signature": "مع أطيب التحيات،<br>عيادة الشفاء",
-    "intro": "تم استلام رسالة اتصال جديدة:",
-    "instructions": "تفاصيل الرسالة:",
-    "viewMessage": "عرض الرسالة",
-    "name": "الاسم",
-    "email": "البريد الإلكتروني",
-    "phone": "الهاتف",
-    "subject": "الموضوع",
-    "message": "الرسالة",
-    "outro": "يرجى الرد خلال 24 ساعة."
+    "greeting": "Dear Admin,",
+    "signature": "Best regards,<br>Al Shifa Clinic",
+    "intro": "A new contact message has been received:",
+    "instructions": "Message details:",
+    "viewMessage": "View Message",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "subject": "Subject",
+    "message": "Message",
+    "outro": "Please respond within 24 hours."
   },
   "contactConfirmation": {
-    "greeting": "عزيزي/عزيزتي {{name}}،",
-    "signature": "مع أطيب التحيات،<br>دعم عيادة الشفاء",
-    "intro": "شكراً لتواصلك مع عيادة الشفاء. لقد استلمنا رسالتك.",
-    "outro": "للأسئلة العاجلة، يرجى الاتصال بنا على {{phone}} أو {{email}}."
+    "greeting": "Dear {{name}},",
+    "signature": "Best regards,<br>Al Shifa Clinic Support",
+    "intro": "Thank you for contacting Al Shifa Clinic. We have received your message.",
+    "outro": "For urgent inquiries, please contact us at {{phone}} or {{email}}."
   },
   "appointmentConfirmation": {
-    "greeting": "عزيزي/عزيزتي {{patientName}}،",
-    "signature": "مع أطيب التحيات،<br>عيادة الشفاء",
-    "intro": "تم تأكيد موعدك.",
-    "details": "تفاصيل الموعد:",
-    "doctor": "الطبيب",
-    "date": "التاريخ",
-    "time": "الوقت",
-    "type": "النوع",
-    "location": "الموقع",
-    "fee": "السعر",
-    "outro": "يرجى الحضور قبل موعدك بـ 15 دقيقة."
+    "greeting": "Dear {{patientName}},",
+    "signature": "Best regards,<br>Al Shifa Clinic",
+    "intro": "Your appointment has been confirmed.",
+    "details": "Appointment Details:",
+    "doctor": "Doctor",
+    "date": "Date",
+    "time": "Time",
+    "type": "Type",
+    "location": "Location",
+    "fee": "Fee",
+    "outro": "Please arrive 15 minutes before your appointment.",
+    "viewAppointment": "View Appointment"
   },
   "appointmentReminder": {
-    "greeting": "عزيزي/عزيزتي {{patientName}}،",
-    "signature": "مع أطيب التحيات،<br>عيادة الشفاء",
-    "intro": "تذكير بموعدك القادم.",
-    "details": "تفاصيل الموعد:",
-    "doctor": "الطبيب",
-    "date": "التاريخ",
-    "time": "الوقت",
-    "type": "النوع",
-    "location": "الموقع",
-    "outro": "يرجى تأكيد حضورك."
+    "greeting": "Dear {{patientName}},",
+    "signature": "Best regards,<br>Al Shifa Clinic",
+    "intro": "Reminder for your upcoming appointment.",
+    "details": "Appointment Details:",
+    "doctor": "Doctor",
+    "date": "Date",
+    "time": "Time",
+    "type": "Type",
+    "location": "Location",
+    "outro": "Please confirm your attendance.",
+    "confirmAttendance": "Confirm Attendance"
   }
 }

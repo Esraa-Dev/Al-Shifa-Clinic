@@ -7,10 +7,26 @@ export const patientProfileSchema = z.object({
   phone: z
     .string()
     .regex(/^\+?[0-9]{10,15}$/, i18n.t("validation:invalidPhone")),
-  dateOfBirth: z.string().nullable().optional(),
-  gender: z.enum(["male", "female", "other", "prefer-not-to-say"]).optional(),
+  dateOfBirth: z
+    .string()
+    .refine(
+      (value) => {
+        if (!value) return true;
+        const date = new Date(value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return date <= today;
+      },
+      {
+        message: i18n.t("validation:dateOfBirthInvalid"),
+      }
+    )
+    .optional(),
+  gender: z
+    .enum(["male", "female", "other", "prefer-not-to-say", ""])
+    .optional(),
   bloodGroup: z
-    .enum(["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-", "Unknown"])
+    .enum(["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-", "Unknown", ""])
     .optional(),
   address: z
     .object({

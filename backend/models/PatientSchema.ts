@@ -91,52 +91,82 @@ export const getUpdateProfileSchema = (t: any) => {
     firstName: Joi.string().min(3).max(50),
     lastName: Joi.string().min(3).max(50),
     phone: Joi.string().pattern(/^\+?[0-9]{10,15}$/),
-    dateOfBirth: Joi.date().iso().max("now").messages({
-      "date.format": t("validation:dateOfBirthInvalid"),
-    }),
-    gender: Joi.string().valid(...Object.values(Gender)).messages({
-      "any.only": t("validation:genderInvalid"),
-    }),
-    bloodGroup: Joi.string().valid(...Object.values(BloodGroup)).messages({
-      "any.only": t("validation:bloodGroupInvalid"),
-    }),
+    dateOfBirth: Joi.date()
+      .iso()
+      .max("now")
+      .allow("", null)
+      .messages({
+        "date.format": t("validation:dateOfBirthInvalid"),
+      }),
+    gender: Joi.string()
+      .valid(...Object.values(Gender))
+      .allow("", null)
+      .messages({
+        "any.only": t("validation:genderInvalid"),
+      }),
+    bloodGroup: Joi.string()
+      .valid(...Object.values(BloodGroup))
+      .allow("", null)
+      .messages({
+        "any.only": t("validation:bloodGroupInvalid"),
+      }),
     address: Joi.object({
-      street: Joi.string().allow("", null).messages({
-        "string.base": t("validation:streetInvalid"),
-      }),
-      city: Joi.string().allow("", null).messages({
-        "string.base": t("validation:cityInvalid"),
-      }),
-      state: Joi.string().allow("", null).messages({
-        "string.base": t("validation:stateInvalid"),
-      }),
-      country: Joi.string().allow("", null).messages({
-        "string.base": t("validation:countryInvalid"),
-      }),
-      pincode: Joi.string().allow("", null).messages({
-        "string.base": t("validation:pincodeInvalid"),
-      }),
+      street: Joi.string()
+        .allow("", null)
+        .messages({
+          "string.base": t("validation:streetInvalid"),
+        }),
+      city: Joi.string()
+        .allow("", null)
+        .messages({
+          "string.base": t("validation:cityInvalid"),
+        }),
+      state: Joi.string()
+        .allow("", null)
+        .messages({
+          "string.base": t("validation:stateInvalid"),
+        }),
+      country: Joi.string()
+        .allow("", null)
+        .messages({
+          "string.base": t("validation:countryInvalid"),
+        }),
+      pincode: Joi.string()
+        .allow("", null)
+        .messages({
+          "string.base": t("validation:pincodeInvalid"),
+        }),
     }),
     emergencyContact: Joi.object({
-      name: Joi.string().allow("", null).messages({
-        "string.base": t("validation:emergencyNameInvalid"),
-      }),
+      name: Joi.string()
+        .allow("", null)
+        .messages({
+          "string.base": t("validation:emergencyNameInvalid"),
+        }),
       relationship: Joi.string()
         .valid(...Object.values(EmergencyRelationship))
         .allow("", null)
         .messages({
           "any.only": t("validation:emergencyRelationshipInvalid"),
         }),
-      phone: Joi.string().allow("", null).messages({
-        "string.base": t("validation:emergencyPhoneInvalid"),
-      }),
+      phone: Joi.string()
+        .allow("", null)
+        .messages({
+          "string.base": t("validation:emergencyPhoneInvalid"),
+        }),
     }).allow(null),
-    medicalHistory: Joi.string().max(2000).allow("", null).messages({
-      "string.max": t("validation:medicalHistoryInvalid"),
-    }),
-    allergies: Joi.array().items(Joi.string()).default([]).messages({
-      "array.includes": t("validation:allergyInvalid"),
-    }),
+    medicalHistory: Joi.string()
+      .max(2000)
+      .allow("", null)
+      .messages({
+        "string.max": t("validation:medicalHistoryInvalid"),
+      }),
+    allergies: Joi.array()
+      .items(Joi.string())
+      .default([])
+      .messages({
+        "array.includes": t("validation:allergyInvalid"),
+      }),
   });
 };
 

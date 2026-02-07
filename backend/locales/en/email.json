@@ -7,13 +7,18 @@
     "greeting": "Hello {{username}},",
     "signature": "Best regards,<br>Al Shifa Clinic Team",
     "intro": "Your verification code is: {{otp}}",
-    "outro": "This code will expire in 5 minutes."
+    "outro": "This code will expire in 2 minutes.",
+    "instructions": "Please copy this code and use it in the verification form.",
+    "verifyButton": "Verify Now"
   },
   "resetPassword": {
     "greeting": "Hello {{username}},",
     "signature": "Best regards,<br>Al Shifa Clinic Team",
     "intro": "Your password reset code is: {{otp}}",
-    "outro": "This code will expire in 5 minutes."
+    "outro": "This code will expire in 2 minutes.",
+    "instructions": "Please copy this code and use it in the password reset form.",
+    "resetButton": "Reset Password",
+    "button": "Reset Password"
   },
   "contact": {
     "greeting": "Dear Admin,",
@@ -45,7 +50,8 @@
     "type": "Type",
     "location": "Location",
     "fee": "Fee",
-    "outro": "Please arrive 15 minutes before your appointment."
+    "outro": "Please arrive 15 minutes before your appointment.",
+    "viewAppointment": "View Appointment"
   },
   "appointmentReminder": {
     "greeting": "Dear {{patientName}},",
@@ -57,6 +63,7 @@
     "time": "Time",
     "type": "Type",
     "location": "Location",
-    "outro": "Please confirm your attendance."
+    "outro": "Please confirm your attendance.",
+    "confirmAttendance": "Confirm Attendance"
   }
 }

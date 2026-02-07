@@ -20,10 +20,10 @@
   "atLeastOneDay": "Must add at least one work day",
   "fileTooLarge": "File must be less than 2MB",
   "invalidFileType": "Only JPG or PNG images allowed",
-      "name": "Name must be at least 2 characters",
-      "email": "Please enter a valid email address",
-      "phone": "Phone number must be at least 10 digits",
-      "subject": "Subject must be at least 3 characters",
-      "message": "Message must be at least 10 characters"
-    
+  "name": "Name must be at least 2 characters",
+  "email": "Please enter a valid email address",
+  "phone": "Phone number must be at least 10 digits",
+  "subject": "Subject must be at least 3 characters",
+  "message": "Message must be at least 10 characters",
+  "dateOfBirthInvalid": "Date of birth cannot be in the future"
 }

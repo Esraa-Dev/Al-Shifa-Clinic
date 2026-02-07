@@ -38,7 +38,7 @@ export const BloodGroup = {
   AB_NEGATIVE: "AB-",
   O_POSITIVE: "O+",
   O_NEGATIVE: "O-",
-  UNKNOWN: "unknown",
+  UNKNOWN: "Unknown",
 } as const;
 
 export const DaysOfWeek = {

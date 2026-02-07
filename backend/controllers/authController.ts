@@ -71,7 +71,7 @@ export const registerUser = AsyncHandler(
       phone,
       role,
       verifyOtp,
-      verifyOtpExpireAt: new Date(Date.now() + 10 * 60 * 1000),
+      verifyOtpExpireAt: new Date(Date.now() + 2 * 60 * 1000),
       profileStatus: "incomplete",
     });
 
@@ -83,14 +83,15 @@ export const registerUser = AsyncHandler(
       req.language || "en"
     );
 
-    await sendEmail({
-      email: newUser.email,
-      subject:
-        req.language === "ar"
-          ? "تأكيد البريد الإلكتروني"
-          : "Email Verification",
-      mailgenContent,
-    });
+      await sendEmail({
+        email: newUser.email,
+        subject:
+          req.language === "ar"
+            ? "تأكيد البريد الإلكتروني"
+            : "Email Verification",
+        mailgenContent,
+        language: req.language || "en"
+      });   
 
     res
       .status(201)
@@ -200,8 +201,8 @@ export const forgotPassword = AsyncHandler(
     if (!user.isEmailVerified) {
       throw new ApiError(req.t("user:emailNotVerified"), 403);
     }
-    const resetOtp = user.generateOtp("reset");
-    await user.save({ validateBeforeSave: false });
+    const resetOtp = await user.generateOtp("reset");
+    
     const mailgenContent = await forgotPasswordContent(
       user.firstName,
       resetOtp,
@@ -215,7 +216,9 @@ export const forgotPassword = AsyncHandler(
           ? "رمز إعادة تعيين كلمة المرور"
           : "Password Reset OTP",
       mailgenContent,
+      language: req.language || "en"
     });
+    
     res
       .status(200)
       .json(new ApiResponse(req.t("user:otpSent"), { email: user.email }, 200));
@@ -384,7 +387,7 @@ export const resendOtp = AsyncHandler(async (req: Request, res: Response) => {
     if (user.isEmailVerified) {
       throw new ApiError(req.t("user:emailAlreadyVerified"), 400);
     }
-    otp = user.generateOtp("verification");
+    otp = await user.generateOtp("verification");
     mailgenContent = await emailVerificationContent(
       user.firstName,
       otp,
@@ -394,7 +397,7 @@ export const resendOtp = AsyncHandler(async (req: Request, res: Response) => {
     if (!user.isEmailVerified) {
       throw new ApiError(req.t("user:emailNotVerified"), 403);
     }
-    otp = user.generateOtp("reset");
+    otp = await user.generateOtp("reset");
     mailgenContent = await forgotPasswordContent(
       user.firstName,
       otp,
@@ -403,8 +406,6 @@ export const resendOtp = AsyncHandler(async (req: Request, res: Response) => {
   } else {
     throw new ApiError(req.t("user:invalidOtpType"), 400);
   }
-
-  await user.save({ validateBeforeSave: false });
 
   if (!mailgenContent || !mailgenContent.body) {
     throw new ApiError(req.t("common:serverError"), 500);
@@ -421,6 +422,7 @@ export const resendOtp = AsyncHandler(async (req: Request, res: Response) => {
         ? "رمز إعادة تعيين كلمة المرور"
         : "Password Reset OTP",
     mailgenContent,
+    language: req.language || "en"
   });
 
   res
@@ -433,7 +435,6 @@ export const resendOtp = AsyncHandler(async (req: Request, res: Response) => {
       )
     );
 });
-
 
 export const changePassword = AsyncHandler(async (req: Request, res: Response) => {
   const { error } = changePasswordValidation.validate(req.body, {

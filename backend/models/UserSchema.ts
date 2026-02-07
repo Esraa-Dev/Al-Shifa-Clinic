@@ -55,6 +55,7 @@ const UserSchema: Schema = new Schema(
     },
     image: {
       type: String,
+      default:"https://res.cloudinary.com/dajioti7d/image/upload/v1770425838/freepik__talk__90162_xy9xte.png"
     },
     phone: {
       type: String,
@@ -102,17 +103,18 @@ UserSchema.methods.isPasswordValid = async function (password: string) {
   return await bcrypt.compare(password, this.password);
 };
 
-UserSchema.methods.generateOtp = function (type = "verification") {
+UserSchema.methods.generateOtp = async function (type = "verification") {
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
   if (type === "verification") {
     this.verifyOtp = otp;
-    this.verifyOtpExpireAt = new Date(Date.now() + 2 * 60 * 1000); // 2 minutes
+    this.verifyOtpExpireAt = new Date(Date.now() + 2 * 60 * 1000);
   } else if (type === "reset") {
     this.resetPasswordOtp = otp;
-    this.resetPasswordOtpExpireAt = new Date(Date.now() + 2 * 60 * 1000); // 2 minutes
+    this.resetPasswordOtpExpireAt = new Date(Date.now() + 2 * 60 * 1000);
   }
 
+  await this.save({ validateBeforeSave: false });
   return otp;
 };
 
