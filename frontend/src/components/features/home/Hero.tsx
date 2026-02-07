@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 
 
-const Hero = () => {
+export const Hero = () => {
   const { t, i18n } = useTranslation();
 
   return (
@@ -24,22 +24,21 @@ const Hero = () => {
             <p className="text-lg md:text-xl lg:text-2xl leading-relaxed">
               {t('home:hero.description')}
             </p>
-
-            <div className="flex gap-4 mt-6">
+            <div className="flex flex-col sm:flex-row gap-4 mt-6 w-full sm:w-auto">
               <Link
                 to="/doctor-list"
-                className="flex items-center gap-2 bg-primary px-6 py-2 text-white hover:bg-primary/80 hover:border hover:border-white"
+                className="flex items-center justify-center gap-2 bg-primary px-6 py-3 text-white transition-all hover:bg-primary/80 hover:border hover:border-white w-full sm:w-auto text-center"
               >
                 <Calendar className="w-5 h-5" />
-                {t('home:hero.book_now')}
+                <span className="whitespace-nowrap">{t('home:hero.book_now')}</span>
               </Link>
 
-              <a href="tel:+201234567890">
+              <a href="tel:+201234567890" className="w-full sm:w-auto">
                 <Button
-                  className="flex items-center gap-2 bg-secondary hover:bg-secondary/80 hover:border hover:border-white text-white"
+                  className="flex items-center justify-center gap-2 bg-secondary hover:bg-secondary/80 hover:border hover:border-white text-white w-full py-3 h-auto"
                 >
                   <Phone className="w-5 h-5" />
-                  {t('home:hero.call_us')}
+                  <span className="whitespace-nowrap">{t('home:hero.call_us')}</span>
                 </Button>
               </a>
             </div>
@@ -49,5 +48,3 @@ const Hero = () => {
     </div>
   );
 };
-
-export default Hero;

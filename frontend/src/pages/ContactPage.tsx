@@ -20,83 +20,53 @@ const ContactPage = () => {
 
   const onSubmit = async (data: ContactFormData) => {
     mutate(data, {
-      onSuccess: () => {
-        reset();
-      }
-    })
-  }
+      onSuccess: () => reset()
+    });
+  };
 
   const contactMethods = [
-    {
-      icon: Phone,
-      title: t('phone.title'),
-      details: t('phone.details'),
-      description: t('phone.description')
-    },
-    {
-      icon: Mail,
-      title: t('email.title'),
-      details: t('email.details'),
-      description: t('email.description')
-    },
-    {
-      icon: MapPin,
-      title: t('address.title'),
-      details: t('address.details'),
-      description: t('address.description')
-    },
-    {
-      icon: Clock,
-      title: t('hours.title'),
-      details: t('hours.details'),
-      description: t('hours.description')
-    }
+    { icon: Phone, title: t('phone.title'), details: t('phone.details'), description: t('phone.description') },
+    { icon: Mail, title: t('email.title'), details: t('email.details'), description: t('email.description') },
+    { icon: MapPin, title: t('address.title'), details: t('address.details'), description: t('address.description') },
+    { icon: Clock, title: t('hours.title'), details: t('hours.details'), description: t('hours.description') }
   ].map(method => ({
-    icon: <method.icon className="w-6 h-6" />,
+    icon: <method.icon className="w-5 h-5 md:w-6 md:h-6" />,
     title: method.title,
     details: method.details,
     description: method.description
   }));
 
   const faqs = [
-    {
-      question: t('faq.booking.question'),
-      answer: t('faq.booking.answer')
-    },
-    {
-      question: t('faq.availability.question'),
-      answer: t('faq.availability.answer')
-    },
-    {
-      question: t('faq.cancellation.question'),
-      answer: t('faq.cancellation.answer')
-    },
-    {
-      question: t('faq.support.question'),
-      answer: t('faq.support.answer')
-    }
+    { question: t('faq.booking.question'), answer: t('faq.booking.answer') },
+    { question: t('faq.availability.question'), answer: t('faq.availability.answer') },
+    { question: t('faq.cancellation.question'), answer: t('faq.cancellation.answer') },
+    { question: t('faq.support.question'), answer: t('faq.support.answer') }
   ];
 
   return (
     <div className="bg-background min-h-screen">
-      <section className="py-20 bg-linear-to-r from-primary to-secondary text-white">
+      <section className="py-12 md:py-20 bg-linear-to-r from-primary to-secondary text-white">
         <div className="container text-center">
-          <h1 className="text-5xl font-bold mb-6">{t('contact:pageTitle')}</h1>
-          <p className="text-xl opacity-90 max-w-2xl mx-auto">{t('contact:heroDescription')}</p>
+          <h1 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6 leading-tight">
+            {t('contact:pageTitle')}
+          </h1>
+          <p className="text-base md:text-xl opacity-90 max-w-2xl mx-auto">
+            {t('contact:heroDescription')}
+          </p>
         </div>
       </section>
 
-      <div className="container py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div className="bg-white p-8 rounded-2xl border border-primaryBorder shadow-sm">
-            <div className="flex items-center gap-3 mb-8">
-              <MessageSquare className="w-8 h-8 text-primary" />
-              <h2 className="text-2xl font-bold text-primaryText">{t('form.title')}</h2>
+      <div className="container py-12 md:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start">
+
+          <div className="bg-white p-5 md:p-8 rounded-2xl border border-primaryBorder shadow-sm order-2 lg:order-1">
+            <div className="flex items-center gap-3 mb-6 md:mb-8">
+              <MessageSquare className="w-6 h-6 md:w-8 md:h-8 text-primary shrink-0" />
+              <h2 className="text-xl md:text-2xl font-bold text-primaryText">{t('form.title')}</h2>
             </div>
 
-
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 md:space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
                 <TextInput
                   id="fullName"
                   label={t('form.fullName.label')}
@@ -116,7 +86,7 @@ const ContactPage = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
                 <TextInput
                   id="phone"
                   label={t('form.phone.label')}
@@ -142,20 +112,20 @@ const ContactPage = () => {
                 placeholder={t('form.message.placeholder')}
                 register={register("message")}
                 error={errors.message}
-                rows={5}
+                rows={4}
                 requiredInput
               />
 
               <Button
                 type="submit"
-                className="w-full flex items-center justify-center gap-2 py-4"
+                className="w-full flex items-center justify-center gap-2 py-3 md:py-4 transition-transform active:scale-[0.98]"
                 disabled={isPending}
               >
                 {isPending ? (
                   <span className="animate-pulse">{t('form.sending')}</span>
                 ) : (
                   <>
-                    <Send className="w-5 h-5" />
+                    <Send className="w-4 h-4 md:w-5 md:h-5" />
                     {t('form.submit')}
                   </>
                 )}
@@ -163,7 +133,7 @@ const ContactPage = () => {
             </form>
           </div>
 
-          <div>
+          <div className="space-y-8 md:space-y-12 order-1 lg:order-2">
             <ContactInfo
               methods={contactMethods}
               title={t('info.title')}
@@ -174,6 +144,7 @@ const ContactPage = () => {
               title={t('faq.title')}
             />
           </div>
+
         </div>
       </div>
     </div>
