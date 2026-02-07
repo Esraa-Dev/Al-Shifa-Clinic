@@ -12,8 +12,10 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (!user) return;
 
-    const newSocket = io(import.meta.env.VITE_SOCKET_URL);
-
+    const newSocket = io(import.meta.env.VITE_SOCKET_URL, {
+      transports: ['websocket'],
+      withCredentials: true
+    });
     newSocket.emit("identify", user._id);
     setSocket(newSocket);
 
