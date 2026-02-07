@@ -1,11 +1,11 @@
-import './i18n';
-import i18n from "./i18n";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import './index.css';
-import App from './App.tsx';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
+import { useTranslation } from "react-i18next";
+import App from './App.tsx';
+import './i18n';
+import './index.css';
 import "react-toastify/dist/ReactToastify.css";
 
 const queryClient = new QueryClient({
@@ -18,16 +18,31 @@ const queryClient = new QueryClient({
   },
 });
 
-const isRTL = i18n.language === "ar";
+const Root = () => {
+  const { i18n } = useTranslation();
+  const isRTL = i18n.dir() === "rtl";
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  return (
     <QueryClientProvider client={queryClient}>
       <ToastContainer
         position={isRTL ? "top-left" : "top-right"}
+        rtl={isRTL}
         autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
       />
       <App />
     </QueryClientProvider>
-  </StrictMode>,
+  );
+};
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <Root />
+  </StrictMode>
 );

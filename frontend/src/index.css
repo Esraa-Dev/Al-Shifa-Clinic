@@ -145,3 +145,23 @@ input[type="date"] {
   color: #000 !important;
   font-size: 0.9rem !important;
 }
+
+.Toastify__toast-container {
+  z-index: 10000 !important;
+  padding: 16px;
+}
+
+.Toastify__toast {
+  border-radius: 8px;
+  font-family: inherit;
+}
+
+[dir="rtl"] .Toastify__close-button {
+  margin-right: auto;
+  margin-left: initial;
+}
+
+[dir="rtl"] .Toastify__toast-icon {
+  margin-left: 10px;
+  margin-right: initial;
+}
