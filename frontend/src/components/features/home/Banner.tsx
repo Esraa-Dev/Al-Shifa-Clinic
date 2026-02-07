@@ -16,7 +16,7 @@ export const Banner = () => {
                 <div className="absolute bottom-0 left-0 w-40 h-40 md:w-80 md:h-80 bg-white rounded-full translate-y-20 -translate-x-20 md:translate-y-40 md:-translate-x-40"></div>
             </div>
 
-            <div className="container relative py-12 lg:py-24 px-4 mx-auto">
+            <div className="container relative py-12 lg:py-24">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
                     <div className="text-white text-center lg:text-left">

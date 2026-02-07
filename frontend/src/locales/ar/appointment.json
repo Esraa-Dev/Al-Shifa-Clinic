@@ -21,6 +21,7 @@
     "completed": "مكتمل",
     "cancelled": "ملغي"
   },
+  "typeLabel": "النوع",
   "type": {
     "video": "فيديو",
     "voice": "صوت",
@@ -63,5 +64,8 @@
   "rated": "تم التقييم",
   "addPrescription": "إضافة روشتة",
   "viewPrescription": "عرض الروشتة",
-  "rateAppointment": "تقييم الموعد"
+  "rateAppointment": "تقييم الموعد",
+  "paymentStatus": "حالة الدفع",
+  "createdAt": "تاريخ الإنشاء",
+  "location": "الموقع"
 }

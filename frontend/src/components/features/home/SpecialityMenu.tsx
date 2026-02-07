@@ -21,7 +21,7 @@ export const SpecialityMenu = () => {
       <div className="hidden sm:block absolute top-0 right-0 w-48 h-48 lg:w-64 lg:h-64 bg-primary/5 rounded-full -translate-y-24 translate-x-24 lg:-translate-y-32 lg:translate-x-32"></div>
       <div className="hidden sm:block absolute bottom-0 left-0 w-64 h-64 lg:w-80 lg:h-80 bg-secondary/5 rounded-full translate-y-32 -translate-x-32 lg:translate-y-40 lg:-translate-x-40"></div>
 
-      <div className="container px-4 mx-auto">
+      <div className="container">
         <div className="text-center mb-10 md:mb-16">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-primaryText mb-3">
             {t('departments:title')}

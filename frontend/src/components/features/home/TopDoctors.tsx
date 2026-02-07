@@ -18,7 +18,7 @@ export const TopDoctors = () => {
   }
 
   return (
-    <section className="container px-4 pb-12 md:pb-20 mx-auto">
+    <section className="container pb-12 md:pb-20">
       <div className="text-center mb-10 md:mb-14">
         <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-primaryText mb-3">
           {t("doctorList:topDoctors.title")}

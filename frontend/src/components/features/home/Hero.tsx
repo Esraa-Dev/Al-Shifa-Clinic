@@ -13,7 +13,7 @@ export const Hero = () => {
         className={`absolute inset-0 bg-cover bg-center bg-no-repeat bg-[url('/src/assets/hero.jpg')] ${i18n.language === "en" ? "transform-[scaleX(-1)]" : ""}`}
       />
 
-      <div className="relative bg-black/50 w-full h-[calc(100vh-96px)] flex items-center">
+      <div className="relative bg-black/10 w-full h-[calc(100vh-96px)] flex items-center">
         <div className="container mx-auto px-6 lg:px-12">
           <div className="max-w-3xl text-white space-y-6">
             <h1 className="text-4xl md:text-7xl lg:text-8xl font-bold leading-tight tracking-tight text-primary">

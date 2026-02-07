@@ -21,6 +21,7 @@
     "completed": "Completed",
     "cancelled": "Cancelled"
   },
+  "typeLabel": "Type",
   "type": {
     "video": "Video",
     "voice": "Voice",
@@ -63,5 +64,8 @@
   "rated": "Rated",
   "addPrescription": "Add Prescription",
   "viewPrescription": "View Prescription",
-  "rateAppointment": "Rate Appointment"
+  "rateAppointment": "Rate Appointment",
+  "paymentStatus": "Payment Status",
+  "createdAt": "Created At",
+  "location": "Location"
 }

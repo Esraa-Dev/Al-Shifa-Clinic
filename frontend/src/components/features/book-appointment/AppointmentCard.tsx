@@ -124,110 +124,111 @@ export const AppointmentCard = ({
   const location = i18n.language === 'ar'
     ? 'مدينة نصر، شارع مكرم عبيد، برج الأطباء'
     : 'Nasr City, Makram Ebeid Street, Doctors Tower';
+
   return (
     <>
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
-        <div className="p-5">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
+      <div className="bg-white rounded-xl md:rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+        <div className="p-4 md:p-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3 md:gap-4">
               <div className="relative">
-                <div className="w-16 h-16 bg-primary/5 rounded-2xl flex items-center justify-center border border-primary/10 overflow-hidden">
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-primary/5 rounded-lg md:rounded-2xl flex items-center justify-center border border-primary/10 overflow-hidden">
                   {displayData.image ? (
                     <img src={displayData.image} alt={displayData.name} className="w-full h-full object-cover" />
                   ) : (
-                    <User className="w-8 h-8 text-primary" />
+                    <User className="w-6 h-6 md:w-8 md:h-8 text-primary" />
                   )}
                 </div>
-                <span className={`absolute -bottom-1 -right-1 w-4 h-4 border-2 border-white rounded-full transition-colors duration-300 ${isOnline ? "bg-green-500" : "bg-gray-300"}`}></span>
+                <span className={`absolute -bottom-1 -right-1 w-3 h-3 md:w-4 md:h-4 border-2 border-white rounded-full transition-colors duration-300 ${isOnline ? "bg-green-500" : "bg-gray-300"}`}></span>
               </div>
 
-              <div>
-                <h3 className="text-lg font-bold text-gray-900 leading-tight">
+              <div className="flex-1 min-w-0">
+                <h3 className="text-base md:text-lg font-bold text-gray-900 leading-tight truncate">
                   {variant === "patient" ? `${t("appointment:doctorPrefix")} ` : ""}{displayData.name}
                 </h3>
-                <div className="flex flex-wrap items-center gap-2 mt-1">
-                  <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${getStatusStyles(appointment.status)}`}>
+                <div className="flex flex-wrap items-center gap-1 md:gap-2 mt-1">
+                  <span className={`px-2 py-0.5 md:px-2.5 md:py-0.5 rounded-full text-[10px] md:text-[11px] font-bold border ${getStatusStyles(appointment.status)}`}>
                     {t(`appointment:status.${appointment.status.toLowerCase().replace(" ", "")}`)}
                   </span>
-                  <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${getTypeStyles()}`}>
+                  <span className={`px-2 py-0.5 md:px-2.5 md:py-0.5 rounded-full text-[10px] md:text-[11px] font-bold border ${getTypeStyles()}`}>
                     <span className="flex items-center gap-1">
                       {getTypeIcon()}
-                      {t(`appointment:type.${appointment.type}`)}
+                      <span className="hidden sm:inline">{t(`appointment:type.${appointment.type}`)}</span>
                     </span>
                   </span>
-                  <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${appointment.paymentStatus === 'paid' ? 'bg-green-50 text-green-600' : appointment.paymentStatus === 'pending' ? 'bg-orange-50 text-orange-600' : 'bg-red-50 text-red-600'}`}>
-                    {t(`appointment:payment.${appointment.paymentStatus}`)}
+                  <span className={`px-2 py-0.5 md:px-2.5 md:py-0.5 rounded-full text-[10px] md:text-[11px] font-bold border ${appointment.paymentStatus === 'paid' ? 'bg-green-50 text-green-600' : appointment.paymentStatus === 'pending' ? 'bg-orange-50 text-orange-600' : 'bg-red-50 text-red-600'}`}>
+                    {appointment.paymentStatus === 'paid' ? t('common:paid') : appointment.paymentStatus === 'pending' ? t('common:pending') : t('common:failed')}
                   </span>
                   {appointment.hasPrescription && (
-                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold border bg-blue-50 text-blue-600">
-                      {t("appointment:hasPrescription")}
+                    <span className="px-2 py-0.5 md:px-2.5 md:py-0.5 rounded-full text-[10px] md:text-[11px] font-bold border bg-blue-50 text-blue-600">
+                      RX
                     </span>
                   )}
                   {appointment.isRated && (
-                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold border bg-yellow-50 text-yellow-600">
-                      {t("appointment:rated")}
+                    <span className="px-2 py-0.5 md:px-2.5 md:py-0.5 rounded-full text-[10px] md:text-[11px] font-bold border bg-yellow-50 text-yellow-600">
+                      ★
                     </span>
                   )}
                 </div>
                 {variant === "patient" && displayData.info?.specialization && (
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 mt-1 truncate">
                     {i18n.language === "ar" ? displayData.info.specialization_ar : displayData.info.specialization_en}
                   </p>
                 )}
               </div>
             </div>
 
-            <div className="flex flex-row md:flex-col items-center md:items-end gap-4 md:gap-1 text-sm border-t md:border-t-0 border-gray-50 pt-3 md:pt-0">
-              <div className={`flex items-center gap-2 font-semibold ${dateStatus === "today" ? "text-blue-600" : dateStatus === "past" ? "text-gray-500" : "text-gray-700"}`}>
+            <div className="flex flex-row sm:flex-col items-center sm:items-end gap-3 md:gap-1 text-sm border-t sm:border-t-0 border-gray-50 pt-3 sm:pt-0 mt-3 sm:mt-0">
+              <div className={`flex items-center gap-2 font-semibold text-sm md:text-base ${dateStatus === "today" ? "text-blue-600" : dateStatus === "past" ? "text-gray-500" : "text-gray-700"}`}>
                 <Calendar className={`w-4 h-4 ${dateStatus === "today" ? "text-blue-600" : "text-primary"}`} />
                 <span>{formatDateForDisplay(appointment.appointmentDate)}</span>
               </div>
-              <div className="flex items-center gap-2 text-gray-500">
+              <div className="flex items-center gap-2 text-gray-500 text-sm md:text-base">
                 <Clock className="w-4 h-4 text-primary" />
                 <span>{appointment.startTime} - {appointment.endTime}</span>
               </div>
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between">
-            <div className="flex items-center gap-6">
+          <div className="mt-4 md:mt-6 pt-3 md:pt-4 border-t border-gray-50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4">
+            <div className="flex items-center gap-4 md:gap-6">
               <div className="flex flex-col">
                 <span className="text-xs text-gray-400 uppercase font-bold tracking-wider">{t("appointment:fees")}</span>
-                <span className="font-bold text-primary">{appointment.fee} {t("appointment:currency")}</span>
+                <span className="font-bold text-primary text-sm md:text-base">{appointment.fee} {t("appointment:currency")}</span>
               </div>
               {appointment.type === "clinic" && (
                 <div className="flex flex-col">
                   <span className="text-xs text-gray-400 uppercase font-bold tracking-wider">{t("appointment:location")}</span>
-                  <span className="font-medium text-gray-700">{location}</span>
+                  <span className="font-medium text-gray-700 text-sm md:text-base truncate max-w-[120px] md:max-w-none">{location}</span>
                 </div>
               )}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 self-end sm:self-auto">
               <button
                 onClick={() => setShowDetails(!showDetails)}
-                className="p-2 text-gray-400 hover:text-primary transition-colors bg-gray-50 rounded-lg"
+                className="p-1.5 md:p-2 text-gray-400 hover:text-primary transition-colors bg-gray-50 rounded-lg"
               >
-                {showDetails ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                {showDetails ? <ChevronUp size={18} className="md:w-5 md:h-5" /> : <ChevronDown size={18} className="md:w-5 md:h-5" />}
               </button>
 
               {variant === "doctor" ? (
-                <>
+                <div className="flex flex-wrap gap-2">
                   {appointment.paymentStatus === "paid" && ["video", "voice"].includes(appointment.type) && !["Completed", "Cancelled"].includes(appointment.status) && (
-                    <Button disabled={isStartingCall} onClick={() => onStartCall(appointment.type as any)} className="gap-2 h-9 px-4">
-                      {isStartingCall ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : (appointment.type === "video" ? <Video size={16} /> : <Phone size={16} />)}
-                      {t("appointment:startCallNow")}
+                    <Button disabled={isStartingCall} onClick={() => onStartCall(appointment.type as any)} className="gap-1 md:gap-2 h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm">
+                      {isStartingCall ? <div className="w-3 h-3 md:w-4 md:h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : (appointment.type === "video" ? <Video size={14} className="md:w-4 md:h-4" /> : <Phone size={14} className="md:w-4 md:h-4" />)}
+                      <span className="hidden sm:inline">{t("appointment:startCallNow")}</span>
                     </Button>
                   )}
 
                   {appointment.paymentStatus === "paid" && appointment.type === "clinic" && appointment.status === "Scheduled" && (
-                    <Button disabled={isUpdatingStatus} onClick={() => handleStatusUpdate("In Progress")}>
+                    <Button disabled={isUpdatingStatus} onClick={() => handleStatusUpdate("In Progress")} className="h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm">
                       {t("appointment:startExamination")}
                     </Button>
                   )}
 
                   {appointment.paymentStatus === "paid" && appointment.status === "In Progress" && (
-                    <Button disabled={isUpdatingStatus} onClick={() => handleStatusUpdate("Completed")}>
+                    <Button disabled={isUpdatingStatus} onClick={() => handleStatusUpdate("Completed")} className="h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm">
                       {t("appointment:endAppointment")}
                     </Button>
                   )}
@@ -235,81 +236,76 @@ export const AppointmentCard = ({
                   {appointment.status === "Completed" && !appointment.hasPrescription && (
                     <Button
                       onClick={() => setShowPrescriptionModal(true)}
-                      className="gap-2 bg-blue-600 hover:bg-blue-700"
+                      className="gap-1 md:gap-2 bg-blue-600 hover:bg-blue-700 h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm"
                     >
-                      <FileText size={16} />
-                      {t("appointment:addPrescription")}
+                      <FileText size={14} className="md:w-4 md:h-4" />
+                      <span className="hidden sm:inline">{t("appointment:addPrescription")}</span>
                     </Button>
                   )}
 
                   {appointment.status === "Completed" && appointment.hasPrescription && (
                     <Button
-                      className="gap-2 border-blue-300 text-blue-600 hover:bg-blue-50"
+                      className="gap-1 md:gap-2 border-blue-300 text-blue-600 hover:bg-blue-50 h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm"
                       onClick={() => setShowPrescriptionModal(true)}
                     >
-                      <FileText size={16} />
-                      {t("appointment:viewPrescription")}
+                      <FileText size={14} className="md:w-4 md:h-4" />
+                      <span className="hidden sm:inline">{t("appointment:viewPrescription")}</span>
                     </Button>
                   )}
-                </>
+                </div>
               ) : (
-                <>
+                <div className="flex flex-wrap gap-2">
                   {appointment.status === "Completed" && appointment.hasPrescription && (
                     <Button
                       onClick={() => setShowPatientPrescriptionModal(true)}
-                      className="gap-2 bg-blue-600 hover:bg-blue-700"
+                      className="gap-1 md:gap-2 bg-blue-600 hover:bg-blue-700 h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm"
                     >
-                      <Eye size={16} />
-                      {t("appointment:viewPrescription")}
+                      <Eye size={14} className="md:w-4 md:h-4" />
+                      <span className="hidden sm:inline">{t("appointment:viewPrescription")}</span>
                     </Button>
                   )}
 
                   {appointment.status === "Completed" && !appointment.isRated && (
                     <Button
                       onClick={() => setShowRatingModal(true)}
-                      className="gap-2 bg-yellow-600 hover:bg-yellow-700"
+                      className="gap-1 md:gap-2 bg-yellow-600 hover:bg-yellow-700 h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm"
                     >
-                      <Star size={16} />
-                      {t("appointment:rateAppointment")}
+                      <Star size={14} className="md:w-4 md:h-4" />
+                      <span className="hidden sm:inline">{t("appointment:rateAppointment")}</span>
                     </Button>
                   )}
-                </>
+                </div>
               )}
             </div>
           </div>
 
           {showDetails && (
-            <div className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-100 animate-in fade-in slide-in-from-top-2">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="mt-3 md:mt-4 p-3 md:p-4 bg-gray-50 rounded-lg md:rounded-xl border border-gray-100 animate-in fade-in slide-in-from-top-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                 <div>
-                  <h4 className="text-xs font-bold text-gray-400 uppercase mb-2">
+                  <h4 className="text-xs font-bold text-gray-400 uppercase mb-1 md:mb-2">
                     {variant === "doctor" ? t("appointment:patientComplaint") : t("appointment:symptoms")}:
                   </h4>
                   <p className="text-gray-700 text-sm">
                     {appointment.symptoms || t("appointment:noSymptomsDescription")}
                   </p>
                 </div>
-                <div>
-                  <h4 className="text-xs font-bold text-gray-400 uppercase mb-2">
-                    {t("appointment:appointmentDetails")}:
-                  </h4>
-                  <div className="space-y-1 text-sm text-gray-700">
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">{t("appointment:type")}:</span>
-                      <span className="font-medium">{t(`appointment:type.${appointment.type}`)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">{t("appointment:paymentStatus")}:</span>
-                      <span className={`font-medium ${appointment.paymentStatus === 'paid' ? 'text-green-600' : appointment.paymentStatus === 'pending' ? 'text-orange-600' : 'text-red-600'}`}>
-                        {t(`appointment:payment.${appointment.paymentStatus}`)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">{t("appointment:createdAt")}:</span>
-                      <span className="font-medium">
-                        {format(new Date(appointment.createdAt), "d MMM yyyy, HH:mm", { locale: i18n.language === "ar" ? ar : undefined })}
-                      </span>
-                    </div>
+                <div className="space-y-1 text-sm text-gray-700">
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">{t("appointment:typeLabel")}:</span>
+                    <span className="font-medium">{t(`appointment:type.${appointment.type}`)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">{t("appointment:paymentStatus")}:</span>
+                    <span className={`font-medium ${appointment.paymentStatus === 'paid' ? 'text-green-600' : appointment.paymentStatus === 'pending' ? 'text-orange-600' : 'text-red-600'}`}>
+                      {t(`appointment:payment.${appointment.paymentStatus}`)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">{t("appointment:createdAt")}:</span>
+                    <span className="font-medium text-xs md:text-sm">
+                      {format(new Date(appointment.createdAt), "d MMM yyyy, HH:mm", { locale: i18n.language === "ar" ? ar : undefined })}
+                    </span>
                   </div>
                 </div>
               </div>

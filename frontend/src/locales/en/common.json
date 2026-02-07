@@ -36,5 +36,8 @@
   "edit": "Edit",
   "delete": "Delete",
   "close": "Close",
-  "actions": "Actions"
+  "actions": "Actions",
+  "cancel": "Cancel",
+  "submit": "Submit",
+  "submitting": "Submitting..."
 }
