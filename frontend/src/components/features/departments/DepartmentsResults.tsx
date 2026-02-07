@@ -48,7 +48,7 @@ const DepartmentsResults = ({
                   />
                 ) : (
                   <div className="w-full h-full bg-primary rounded-full flex items-center justify-center p-2 text-white">
-                  <Stethoscope className="w-full h-full" />
+                    <Stethoscope className="w-full h-full" />
                   </div>
                 )}
               </div>
@@ -76,6 +76,7 @@ const DepartmentsResults = ({
 
             <Link
               to={`/doctor-list?department=${department._id}`}
+              onClick={() => window.scrollTo(0, 0)}
               className="block w-full outline-1 outline-primary border-4 border-white text-center py-2 rounded-lg font-medium bg-primary text-white transition-colors"
             >
               {t("departments:viewDoctors")}

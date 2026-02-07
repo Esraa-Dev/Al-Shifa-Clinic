@@ -51,6 +51,7 @@ export const TextInput = ({
             ${isDashboard ? 'text-left' : isRtl ? 'text-right' : 'text-left'}
           `}
           dir={isDashboard ? "ltr" : isRtl ? "rtl" : "ltr"}
+          autoComplete={type === "password" ? (id === "password" ? "current-password" : "new-password") : "on"}
         />
         {type === "password" && (
           <button
