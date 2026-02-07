@@ -4,9 +4,11 @@ import { TextInput } from "../../ui/TextInput";
 import { Textarea } from "../../ui/Textarea";
 import { useTranslation } from "react-i18next";
 import { useForm, useFieldArray } from "react-hook-form";
-import type { PrescriptionModalProps, PrescriptionFormData, Medicine } from "../../../types/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { PrescriptionModalProps } from "../../../types/types";
 import { useCreatePrescription } from "../../../hooks/prescription/useCreatePrescription";
 import { useUpdatePrescription } from "../../../hooks/prescription/useUpdatePrescription";
+import { prescriptionSchema, type PrescriptionFormData } from "../../../validations/prescriptionSchema";
 
 export const PrescriptionModal = ({
   appointmentId,
@@ -16,14 +18,15 @@ export const PrescriptionModal = ({
   onSuccess,
   existingPrescription
 }: PrescriptionModalProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["prescription", "common", "validation"]);
+  
+  const createValidationSchema = prescriptionSchema();
+  
   const { mutate: createMutate, isPending: isCreating } = useCreatePrescription();
   const { mutate: updateMutate, isPending: isUpdating } = useUpdatePrescription();
   const isPending = isCreating || isUpdating;
   
-  console.log(existingPrescription)
-
-  const getDefaultMedicines = (): Medicine[] => {
+  const getDefaultMedicines = () => {
     if (existingPrescription?.medicines && existingPrescription.medicines.length > 0) {
       return existingPrescription.medicines;
     }
@@ -31,6 +34,7 @@ export const PrescriptionModal = ({
   };
 
   const { register, control, handleSubmit, reset, formState: { errors } } = useForm<PrescriptionFormData>({
+    resolver: zodResolver(createValidationSchema),
     defaultValues: {
       diagnosis: existingPrescription?.diagnosis || "",
       medicines: getDefaultMedicines(),
@@ -47,7 +51,7 @@ export const PrescriptionModal = ({
   });
   
   const onSubmit = (data: PrescriptionFormData) => {
-    const formData = {
+    const formData: any = {
       diagnosis: data.diagnosis,
       medicines: data.medicines?.map(medicine => ({
         name: medicine.name,
@@ -56,9 +60,12 @@ export const PrescriptionModal = ({
         duration: medicine.duration,
         instructions: medicine.instructions || ""
       })) || [],
-      notes: data.notes || "",
-      followUpDate: data.followUpDate || ""
+      notes: data.notes || ""
     };
+
+    if (data.followUpDate?.trim()) {
+      formData.followUpDate = data.followUpDate;
+    }
 
     if (existingPrescription) {
       const prescriptionId = existingPrescription?._id;
@@ -110,27 +117,27 @@ export const PrescriptionModal = ({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div className="bg-white rounded-4xl border-t-6 border-primary shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden">
-          <div className="flex justify-between items-center p-6">
-            <div>
-              <h3 className="text-2xl font-bold text-primaryText">
-                {existingPrescription
-                  ? t("prescription:updatePrescription")
-                  : t("prescription:createPrescription")
-                }
-              </h3>
-              <p className="text-primaryText mt-1">
-                {t("prescription:forPatient")}: <span className="font-semibold">{patientName}</span>
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={onClose}
-              className="text-white bg-black/80 rounded-full p-2  transition-colors cursor-pointer"
-              aria-label={t("common:close")}
-            >
-              <X size={16} />
-            </button>
+        <div className="flex justify-between items-center p-6">
+          <div>
+            <h3 className="text-2xl font-bold text-primaryText">
+              {existingPrescription
+                ? t("prescription:updatePrescription")
+                : t("prescription:createPrescription")
+              }
+            </h3>
+            <p className="text-primaryText mt-1">
+              {t("prescription:forPatient")}: <span className="font-semibold">{patientName}</span>
+            </p>
           </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-white bg-black/80 rounded-full p-2 transition-colors cursor-pointer"
+            aria-label={t("common:close")}
+          >
+            <X size={16} />
+          </button>
+        </div>
 
         <div className="flex-1 overflow-y-auto bg-white">
           <div className="p-6">
@@ -226,6 +233,7 @@ export const PrescriptionModal = ({
                     placeholder={t("prescription:notesPlaceholder")}
                     rows={2}
                     register={register("notes")}
+                    error={errors.notes}
                   />
                 </div>
 
@@ -234,6 +242,7 @@ export const PrescriptionModal = ({
                     label={t("prescription:followUpDate")}
                     type="date"
                     register={register("followUpDate")}
+                    error={errors.followUpDate}
                   />
                 </div>
               </div>
@@ -242,27 +251,26 @@ export const PrescriptionModal = ({
         </div>
 
         <div className="border-t border-primaryBorder bg-white p-6 rounded-b-4xl">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex flex-wrap gap-3">
-              <Button
-                type="button"
-                onClick={onClose}
-                className="flex-1 bg-secondary"
-                disabled={isPending}
-              >
-                {t("common:cancel")}
-              </Button>
-              <Button
-                type="submit"
-                className="flex-1"
-                disabled={isPending}
-              >
-                {isPending ? t("common:saving") :
-                  existingPrescription ? t("prescription:updatePrescription") :
-                    t("prescription:createPrescription")}
-              </Button>
-            </div>
-          </form>
+          <div className="flex flex-wrap gap-3">
+            <Button
+              type="button"
+              onClick={onClose}
+              className="flex-1 bg-secondary"
+              disabled={isPending}
+            >
+              {t("common:cancel")}
+            </Button>
+            <Button
+              type="button"
+              onClick={handleSubmit(onSubmit)}
+              className="flex-1"
+              disabled={isPending}
+            >
+              {isPending ? t("common:saving") :
+                existingPrescription ? t("prescription:updatePrescription") :
+                  t("prescription:createPrescription")}
+            </Button>
+          </div>
         </div>
       </div>
     </div>

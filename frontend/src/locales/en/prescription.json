@@ -44,5 +44,6 @@
   "title": "Prescription",
   "prescribedBy": "Prescribed by",
   "date": "Prescription Date",
-  "notFound": "No prescription found for this appointment"
+  "notFound": "No prescription found for this appointment",
+  "atLeastOneMedicine": "At least one medicine is required"
 }
