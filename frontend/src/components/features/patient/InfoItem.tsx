@@ -4,7 +4,8 @@ const InfoItem = ({ icon, label, value }: InfoItemProps) => {
   const Icon = icon;
   return (
     <div className="flex items-center gap-4">
-      <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+      <div 
+      className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">
         <Icon />
       </div>
       <div className="">

@@ -64,7 +64,7 @@ export const AppointmentCard = ({
   };
 
   const getTypeIcon = () => {
-    switch(appointment.type) {
+    switch (appointment.type) {
       case "clinic": return <Home className="w-4 h-4" />;
       case "video": return <VideoIcon className="w-4 h-4" />;
       case "voice": return <Mic className="w-4 h-4" />;
@@ -73,7 +73,7 @@ export const AppointmentCard = ({
   };
 
   const getTypeStyles = () => {
-    switch(appointment.type) {
+    switch (appointment.type) {
       case "clinic": return "bg-purple-50 text-purple-600 border-purple-200";
       case "video": return "bg-blue-50 text-blue-600 border-blue-200";
       case "voice": return "bg-green-50 text-green-600 border-green-200";
@@ -85,43 +85,45 @@ export const AppointmentCard = ({
     const date = new Date(dateString);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     const appointmentDate = new Date(date);
     appointmentDate.setHours(0, 0, 0, 0);
-    
+
     if (appointmentDate.getTime() === today.getTime()) {
       return t("appointment:today");
     }
-    
+
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
     if (appointmentDate.getTime() === yesterday.getTime()) {
       return t("appointment:yesterday");
     }
-    
+
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
     if (appointmentDate.getTime() === tomorrow.getTime()) {
       return t("appointment:tomorrow");
     }
-    
+
     return format(date, "d MMMM yyyy", { locale: i18n.language === "ar" ? ar : undefined });
   };
 
   const getDateStatus = (dateString: string) => {
     const appointmentDate = new Date(dateString);
     const today = new Date();
-    
+
     appointmentDate.setHours(0, 0, 0, 0);
     today.setHours(0, 0, 0, 0);
-    
+
     if (appointmentDate < today) return "past";
     if (appointmentDate > today) return "future";
     return "today";
   };
 
   const dateStatus = getDateStatus(appointment.appointmentDate);
-
+  const location = i18n.language === 'ar'
+    ? 'مدينة نصر، شارع مكرم عبيد، برج الأطباء'
+    : 'Nasr City, Makram Ebeid Street, Doctors Tower';
   return (
     <>
       <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
@@ -196,7 +198,7 @@ export const AppointmentCard = ({
               {appointment.type === "clinic" && (
                 <div className="flex flex-col">
                   <span className="text-xs text-gray-400 uppercase font-bold tracking-wider">{t("appointment:location")}</span>
-                  <span className="font-medium text-gray-700">{t("appointment:clinicLocation")}</span>
+                  <span className="font-medium text-gray-700">{location}</span>
                 </div>
               )}
             </div>

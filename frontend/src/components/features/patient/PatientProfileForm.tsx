@@ -145,9 +145,9 @@ const PatientProfileForm = ({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-8 bg-white p-8 rounded-xl"
+      className="space-y-6 md:space-y-8 bg-white p-4 sm:p-6 md:p-8 rounded-xl"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-x-4">
         <TextInput
           id="phone"
           label={t("phone")}
@@ -216,9 +216,9 @@ const PatientProfileForm = ({
         </Select>
       </div>
 
-      <h3 className="font-bold text-xl text-primaryText ">{t("address")} </h3>
+      <h3 className="font-bold text-lg sm:text-xl text-primaryText">{t("address")}</h3>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-x-4">
         <TextInput
           id="street"
           label={t("street")}
@@ -256,11 +256,11 @@ const PatientProfileForm = ({
         />
       </div>
 
-      <h3 className="font-bold text-xl text-primaryText ">
+      <h3 className="font-bold text-lg sm:text-xl text-primaryText">
         {t("emergencyContact")}
       </h3>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-x-4">
         <TextInput
           id="emergencyName"
           label={t("contactName")}
@@ -292,7 +292,7 @@ const PatientProfileForm = ({
         </Select>
       </div>
 
-      <h3 className="font-bold text-xl text-primaryText ">{t("medicalInfo")} </h3>
+      <h3 className="font-bold text-lg sm:text-xl text-primaryText">{t("medicalInfo")}</h3>
 
       <Textarea
         id="medicalHistory"
@@ -310,18 +310,18 @@ const PatientProfileForm = ({
         error={errors.allergies}
       />
 
-      <div className="flex justify-end gap-3">
+      <div className="flex flex-col sm:flex-row justify-end gap-3">
         <Button
           type="button"
           onClick={() => setIsEditing(false)}
-          className="bg-gray-100 text-gray-700 hover:bg-gray-200"
+          className="bg-gray-100 text-gray-700 hover:bg-gray-200 w-full sm:w-auto"
         >
           {t("cancel")}
         </Button>
         <Button
           type="submit"
           disabled={isPending || !isDirty}
-          className="disabled:opacity-50 disabled:cursor-not-allowed"
+          className="disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
         >
           {isPending ? (
             <div className="flex items-center justify-center">

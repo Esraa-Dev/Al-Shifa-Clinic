@@ -35,19 +35,22 @@ export const PatientPersonalInfo = ({ userData }: PatientPersonalInfoProps) => {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-primaryText">
+    <div className="space-y-6 md:space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h2 className="text-xl sm:text-2xl font-bold text-primaryText">
           {t("personalInfo")}
         </h2>
-        <Button onClick={() => setIsEditing(true)} className="gap-2">
+        <Button
+          onClick={() => setIsEditing(true)}
+          className="gap-2 w-full sm:w-auto"
+        >
           <Edit className="w-4 h-4" />
           {t("edit")}
         </Button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-primaryBorder p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="bg-white rounded-xl md:rounded-2xl border border-primaryBorder p-4 md:p-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           <InfoItem
             icon={User}
             label={t("fullName")}
@@ -84,9 +87,9 @@ export const PatientPersonalInfo = ({ userData }: PatientPersonalInfoProps) => {
       </div>
 
       {userData.address && (
-        <div className="bg-white rounded-2xl border border-primaryBorder p-6">
-          <h3 className="text-xl font-bold mb-6">{t("address")}</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white rounded-xl md:rounded-2xl border border-primaryBorder p-4 md:p-6">
+          <h3 className="text-lg md:text-xl font-bold mb-4 md:mb-6">{t("address")}</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
             <InfoItem
               icon={MapPin}
               label={t("street")}
@@ -117,9 +120,9 @@ export const PatientPersonalInfo = ({ userData }: PatientPersonalInfoProps) => {
       )}
 
       {userData.emergencyContact && (
-        <div className="bg-white rounded-2xl border border-primaryBorder p-6">
-          <h3 className="text-xl font-bold mb-6">{t("emergencyContact")}</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white rounded-xl md:rounded-2xl border border-primaryBorder p-4 md:p-6">
+          <h3 className="text-lg md:text-xl font-bold mb-4 md:mb-6">{t("emergencyContact")}</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
             <InfoItem
               icon={User}
               label={t("contactName")}
@@ -139,30 +142,30 @@ export const PatientPersonalInfo = ({ userData }: PatientPersonalInfoProps) => {
         </div>
       )}
 
-      <div className="bg-white rounded-2xl border border-primaryBorder p-6">
-        <h3 className="text-xl font-bold mb-6">{t("medicalInfo")}</h3>
+      <div className="bg-white rounded-xl md:rounded-2xl border border-primaryBorder p-4 md:p-6">
+        <h3 className="text-lg md:text-xl font-bold mb-4 md:mb-6">{t("medicalInfo")}</h3>
 
-        <div className="mb-6">
-          <h4 className="font-medium text-gray-700 mb-3">{t("allergies")}</h4>
+        <div className="mb-4 md:mb-6">
+          <h4 className="font-medium text-gray-700 mb-2 md:mb-3">{t("allergies")}</h4>
           {userData.allergies && userData.allergies.length > 0 ? (
             <div className="flex flex-wrap gap-2">
               {userData.allergies.map((allergy: string, index: number) => (
                 <span
                   key={index}
-                  className="px-4 py-2 bg-primary/5 text-primary rounded-full text-sm"
+                  className="px-3 py-1 md:px-4 md:py-2 bg-primary/5 text-primary rounded-full text-xs md:text-sm"
                 >
                   {allergy}
                 </span>
               ))}
             </div>
           ) : (
-            <p className="text-gray-500">{t("noAllergies")}</p>
+            <p className="text-gray-500 text-sm md:text-base">{t("noAllergies")}</p>
           )}
         </div>
 
         <div>
-          <h4 className="font-medium text-gray-700 mb-3">{t("medicalHistory")}</h4>
-          <p className="text-gray-700 whitespace-pre-line">
+          <h4 className="font-medium text-gray-700 mb-2 md:mb-3">{t("medicalHistory")}</h4>
+          <p className="text-gray-700 whitespace-pre-line text-sm md:text-base">
             {userData.medicalHistory || t("noMedicalHistory")}
           </p>
         </div>

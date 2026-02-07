@@ -24,9 +24,6 @@ import {
 } from "../../../validations/doctorProfileSchema";
 import { DAYS } from "../../../constants/constants";
 
-
-
-
 const DoctorProfileForm = ({
   userData,
   setIsEditing,
@@ -165,19 +162,19 @@ const DoctorProfileForm = ({
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
-      className="space-y-8 bg-white p-8 rounded-xl"
+      className="space-y-6 md:space-y-8 bg-white p-4 sm:p-6 md:p-8 rounded-xl"
     >
-      <div className="mb-8">
-        <h3 className="text-xl font-bold mb-4">Profile Picture</h3>
-        <div className="flex items-center gap-6">
-          <div className="relative">
+      <div className="mb-6 md:mb-8">
+        <h3 className="text-lg md:text-xl font-bold mb-4">Profile Picture</h3>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4 md:gap-6">
+          <div className="relative self-start">
             <img
               src={imagePreview || userData?.image || "/default-avatar.png"}
               alt="Profile"
-              className="w-24 h-24 rounded-full object-cover border-4 border-gray-100"
+              className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-gray-100"
             />
-            <label className="absolute bottom-0 right-0 bg-primary  p-2 rounded-full cursor-pointer hover:bg-primary/90 transition-colors">
-              <User className="h-4 w-4 " color="white" />
+            <label className="absolute bottom-0 right-0 bg-primary p-2 rounded-full cursor-pointer hover:bg-primary/90 transition-colors">
+              <User className="h-4 w-4" color="white" />
               <input
                 type="file"
                 className="hidden"
@@ -202,9 +199,9 @@ const DoctorProfileForm = ({
         </div>
       </div>
 
-      <h3 className="font-bold text-xl text-primaryText">Personal Information</h3>
+      <h3 className="font-bold text-lg md:text-xl text-primaryText">Personal Information</h3>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             First Name
@@ -213,7 +210,7 @@ const DoctorProfileForm = ({
             type="text"
             value={userData?.firstName || ""}
             disabled
-            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600"
+            className="w-full px-3 md:px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 text-sm md:text-base"
             aria-label="First name"
           />
         </div>
@@ -225,7 +222,7 @@ const DoctorProfileForm = ({
             type="text"
             value={userData?.lastName || ""}
             disabled
-            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600"
+            className="w-full px-3 md:px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 text-sm md:text-base"
             aria-label="Last name"
           />
         </div>
@@ -237,7 +234,7 @@ const DoctorProfileForm = ({
             type="email"
             value={userData?.email || ""}
             disabled
-            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600"
+            className="w-full px-3 md:px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 text-sm md:text-base"
             aria-label="Email"
           />
         </div>
@@ -249,15 +246,15 @@ const DoctorProfileForm = ({
             type="tel"
             value={userData?.phone || ""}
             disabled
-            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600"
+            className="w-full px-3 md:px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 text-sm md:text-base"
             aria-label="Phone"
           />
         </div>
       </div>
 
-      <h3 className="font-bold text-xl text-primaryText">Professional Information</h3>
+      <h3 className="font-bold text-lg md:text-xl text-primaryText">Professional Information</h3>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
         <Select
           id="department"
           label="Department"
@@ -334,7 +331,7 @@ const DoctorProfileForm = ({
         />
       </div>
 
-      <h3 className="font-bold text-xl text-primaryText">Description</h3>
+      <h3 className="font-bold text-lg md:text-xl text-primaryText">Description</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Textarea
@@ -357,33 +354,33 @@ const DoctorProfileForm = ({
         />
       </div>
 
-      <div className="space-y-6">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="font-bold text-xl text-primaryText">Weekly Schedule</h3>
+      <div className="space-y-4 md:space-y-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
+          <h3 className="font-bold text-lg md:text-xl text-primaryText">Weekly Schedule</h3>
           <Button
             type="button"
             onClick={handleAddScheduleSlot}
-            className="bg-primary hover:bg-primary/90 text-white"
+            className="bg-primary hover:bg-primary/90 text-white w-full sm:w-auto"
           >
             + Add Time Slot
           </Button>
         </div>
 
         {watchedSchedule.length === 0 ? (
-          <div className="text-center py-8 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-            <Clock className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-            <p className="text-gray-600">No schedule added yet</p>
-            <p className="text-sm text-gray-500 mt-1">Add your working hours for each day</p>
+          <div className="text-center py-6 md:py-8 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+            <Clock className="h-10 w-10 md:h-12 md:w-12 text-gray-400 mx-auto mb-3" />
+            <p className="text-gray-600 text-sm md:text-base">No schedule added yet</p>
+            <p className="text-xs md:text-sm text-gray-500 mt-1">Add your working hours for each day</p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3 md:space-y-4">
             {watchedSchedule.map((scheduleSlot: ScheduleSlot, scheduleIndex: number) => {
               const unselectedDays = getUnselectedDays(scheduleIndex);
 
               return (
-                <div key={scheduleIndex} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <div key={scheduleIndex} className="bg-gray-50 p-3 md:p-4 rounded-lg border border-gray-200">
                   <div className="flex justify-between items-center mb-3">
-                    <h4 className="font-medium text-gray-700">Time Slot {scheduleIndex + 1}</h4>
+                    <h4 className="font-medium text-gray-700 text-sm md:text-base">Time Slot {scheduleIndex + 1}</h4>
                     <button
                       type="button"
                       onClick={() => handleRemoveScheduleSlot(scheduleIndex)}
@@ -394,7 +391,7 @@ const DoctorProfileForm = ({
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Day
@@ -402,7 +399,7 @@ const DoctorProfileForm = ({
                       <select
                         value={scheduleSlot.day}
                         onChange={(event) => handleUpdateScheduleSlot(scheduleIndex, 'day', event.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white"
+                        className="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-sm md:text-base"
                         title="Select day"
                         aria-label="Select day"
                       >
@@ -426,7 +423,7 @@ const DoctorProfileForm = ({
                         type="time"
                         value={scheduleSlot.startTime}
                         onChange={(event) => handleUpdateScheduleSlot(scheduleIndex, 'startTime', event.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        className="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base"
                         title="Select start time"
                         aria-label="Select start time"
                       />
@@ -440,7 +437,7 @@ const DoctorProfileForm = ({
                         type="time"
                         value={scheduleSlot.endTime}
                         onChange={(event) => handleUpdateScheduleSlot(scheduleIndex, 'endTime', event.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        className="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base"
                         title="Select end time"
                         aria-label="Select end time"
                       />
@@ -453,18 +450,18 @@ const DoctorProfileForm = ({
         )}
       </div>
 
-      <div className="flex justify-end gap-3">
+      <div className="flex flex-col sm:flex-row justify-end gap-3">
         <Button
           type="button"
           onClick={() => setIsEditing(false)}
-          className="bg-gray-100 text-gray-700 hover:bg-gray-200"
+          className="bg-gray-100 text-gray-700 hover:bg-gray-200 w-full sm:w-auto"
         >
           Cancel
         </Button>
         <Button
           type="submit"
           disabled={isUpdatingProfile || !isDirty}
-          className="disabled:opacity-50 disabled:cursor-not-allowed"
+          className="disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
         >
           {isUpdatingProfile ? (
             <div className="flex items-center justify-center">

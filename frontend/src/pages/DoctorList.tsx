@@ -63,18 +63,18 @@ const DoctorListPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background py-20">
+    <div className="min-h-screen bg-background py-8 sm:py-12 md:py-16 lg:py-20">
       <div className="container">
         <div className="bg-white p-8 rounded-4xl mb-8 border border-primaryBorder">
-          <DoctorListHeader 
-            title={t("doctorList:title")} 
-            subtitle={t("doctorList:subtitle")} 
+          <DoctorListHeader
+            title={t("doctorList:title")}
+            subtitle={t("doctorList:subtitle")}
             searchPlaceholder={t("doctorList:search")}
             onSearchChange={(value) => setFilters(prev => ({ ...prev, search: value }))}
             onToggleFilters={() => setShowAdvancedFilters(!showAdvancedFilters)}
             toggleFiltersLabel={t("doctorList:toggleAdvancedFilters")}
           />
-          
+
           <DoctorListFilters
             isDepartmentLoading={isDepartmentLoading}
             departmentData={departmentData}
@@ -99,7 +99,7 @@ const DoctorListPage = () => {
           totalDoctors={doctorsData.doctors?.length || 0}
           onClearFilters={clearFilters}
         />
-        
+
         <Pagination
           currentPage={pagination.currentPage}
           totalPages={pagination.totalPages}

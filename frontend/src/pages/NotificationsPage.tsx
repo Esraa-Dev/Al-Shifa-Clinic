@@ -34,7 +34,7 @@ const NotificationsPage = () => {
 
 
   return (
-    <div className={`space-y-6 ${user?.role === "patient" ? "container py-8":""}`} >
+    <div className={`space-y-6 min-h-screen ${user?.role === "patient" ? "container py-4 sm:py-6 md:py-8 lg:py-10 xl:py-12" : ""}`}>
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold text-primaryText">

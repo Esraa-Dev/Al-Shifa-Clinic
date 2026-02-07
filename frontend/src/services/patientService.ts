@@ -12,6 +12,6 @@ export const patientService = {
 
   updateProfileImage: async (formData: FormData) => {
     const response = await api.put("patient/profile/image", formData);
-    return response.data.data;
+    return response.data;
   },
 };
