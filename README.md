@@ -1,4 +1,3 @@
-markdown
 # 🏥 Al-Shifa Clinic - Complete Healthcare Management System
 
 A full-stack platform with real-time video consultations, appointment management, and comprehensive healthcare features.
