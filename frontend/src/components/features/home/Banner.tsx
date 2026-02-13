@@ -6,8 +6,10 @@ import { StatsSkeleton } from "./StatsSkeleton";
 
 export const Banner = () => {
     const navigate = useNavigate();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const { data, isLoading } = useGetHomeStats();
+    
+    const isRTL = i18n.language === 'ar';
 
     return (
         <div className="relative bg-linear-to-r from-primary to-secondary overflow-hidden">
@@ -18,15 +20,14 @@ export const Banner = () => {
 
             <div className="container relative py-12 lg:py-24">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-
-                    <div className="text-white text-center lg:text-left">
+                    <div className={`text-white ${isRTL ? 'lg:text-right' : 'lg:text-left'} text-center`}>
                         <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 leading-tight max-w-3xl mx-auto lg:mx-0">
                             {t("hero.title")}
                         </h1>
                         <p className="text-base md:text-lg lg:text-xl mb-6 md:mb-8 opacity-90 leading-relaxed max-w-2xl mx-auto lg:mx-0">
                             {t("hero.subtitle")}
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center lg:justify-start mt-4">
+                        <div className={`flex flex-col sm:flex-row gap-3 md:gap-4 ${isRTL ? 'lg:justify-end' : 'lg:justify-start'} justify-center mt-4`}>
                             <button
                                 onClick={() => { navigate("/register"); window.scrollTo(0, 0); }}
                                 className="inline-flex items-center justify-center gap-2 bg-white text-primary px-5 md:px-7 lg:px-8 py-3 md:py-3.5 rounded-xl font-semibold hover:bg-gray-100 transition-all cursor-pointer w-full sm:w-auto text-sm md:text-base shadow-lg shadow-black/5"
@@ -47,7 +48,7 @@ export const Banner = () => {
                     {isLoading ? (
                         <StatsSkeleton />
                     ) : (
-                        <div className="grid grid-cols-2 gap-3 md:gap-6">
+                        <div className="grid grid-cols-2 gap-3 md:gap-6" dir={isRTL ? 'rtl' : 'ltr'}>
                             <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 md:p-6 text-white text-center border border-white/10 flex flex-col justify-center">
                                 <div className="text-xl md:text-3xl font-bold mb-1">{data?.data?.doctors}+</div>
                                 <div className="text-[10px] sm:text-xs md:text-sm opacity-90 uppercase tracking-wider">{t("stats.doctors")}</div>
