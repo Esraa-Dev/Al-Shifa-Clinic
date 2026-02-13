@@ -27,7 +27,11 @@ export const Banner = () => {
                         <p className="text-base md:text-lg lg:text-xl mb-6 md:mb-8 opacity-90 leading-relaxed max-w-2xl mx-auto lg:mx-0">
                             {t("hero.subtitle")}
                         </p>
-                        <div className={`flex flex-col sm:flex-row gap-3 md:gap-4 ${isRTL ? 'lg:justify-end' : 'lg:justify-start'} justify-center mt-4`}>
+                        <div className={`flex flex-col sm:flex-row gap-3 md:gap-4 mt-4 ${
+                            isRTL 
+                                ? 'lg:justify-end' 
+                                : 'lg:justify-start'
+                        } justify-center`}>
                             <button
                                 onClick={() => { navigate("/register"); window.scrollTo(0, 0); }}
                                 className="inline-flex items-center justify-center gap-2 bg-white text-primary px-5 md:px-7 lg:px-8 py-3 md:py-3.5 rounded-xl font-semibold hover:bg-gray-100 transition-all cursor-pointer w-full sm:w-auto text-sm md:text-base shadow-lg shadow-black/5"
