@@ -29,7 +29,7 @@ export const Banner = () => {
                         </p>
                         <div className={`flex flex-col sm:flex-row gap-3 md:gap-4 mt-4 ${
                             isRTL 
-                                ? 'lg:justify-end' 
+                                ? 'lg:justify-end lg:flex-row-reverse' 
                                 : 'lg:justify-start'
                         } justify-center`}>
                             <button
