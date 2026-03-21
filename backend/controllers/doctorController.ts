@@ -22,7 +22,11 @@ export const getAllDoctors = AsyncHandler(
       sortBy,
     } = req.query;
 
-    let filter: any = {};
+    let filter: any = {
+      profileStatus: "completed",
+      status: "approved",
+      isActive: true,
+    };
 
     if (search && search !== "") {
       const regex = new RegExp(search.toString(), "i");
