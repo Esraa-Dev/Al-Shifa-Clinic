@@ -2,6 +2,7 @@ import { Calendar, Phone } from "lucide-react";
 import { Button } from "../../ui/Button";
 import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
+import heroImage from "../../../assets/hero.webp";
 
 
 export const Hero = () => {
@@ -9,8 +10,12 @@ export const Hero = () => {
 
   return (
     <div className="relative h-[calc(100vh-96px)] w-full overflow-hidden">
-      <div
-        className={`absolute inset-0 bg-cover bg-center bg-no-repeat bg-[url('/src/assets/hero.webp')] ${i18n.language === "en" ? "transform-[scaleX(-1)]" : ""}`}
+      <img
+        src={heroImage}
+        className={`absolute inset-0 h-full w-full object-cover object-center ${i18n.language === "en" ? "scale-x-[-1]" : ""}`}
+        alt="Doctor using a digital tablet in a modern hospital setting."
+        decoding="async"
+        fetchPriority="high"
       />
 
       <div className="relative bg-black/10 w-full h-[calc(100vh-96px)] flex items-center">
