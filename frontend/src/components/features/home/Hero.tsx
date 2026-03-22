@@ -10,7 +10,7 @@ export const Hero = () => {
   return (
     <div className="relative h-[calc(100vh-96px)] w-full overflow-hidden">
       <div
-        className={`absolute inset-0 bg-cover bg-center bg-no-repeat bg-[url('/src/assets/hero.jpg')] ${i18n.language === "en" ? "transform-[scaleX(-1)]" : ""}`}
+        className={`absolute inset-0 bg-cover bg-center bg-no-repeat bg-[url('/src/assets/hero.webp')] ${i18n.language === "en" ? "transform-[scaleX(-1)]" : ""}`}
       />
 
       <div className="relative bg-black/10 w-full h-[calc(100vh-96px)] flex items-center">
