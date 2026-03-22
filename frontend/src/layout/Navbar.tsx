@@ -28,7 +28,7 @@ export const Navbar = () => {
   return (
     <nav className={`py-6 relative shadow-md ${isMenuOpen ? "bg-background" : "bg-white"}`}>
       <div className="flex-center justify-between container h-10 gap-3">
-        <Logo />
+        <Logo loadingEagerly />
         <NavLinks />
         <div className="flex-center gap-2 xl:gap-4 shrink">
           <div className="hidden lg:flex">
