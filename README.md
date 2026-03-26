@@ -1,3 +1,6 @@
+
+<img width="1477" height="704" alt="Gemini_Generated_Image_a127xna127xna127" src="https://github.com/user-attachments/assets/87959c94-6961-4486-b7f9-df604b1def72" />
+
 # 🏥 Al-Shifa Clinic - Complete Healthcare Management System
 
 A full-stack platform with real-time video consultations, appointment management, and comprehensive healthcare features.
