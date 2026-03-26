@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import logoImage from "../../assets/logo.png";
+import logoImage from "../../assets/logo.webp";
 import { useAuth } from "../../context/AuthContext";
 
-export const Logo = ({ hideText = false }) => {
+export const Logo = ({ hideText = false, loadingEagerly = false }) => {
     const { t } = useTranslation('layout');
     const { user } = useAuth();
     const navigate = useNavigate();
@@ -34,7 +34,14 @@ export const Logo = ({ hideText = false }) => {
             onClick={handleLogoClick}
             className="flex items-center gap-2 focus:outline-none"
         >
-            <img src={logoImage} alt="Al Shifa Clinic Logo" className="w-10" />
+            <img
+            src={logoImage}
+            alt="Al Shifa Clinic Logo"
+            className="w-10"
+            decoding="async"
+            fetchPriority={loadingEagerly ? "high" : "low"}
+            loading={loadingEagerly ? "eager" : "lazy"}
+            />
             {!hideText && (
                 <h1 className="text-xl xl:text-2xl font-bold text-secondary whitespace-nowrap">
                     {t('layout:clinic.name')} <span className="me-1 text-primary">{t('layout:clinic.subname')}</span>
